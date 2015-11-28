@@ -1,0 +1,5 @@
+E:\Porjects\c#\Chat\ChatApplicationV4\CommonLibrary\bin\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\CommonLibrary\bin\Debug\CommonLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\CommonLibrary\obj\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\CommonLibrary\obj\Debug\CommonLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\CommonLibrary\obj\Debug\ChatLibrary.csprojResolveAssemblyReference.cache

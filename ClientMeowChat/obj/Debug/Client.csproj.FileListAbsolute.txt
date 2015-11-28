@@ -1,0 +1,57 @@
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\bin\Debug\ChatApplcationV1Client.exe.config
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\bin\Debug\ChatApplcationV1Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\bin\Debug\ChatApplcationV1Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\bin\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\bin\Debug\CommonLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\ChatApplcationV1Client.ChangeName.resources
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\ChatApplcationV1Client.FrmChat.resources
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\ChatApplcationV1Client.FrmLogin.resources
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\ChatApplcationV1Client.Properties.Resources.resources
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\ChatApplcationV1Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV2\Client\obj\Debug\ChatApplcationV1Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\bin\Debug\ChatApplcationV1Client.exe.config
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\ChatApplcationV1Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\ChatApplcationV1Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\bin\Debug\ChatApplcationV1Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\bin\Debug\ChatApplcationV1Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\bin\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\bin\Debug\CommonLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\ChatApplcationV1Client.ChangeName.resources
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\ChatApplcationV1Client.FrmChat.resources
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\ChatApplcationV1Client.FrmLogin.resources
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\ChatApplcationV1Client.Properties.Resources.resources
+E:\Porjects\c#\Chat\ChatApplicationV2 - Copy\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\bin\Debug\ClientLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\bin\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\bin\Debug\ClientLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\bin\Debug\CommonLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\ChatApplcationV1Client.ChangeName.resources
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\ChatApplcationV1Client.FrmChat.resources
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\ChatApplcationV1Client.FrmLogin.resources
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\ChatApplcationV1Client.Properties.Resources.resources
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\bin\Debug\Client.exe.config
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\bin\Debug\Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\bin\Debug\Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV3\Client\obj\Debug\Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\bin\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\bin\Debug\CommonLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\bin\Debug\MeowChatClient.exe.config
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\bin\Debug\MeowChatClient.exe
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\bin\Debug\MeowChatClient.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\bin\Debug\MeowChatClientLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\bin\Debug\MeowChatClientLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\MeowChatClient.Properties.Resources.resources
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\MeowChatClient.exe
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\MeowChatClient.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\MeowChatClient.ChangeName.resources
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\MeowChatClient.FrmAbout.resources
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\MeowChatClient.FrmChat.resources
+E:\Porjects\c#\Chat\ChatApplicationV4\Client\obj\Debug\MeowChatClient.FrmLogin.resources
