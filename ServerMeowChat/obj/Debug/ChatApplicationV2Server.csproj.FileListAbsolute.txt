@@ -1,0 +1,11 @@
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\bin\Debug\ChatApplicationV1Server.exe.config
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\bin\Debug\ChatApplicationV1Server.exe
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\bin\Debug\ChatApplicationV1Server.pdb
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\bin\Debug\ChatApplicationLibraries.dll
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\bin\Debug\ChatApplicationLibraries.pdb
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\obj\Debug\ChatApplicationV2Server.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\obj\Debug\ChatApplicationV1Server.ServerForm.resources
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\obj\Debug\ChatApplicationV1Server.Properties.Resources.resources
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\obj\Debug\ChatApplicationV2Server.csproj.GenerateResource.Cache
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\obj\Debug\ChatApplicationV1Server.exe
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplicationV1Server\obj\Debug\ChatApplicationV1Server.pdb

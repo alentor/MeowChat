@@ -1,0 +1,15 @@
+E:\Porjects\c#\Chat\ChatApplicationV2\ServerLibrary\bin\Debug\ServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV2\ServerLibrary\bin\Debug\ServerLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2\ServerLibrary\obj\Debug\ServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV2\ServerLibrary\obj\Debug\ServerLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2\ServerLibrary\obj\Debug\ServerLibrary.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV3\ServerLibrary\bin\Debug\ServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV3\ServerLibrary\bin\Debug\ServerLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV3\ServerLibrary\obj\Debug\ServerLibrary.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV3\ServerLibrary\obj\Debug\ServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV3\ServerLibrary\obj\Debug\ServerLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibrary\obj\Debug\ServerLibrary.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibrary\bin\Debug\MeowChatServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibrary\bin\Debug\MeowChatServerLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibrary\obj\Debug\MeowChatServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibrary\obj\Debug\MeowChatServerLibrary.pdb

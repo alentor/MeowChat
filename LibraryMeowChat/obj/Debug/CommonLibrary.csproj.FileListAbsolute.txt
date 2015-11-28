@@ -1,0 +1,4 @@
+E:\Porjects\c#\Chat\ChatApplicationV2\CommonLibrary\bin\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV2\CommonLibrary\bin\Debug\CommonLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV2\CommonLibrary\obj\Debug\CommonLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV2\CommonLibrary\obj\Debug\CommonLibrary.pdb
