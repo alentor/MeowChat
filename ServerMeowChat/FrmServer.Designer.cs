@@ -48,6 +48,7 @@ namespace MeowChatServer
             this.tabConnTrack = new System.Windows.Forms.TabPage();
             this.tabPagePublicChatServer = new System.Windows.Forms.TabPage();
             this.rchTxtServerPub = new System.Windows.Forms.RichTextBox();
+            this.btnStopSrv = new System.Windows.Forms.Button();
             this.TabControlServer.SuspendLayout();
             this.tabConnTrack.SuspendLayout();
             this.tabPagePublicChatServer.SuspendLayout();
@@ -218,12 +219,26 @@ namespace MeowChatServer
             this.rchTxtServerPub.TabIndex = 10;
             this.rchTxtServerPub.Text = "";
             // 
+            // btnStopSrv
+            // 
+            this.btnStopSrv.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnStopSrv.Enabled = false;
+            this.btnStopSrv.Location = new System.Drawing.Point(254, 362);
+            this.btnStopSrv.Name = "btnStopSrv";
+            this.btnStopSrv.Size = new System.Drawing.Size(73, 23);
+            this.btnStopSrv.TabIndex = 18;
+            this.btnStopSrv.Text = "S&top";
+            this.btnStopSrv.UseVisualStyleBackColor = true;
+            this.btnStopSrv.Click += new System.EventHandler(this.btnStopSrv_Click);
+            // 
             // FrmServer
             // 
             this.AcceptButton = this.btnStartSrv;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnStopSrv;
             this.ClientSize = new System.Drawing.Size(754, 391);
+            this.Controls.Add(this.btnStopSrv);
             this.Controls.Add(this.TabControlServer);
             this.Controls.Add(this.txtBxServer);
             this.Controls.Add(this.btnServerSnd);
@@ -265,6 +280,7 @@ namespace MeowChatServer
         private System.Windows.Forms.TabPage tabConnTrack;
         private System.Windows.Forms.TabPage tabPagePublicChatServer;
         private RichTextBox rchTxtServerPub;
+        private Button btnStopSrv;
     }
 }
 
