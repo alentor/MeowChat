@@ -15,10 +15,10 @@ namespace MeowChatServer
     {
         private readonly byte[] _ByteMessage = new byte[1024]; //Max byte size to be recieved and sent
         private readonly List<Client> _ClientList = new List<Client>(); //List which contains all the connected clients
-        private Socket _ServerSocket; //Server socket
-        private TabPagePrivateChatReceiveServerHandler _TabPagePrivateChatReceiveServerEvent;
         private int _CursorPositionConn;
         private int _CursorPositionPub;
+        private Socket _ServerSocket; //Server socket
+        private TabPagePrivateChatReceiveServerHandler _TabPagePrivateChatReceiveServerEvent;
 
         public FrmServer()
         {
