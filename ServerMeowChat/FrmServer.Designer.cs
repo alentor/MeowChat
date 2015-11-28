@@ -32,7 +32,6 @@ namespace MeowChatServer
         private void InitializeComponent()
         {
             this.btnStartSrv = new System.Windows.Forms.Button();
-            this.btnStopSrv = new System.Windows.Forms.Button();
             this.listViewClients = new System.Windows.Forms.ListView();
             this.colClientName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colClientHash = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -63,18 +62,6 @@ namespace MeowChatServer
             this.btnStartSrv.Text = "&Start Server";
             this.btnStartSrv.UseVisualStyleBackColor = true;
             this.btnStartSrv.Click += new System.EventHandler(this.btnStartSrv_Click);
-            // 
-            // btnStopSrv
-            // 
-            this.btnStopSrv.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnStopSrv.Enabled = false;
-            this.btnStopSrv.Location = new System.Drawing.Point(254, 361);
-            this.btnStopSrv.Name = "btnStopSrv";
-            this.btnStopSrv.Size = new System.Drawing.Size(73, 23);
-            this.btnStopSrv.TabIndex = 1;
-            this.btnStopSrv.Text = "S&top Server";
-            this.btnStopSrv.UseVisualStyleBackColor = true;
-            this.btnStopSrv.Click += new System.EventHandler(this.btnStopSrv_Click);
             // 
             // listViewClients
             // 
@@ -231,12 +218,11 @@ namespace MeowChatServer
             this.rchTxtServerPub.TabIndex = 10;
             this.rchTxtServerPub.Text = "";
             // 
-            // ServerForm
+            // FrmServer
             // 
             this.AcceptButton = this.btnStartSrv;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnStopSrv;
             this.ClientSize = new System.Drawing.Size(754, 391);
             this.Controls.Add(this.TabControlServer);
             this.Controls.Add(this.txtBxServer);
@@ -247,10 +233,9 @@ namespace MeowChatServer
             this.Controls.Add(this.txtBoxIpAddress);
             this.Controls.Add(this.lblLocalIp);
             this.Controls.Add(this.listViewClients);
-            this.Controls.Add(this.btnStopSrv);
             this.Controls.Add(this.btnStartSrv);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "ServerForm";
+            this.Name = "FrmServer";
             this.Text = "Server";
             this.Load += new System.EventHandler(this.ServerForm_Load);
             this.TabControlServer.ResumeLayout(false);
@@ -264,7 +249,6 @@ namespace MeowChatServer
         #endregion
 
         private System.Windows.Forms.Button btnStartSrv;
-        private System.Windows.Forms.Button btnStopSrv;
         private System.Windows.Forms.ListView listViewClients;
         private System.Windows.Forms.ColumnHeader colClientName;
         private System.Windows.Forms.ColumnHeader colClientHash;

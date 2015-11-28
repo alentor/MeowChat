@@ -62,7 +62,6 @@ namespace MeowChatServer
                 _CursorPositionConn = rchTxtServerConn.SelectionStart;
                 //Disbale/Enable buttons as needed
                 btnStartSrv.Enabled = false;
-                btnStopSrv.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -373,33 +372,6 @@ namespace MeowChatServer
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        //BTN Stop
-        private void btnStopSrv_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                foreach (var client in _ClientList)
-                {
-                    var msgToSend = new MessageStracture
-                    {
-                        Command = Command.Disconnect
-                    };
-                    var msgToSendByte = msgToSend.ToByte();
-                    client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
-                }
-                //_ServerSocket.Close();
-                _ServerSocket.Shutdown(SocketShutdown.Both);
-                _ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
-                MessageBox.Show(@"The server went down", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                btnStopSrv.Enabled = false;
-                btnStartSrv.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Server 2", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
