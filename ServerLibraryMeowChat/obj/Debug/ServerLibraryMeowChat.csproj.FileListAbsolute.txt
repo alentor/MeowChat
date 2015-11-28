@@ -1,0 +1,4 @@
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\bin\Debug\MeowChatServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\bin\Debug\MeowChatServerLibrary.pdb
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.dll
+E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.pdb
