@@ -334,7 +334,7 @@ namespace ChatApplicationV1Server {
                     client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
                 }
                 //_ServerSocket.Close();
-                //_ServerSocket.Shutdown(SocketShutdown.Both);
+                _ServerSocket.Shutdown(SocketShutdown.Both);
                 _ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
                 MessageBox.Show(@"The server went down", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnStopSrv.Enabled = false;
