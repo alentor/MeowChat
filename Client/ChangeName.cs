@@ -13,7 +13,7 @@ namespace ChatApplcationV1Client
             Text = @"Change FrmPrivateName";
         }
 
-        public ChangeName(string name)
+        public ChangeName(string name)  
         {
             InitializeComponent();
             _NameOld = name;
