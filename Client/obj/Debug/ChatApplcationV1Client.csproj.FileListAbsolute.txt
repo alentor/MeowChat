@@ -1,0 +1,11 @@
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\bin\Debug\ChatApplcationV1Client.exe.config
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\bin\Debug\ChatApplcationV1Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\bin\Debug\ChatApplcationV1Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.FrmChat.resources
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.FrmLogin.resources
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.Properties.Resources.resources
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.csproj.GenerateResource.Cache
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.exe
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.pdb
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\Chat\ChatApplicationV1\ChatApplcationV1Client\obj\Debug\ChatApplcationV1Client.ChangeName.resources
