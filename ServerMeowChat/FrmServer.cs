@@ -17,6 +17,8 @@ namespace MeowChatServer {
         private int _CursorPositionPub;
         private Socket _ServerSocket; //Server socket
         private TabPagePrivateChatReceiveServerHandler _TabPagePrivateChatReceiveServerEvent;
+        private bool _ListenStarted = true;
+        private bool _IsRunning = true;
 
         public FrmServer() {
             InitializeComponent();
@@ -29,6 +31,10 @@ namespace MeowChatServer {
                 TabControlServer.TabPages[1].Show();
                 TabControlServer.TabPages[0].Show();
                 lblLocalIp.Text = GetLocalIpAddress(); //Get local IP address and display it on lblLocalIp
+                _ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                var ipAddress = IPAddress.Parse(txtBoxIpAddress.Text);
+                var ipEndPoint = new IPEndPoint(ipAddress, int.Parse(txtBoxPort.Text));
+                _ServerSocket.Bind(ipEndPoint); //Bind the socket to local endPoint
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message, @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -38,12 +44,11 @@ namespace MeowChatServer {
         // Button Start 
         private void btnStartSrv_Click(object sender, EventArgs e) {
             try {
-                _ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                var ipAddress = IPAddress.Parse(txtBoxIpAddress.Text);
-                var ipEndPoint = new IPEndPoint(ipAddress, int.Parse(txtBoxPort.Text));
-                _ServerSocket.Bind(ipEndPoint); //Bind the socket to local endPoint
                 //10 specifies the number of incoming connections that can be queued for acceptance
-                _ServerSocket.Listen(10); //Start listening for incoming connection
+                if (_ListenStarted) {
+                    _ServerSocket.Listen(100); //Start listening for incoming connection
+                    _ListenStarted = false;
+                }
                 //Start accppting incoming connection, on a succefull accept call to OnAccept method
                 _ServerSocket.BeginAccept((OnAccept), null);
                 //The inner server messages board
@@ -64,16 +69,22 @@ namespace MeowChatServer {
         // Button stop
         private void btnStopSrv_Click(object sender, EventArgs e) {
             try {
-                foreach (var client in _ClientList) {
-                    var msgToSend = new MessageStracture {
-                        Command = Command.Disconnect
-                    };
-                    var msgToSendByte = msgToSend.ToByte();
+                var msgToSend = new MessageStracture {
+                    Command = Command.Disconnect
+                };
+                var msgToSendByte = msgToSend.ToByte();
+                foreach (Client client in _ClientList) {
+                    //client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
                     client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
+                    client.ClientSocket.Shutdown(SocketShutdown.Both);
+                    client.ClientSocket.BeginDisconnect(true, (OnDisonnect), client.ClientSocket);
                 }
+                //_ServerSocket.Shutdown(SocketShutdown.Both);
+                //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
                 //_ServerSocket.Close();
-                _ServerSocket.Shutdown(SocketShutdown.Both);
-                _ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
+                //_ServerSocket.Shutdown(SocketShutdown.Both);
+                //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
+                //_IsRunning = false;
                 MessageBox.Show(@"The server went down", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnStopSrv.Enabled = false;
                 btnStartSrv.Enabled = true;
@@ -84,6 +95,9 @@ namespace MeowChatServer {
         }
 
         private void OnAccept(IAsyncResult ar) {
+            if (!_IsRunning) {
+                return;
+            }
             try {
                 //Create a connection(client) based on the async accepted connection
                 var clienSocket = _ServerSocket.EndAccept(ar);

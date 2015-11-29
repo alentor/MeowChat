@@ -78,9 +78,10 @@ namespace MeowChatClientLibrary
             try
             {
                 Status = false;
-                var msgToSend = new MessageStracture();
-                msgToSend.Command = Command.Logout;
-                msgToSend.ClientName = ClientName;
+                var msgToSend = new MessageStracture {
+                    Command = Command.Logout,
+                    ClientName = ClientName
+                };
                 var b = msgToSend.ToByte();
                 Socket.Send(b, 0, b.Length, SocketFlags.None);
                 Socket.Shutdown(SocketShutdown.Both);
