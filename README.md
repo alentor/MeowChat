@@ -1,3 +1,1 @@
-C# Project for school.
-
-A simple chat application using .Net sockets.
+School Porject, a simple c# chat application, using .Net sockets and WinForms.
