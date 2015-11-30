@@ -26,3 +26,16 @@ E:\Porjects\c#\Chat\ChatApplicationV4\ServerMeowChat\obj\Debug\ServerMeowChat.cs
 E:\Porjects\c#\Chat\ChatApplicationV4\ServerMeowChat\obj\Debug\MeowChatServer.FrmServer.resources
 E:\Porjects\c#\Chat\ChatApplicationV4\ServerMeowChat\obj\Debug\MeowChatServer.Properties.Resources.resources
 E:\Porjects\c#\Chat\ChatApplicationV4\ServerMeowChat\obj\Debug\ServerMeowChat.csproj.GenerateResource.Cache
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\MeowChatServer.exe.config
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.exe
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.pdb
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\MeowChatServer.exe
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\MeowChatServer.pdb
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\CommonLibrary.dll
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\MeowChatServerLibrary.dll
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\CommonLibrary.pdb
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\MeowChatServerLibrary.pdb
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\ServerMeowChat.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.FrmServer.resources
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.Properties.Resources.resources
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\ServerMeowChat.csproj.GenerateResource.Cache

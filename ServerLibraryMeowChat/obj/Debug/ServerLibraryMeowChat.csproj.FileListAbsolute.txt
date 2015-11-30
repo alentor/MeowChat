@@ -2,3 +2,7 @@ E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\bin\Debug\MeowChatSe
 E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\bin\Debug\MeowChatServerLibrary.pdb
 E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.dll
 E:\Porjects\c#\Chat\ChatApplicationV4\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.pdb
+E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\bin\Debug\MeowChatServerLibrary.dll
+E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\bin\Debug\MeowChatServerLibrary.pdb
+E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.dll
+E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.pdb

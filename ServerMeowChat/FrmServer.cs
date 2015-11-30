@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Windows.Forms;
 using CommonLibrary;
 using MeowChatServerLibrary;
@@ -17,7 +18,7 @@ namespace MeowChatServer {
         private int _CursorPositionPub;
         private Socket _ServerSocket; //Server socket
         private TabPagePrivateChatReceiveServerHandler _TabPagePrivateChatReceiveServerEvent;
-        private bool _ListenStarted = true;
+        private bool _ListenStartedOnce = true;
         private bool _IsRunning = true;
 
         public FrmServer() {
@@ -45,9 +46,9 @@ namespace MeowChatServer {
         private void btnStartSrv_Click(object sender, EventArgs e) {
             try {
                 //10 specifies the number of incoming connections that can be queued for acceptance
-                if (_ListenStarted) {
+                if (_ListenStartedOnce) {
                     _ServerSocket.Listen(100); //Start listening for incoming connection
-                    _ListenStarted = false;
+                    _ListenStartedOnce = false;
                 }
                 //Start accppting incoming connection, on a succefull accept call to OnAccept method
                 _ServerSocket.BeginAccept((OnAccept), null);
@@ -62,7 +63,7 @@ namespace MeowChatServer {
                 btnStopSrv.Enabled = true;
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> btnStartSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -74,23 +75,23 @@ namespace MeowChatServer {
                 };
                 var msgToSendByte = msgToSend.ToByte();
                 foreach (Client client in _ClientList) {
-                    //client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
                     client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
                     client.ClientSocket.Shutdown(SocketShutdown.Both);
                     client.ClientSocket.BeginDisconnect(true, (OnDisonnect), client.ClientSocket);
+                    Thread.Sleep(100);
                 }
                 //_ServerSocket.Shutdown(SocketShutdown.Both);
                 //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
                 //_ServerSocket.Close();
                 //_ServerSocket.Shutdown(SocketShutdown.Both);
                 //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
-                //_IsRunning = false;
                 MessageBox.Show(@"The server went down", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnStopSrv.Enabled = false;
                 btnStartSrv.Enabled = true;
+                _IsRunning = false;
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Server 2", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> btnStopSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -107,7 +108,7 @@ namespace MeowChatServer {
                 clienSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, (OnReceive), clienSocket);
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> OnAccept", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -342,7 +343,7 @@ namespace MeowChatServer {
                 }
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> OnReceive", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -355,13 +356,18 @@ namespace MeowChatServer {
                 client.EndSend(ar);
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" => OnSend", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private static void OnDisonnect(IAsyncResult ar) {
-            var socket = (Socket) ar.AsyncState;
-            socket.EndDisconnect(ar);
+            try {
+                var socket = (Socket) ar.AsyncState;
+                socket.EndDisconnect(ar);
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + @" -> OnDisonnect", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         //Automaticlaly scrolldown richTxtChatBox
