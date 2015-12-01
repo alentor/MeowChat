@@ -21,7 +21,7 @@ namespace MeowChatClient {
 
         public FrmChat() {
             InitializeComponent();
-            txtBxPubMsg.Select();
+            TextBoxPubMsg.Select();
         }
 
         //Event to connect FrmChat with every TabPagePrivateChatClient in TabControlClient
@@ -40,7 +40,7 @@ namespace MeowChatClient {
                 ClientConnection.Socket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, null);
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Chat: 3" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> FrmChat_Load", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -58,14 +58,14 @@ namespace MeowChatClient {
                 _ByteMessage = new byte[1024];
                 if (msgReceived.Command == Command.Disconnect) {
                     Invoke(new Action((delegate{
-                        ClientConnection.ShutDown();
-                        btnPubSnd.Enabled = false;
-                        lstClientList.Items.Clear();
-                        rchTxtClientPub.SelectionStart = _CursorPosition;
-                        rchTxtClientPub.SelectionColor = Color.Black;
-                        rchTxtClientPub.SelectionBackColor = Color.Tomato;
-                        rchTxtClientPub.SelectedText = ChatMethodsStatic.Time() + " Disconnected from the server" + Environment.NewLine;
-                        _CursorPosition = rchTxtClientPub.SelectionStart;
+                        ClientConnection.ServerDisconnectCall();
+                        BtnPubSnd.Enabled = false;
+                        ListBoxClientList.Items.Clear();
+                        RichTextClientPub.SelectionStart = _CursorPosition;
+                        RichTextClientPub.SelectionColor = Color.Black;
+                        RichTextClientPub.SelectionBackColor = Color.Tomato;
+                        RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " Disconnected from the server" + Environment.NewLine;
+                        _CursorPosition = RichTextClientPub.SelectionStart;
                     })));
                     return;
                 }
@@ -74,15 +74,15 @@ namespace MeowChatClient {
                 switch (msgReceived.Command) {
                     case Command.Login:
                         Invoke(new Action((delegate{
-                            rchTxtClientPub.SelectionStart = _CursorPosition;
-                            rchTxtClientPub.SelectionColor = Color.Black;
-                            rchTxtClientPub.SelectionBackColor = Color.LightGreen;
-                            lstClientList.Items.Add(msgReceived.ClientName);
-                            rchTxtClientPub.SelectedText = ChatMethodsStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
+                            RichTextClientPub.SelectionStart = _CursorPosition;
+                            RichTextClientPub.SelectionColor = Color.Black;
+                            RichTextClientPub.SelectionBackColor = Color.LightGreen;
+                            ListBoxClientList.Items.Add(msgReceived.ClientName);
+                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
                             if (msgReceived.ClientName != ClientConnection.ClientName) {
                                 _ListClientsColor.Add(new ChatLines(msgReceived.ClientName));
                             }
-                            _CursorPosition = rchTxtClientPub.SelectionStart;
+                            _CursorPosition = RichTextClientPub.SelectionStart;
                         })));
                         break;
 
@@ -91,14 +91,14 @@ namespace MeowChatClient {
                         Invoke(new Action((delegate{
                             Text = @"Chat: " + ClientConnection.ClientName; //Set window name
                             //_ClientsColor.Add(new ClientChatProp(ClientConnection.ClientName)); //Add this Client to the ClientChatProp list
-                            lstClientList.Items.AddRange(msgReceived.Message.Split(','));
+                            ListBoxClientList.Items.AddRange(msgReceived.Message.Split(','));
                             //remove the empty selection box in list view
-                            rchTxtClientPub.SelectionColor = Color.Black;
-                            rchTxtClientPub.SelectedText = @"<<< " + ClientConnection.ClientName + @" has joined the room >>>" + Environment.NewLine;
-                            _CursorPosition = rchTxtClientPub.SelectionStart;
-                            lstClientList.Items.RemoveAt(lstClientList.Items.Count - 1);
+                            RichTextClientPub.SelectionColor = Color.Black;
+                            RichTextClientPub.SelectedText = @"<<< " + ClientConnection.ClientName + @" has joined the room >>>" + Environment.NewLine;
+                            _CursorPosition = RichTextClientPub.SelectionStart;
+                            ListBoxClientList.Items.RemoveAt(ListBoxClientList.Items.Count - 1);
                             //Add all the connected clients to ClientChatProp list
-                            foreach (var t in lstClientList.Items) {
+                            foreach (var t in ListBoxClientList.Items) {
                                 _ListClientsColor.Add(new ChatLines(t.ToString()));
                             }
                         })));
@@ -106,35 +106,34 @@ namespace MeowChatClient {
 
                     case Command.Logout:
                         Invoke(new Action((delegate{
-                            lstClientList.Items.Remove(msgReceived.ClientName);
+                            ListBoxClientList.Items.Remove(msgReceived.ClientName);
                             for (var i = 0; i < _ListClientsColor.Count; i++) {
                                 if (_ListClientsColor[i].Name == msgReceived.ClientName) {
                                     _ListClientsColor.Remove(_ListClientsColor[i]);
                                     PrivateReceivedMessageClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 2);
                                 }
                             }
-                            rchTxtClientPub.SelectionStart = _CursorPosition;
-                            rchTxtClientPub.SelectionColor = Color.Black;
-                            rchTxtClientPub.SelectionBackColor = Color.Tomato;
-                            rchTxtClientPub.SelectedText = ChatMethodsStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
-                            _CursorPosition = rchTxtClientPub.SelectionStart;
+                            RichTextClientPub.SelectionStart = _CursorPosition;
+                            RichTextClientPub.SelectionColor = Color.Black;
+                            RichTextClientPub.SelectionBackColor = Color.Tomato;
+                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
+                            _CursorPosition = RichTextClientPub.SelectionStart;
                         })));
                         break;
 
-
                     case Command.NameChange:
                         Invoke(new Action((delegate{
-                            var index = lstClientList.FindString(msgReceived.ClientName);
-                            lstClientList.Items[index] = msgReceived.Message;
+                            var index = ListBoxClientList.FindString(msgReceived.ClientName);
+                            ListBoxClientList.Items[index] = msgReceived.Message;
 
                             foreach (var clientColor in _ListClientsColor.Where(clientColor => clientColor.Name == msgReceived.ClientName)) {
                                 clientColor.Name = msgReceived.Message;
                             }
-                            rchTxtClientPub.SelectionStart = _CursorPosition;
-                            rchTxtClientPub.SelectionColor = Color.Black;
-                            rchTxtClientPub.SelectionBackColor = Color.CornflowerBlue;
-                            rchTxtClientPub.SelectedText = ChatMethodsStatic.Time() + " " + @"<<< " + msgReceived.ClientName + @" have changed nickname to " + msgReceived.Message + @" >>>" + Environment.NewLine;
-                            _CursorPosition = rchTxtClientPub.SelectionStart;
+                            RichTextClientPub.SelectionStart = _CursorPosition;
+                            RichTextClientPub.SelectionColor = Color.Black;
+                            RichTextClientPub.SelectionBackColor = Color.CornflowerBlue;
+                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + @"<<< " + msgReceived.ClientName + @" have changed nickname to " + msgReceived.Message + @" >>>" + Environment.NewLine;
+                            _CursorPosition = RichTextClientPub.SelectionStart;
                             if (ClientConnection.ClientName == msgReceived.ClientName) {
                                 Text = @"Chat: " + msgReceived.Message;
                                 ClientConnection.ClientName = msgReceived.Message;
@@ -150,16 +149,16 @@ namespace MeowChatClient {
 
                     case Command.Message:
                         Invoke(new Action((delegate{
-                            rchTxtClientPub.SelectionStart = _CursorPosition;
+                            RichTextClientPub.SelectionStart = _CursorPosition;
                             var color = ColorTranslator.FromHtml(msgReceived.Color);
-                            rchTxtClientPub.SelectedText = ChatMethodsStatic.Time() + " ";
-                            var selectionStart = rchTxtClientPub.SelectionStart;
-                            rchTxtClientPub.SelectionColor = color;
-                            rchTxtClientPub.SelectedText = msgReceived.ClientName + ": " + msgReceived.Message /*+ Environment.NewLine*/;
-                            rchTxtClientPub.SelectedText = Environment.NewLine;
-                            _CursorPosition = rchTxtClientPub.SelectionStart;
+                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " ";
+                            var selectionStart = RichTextClientPub.SelectionStart;
+                            RichTextClientPub.SelectionColor = color;
+                            RichTextClientPub.SelectedText = msgReceived.ClientName + ": " + msgReceived.Message /*+ Environment.NewLine*/;
+                            RichTextClientPub.SelectedText = Environment.NewLine;
+                            _CursorPosition = RichTextClientPub.SelectionStart;
                             foreach (var clientColor in _ListClientsColor.Where(clientColor => clientColor.Name == msgReceived.ClientName)) {
-                                int[] selectionArr = {selectionStart, rchTxtClientPub.TextLength - selectionStart};
+                                int[] selectionArr = {selectionStart, RichTextClientPub.TextLength - selectionStart};
                                 clientColor.Messages.Add(selectionArr);
                             }
                         })));
@@ -169,8 +168,8 @@ namespace MeowChatClient {
                         Invoke(new Action((delegate{
                             var newColor = ColorTranslator.FromHtml(msgReceived.Color);
                             foreach (var selectedText in _ListClientsColor.Where(clientColor => clientColor.Name == msgReceived.ClientName).SelectMany(clientColor => clientColor.Messages)) {
-                                rchTxtClientPub.Select(selectedText[0], selectedText[1]);
-                                rchTxtClientPub.SelectionColor = newColor;
+                                RichTextClientPub.Select(selectedText[0], selectedText[1]);
+                                RichTextClientPub.SelectionColor = newColor;
                             }
                         })));
                         break;
@@ -196,17 +195,17 @@ namespace MeowChatClient {
 
                     case Command.ServerMessage:
                         Invoke(new Action((delegate{
-                            rchTxtClientPub.SelectionStart = _CursorPosition;
-                            rchTxtClientPub.SelectionColor = Color.Black;
-                            rchTxtClientPub.SelectionBackColor = Color.MediumPurple;
-                            rchTxtClientPub.SelectedText = ChatMethodsStatic.Time() + " " + "Server Message: " + msgReceived.Message + Environment.NewLine;
-                            _CursorPosition = rchTxtClientPub.SelectionStart;
+                            RichTextClientPub.SelectionStart = _CursorPosition;
+                            RichTextClientPub.SelectionColor = Color.Black;
+                            RichTextClientPub.SelectionBackColor = Color.MediumPurple;
+                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + "Server Message: " + msgReceived.Message + Environment.NewLine;
+                            _CursorPosition = RichTextClientPub.SelectionStart;
                         })));
                         break;
                 }
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Chat: 4" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> OnReceive", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -216,14 +215,14 @@ namespace MeowChatClient {
                 ClientConnection.Socket.EndSend(ar);
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message + @" => OnReceive", @"Chat" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> OnSend", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         //Public Chat Send button
-        private void btnSend_Click(object sender, EventArgs e) {
+        private void BtnSend_Click(object sender, EventArgs e) {
             try {
-                if (txtBxPubMsg.Text.Length <= 0) {
+                if (TextBoxPubMsg.Text.Length <= 0) {
                     return;
                 }
 
@@ -231,15 +230,15 @@ namespace MeowChatClient {
                     Command = Command.Message,
                     ClientName = ClientConnection.ClientName,
                     Color = ClientConnection.Color,
-                    Message = txtBxPubMsg.Text
+                    Message = TextBoxPubMsg.Text
                 };
                 var msgToSendByte = msgToSend.ToByte();
                 ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
-                //reset the txtBxPubMsg
-                txtBxPubMsg.Text = null;
+                //reset the TextBoxPubMsg
+                TextBoxPubMsg.Text = null;
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> BtnSend_Click", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -251,7 +250,7 @@ namespace MeowChatClient {
             ClientConnection.Connect(ClientConnection.Address, ClientConnection.Port, ClientConnection.ClientName);
             Thread.Sleep(5);
             FrmChat_Load(this, null);
-            btnPubSnd.Enabled = true;
+            BtnPubSnd.Enabled = true;
         }
 
         //File => Disconnect
@@ -264,22 +263,22 @@ namespace MeowChatClient {
             }
             ClientConnection.Disconnect();
             Thread.Sleep(50);
-            btnPubSnd.Enabled = false;
+            BtnPubSnd.Enabled = false;
             Text = @"Chat: " + ClientConnection.ClientName + @"[Disconnected]";
-            rchTxtClientPub.SelectionColor = Color.Black;
-            rchTxtClientPub.SelectionBackColor = Color.Crimson;
-            rchTxtClientPub.SelectedText = @"You are disonnected now " + Environment.NewLine;
-            lstClientList.Items.Clear();
+            RichTextClientPub.SelectionColor = Color.Black;
+            RichTextClientPub.SelectionBackColor = Color.Crimson;
+            RichTextClientPub.SelectedText = @"You are disonnected now " + Environment.NewLine;
+            ListBoxClientList.Items.Clear();
             _ListClientsColor.Clear();
         }
 
         //File => Exit
-        private void ClickexitToolStripMenuItem(object sender, EventArgs e) {
+        private void ClickExitToolStripMenuItem(object sender, EventArgs e) {
             Close();
         }
 
         //Chat => Change Name
-        private void changeNameToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void ChangeNameToolStripMenuItem_Click(object sender, EventArgs e) {
             try {
                 if (!ClientConnection.Status) {
                     return;
@@ -289,7 +288,7 @@ namespace MeowChatClient {
                     if (changeName.ShowDialog() != DialogResult.OK) {
                         return;
                     }
-                    if (lstClientList.Items.Cast <object>().Any(item => changeName.NameNew == item.ToString())) {
+                    if (ListBoxClientList.Items.Cast <object>().Any(item => changeName.NameNew == item.ToString())) {
                         MessageBox.Show(@"The name " + changeName.NameNew + @"already taken", @"Chat: 5" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
@@ -303,13 +302,13 @@ namespace MeowChatClient {
                 }
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Chat: 5" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> ChangeNameToolStripMenuItem_Click", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         //Chat => Change color
-        private void changeColorToolStripMenuItem_Click(object sender, EventArgs e) {
-            btnColorPick_Click(this, null);
+        private void ChangeColorToolStripMenuItem_Click(object sender, EventArgs e) {
+            BtnColorPick_Click(this, null);
         }
 
         //Closing FrmChat
@@ -329,46 +328,51 @@ namespace MeowChatClient {
         }
 
         //Color Picker
-        private void btnColorPick_Click(object sender, EventArgs e) {
+        private void BtnColorPick_Click(object sender, EventArgs e) {
             if (!ClientConnection.Status) {
                 return;
             }
-            var pickColor = colorPicker.ShowDialog();
-            if (pickColor == DialogResult.OK) {
-                var colorHex = ChatMethodsStatic.HexConverter(colorPicker.Color);
-                ClientConnection.Color = colorHex;
-                var msgToSend = new MessageStracture {
-                    Command = Command.ColorChange,
-                    ClientName = ClientConnection.ClientName,
-                    Color = colorHex
-                };
-                var msgToSendByte = msgToSend.ToByte();
-                ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+            var pickColor = ColorPicker.ShowDialog();
+            try {
+                if (pickColor == DialogResult.OK) {
+                    var colorHex = ChatMethodsStatic.HexConverter(ColorPicker.Color);
+                    ClientConnection.Color = colorHex;
+                    var msgToSend = new MessageStracture {
+                        Command = Command.ColorChange,
+                        ClientName = ClientConnection.ClientName,
+                        Color = colorHex
+                    };
+                    var msgToSendByte = msgToSend.ToByte();
+                    ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + @" -> BtnColorPick_Click", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         //Automaticlaly scrolldown rchTxtPubChat
-        private void RchTxtChatBoxText_Changed(object sender, EventArgs e) {
-            rchTxtClientPub.SelectionStart = rchTxtClientPub.Text.Length;
-            rchTxtClientPub.ScrollToCaret();
+        private void RichTextChatBoxText_Changed(object sender, EventArgs e) {
+            RichTextClientPub.SelectionStart = RichTextClientPub.Text.Length;
+            RichTextClientPub.ScrollToCaret();
         }
 
         //List double click to start a new private chat
-        private void lstClientList_DoubleClick(object sender, EventArgs e) {
+        private void ListBoxClientList_DoubleClick(object sender, EventArgs e) {
             try {
-                if (lstClientList.SelectedItem.ToString() == ClientConnection.ClientName) {
+                if (ListBoxClientList.SelectedItem.ToString() == ClientConnection.ClientName) {
                     MessageBox.Show(@"You can't start a private chat with yourself", @"Chat: 5" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                if (TabControlClient.TabPages.OfType <TabPagePrivateChatClient>().Any(tabPagePrivateChat => tabPagePrivateChat.Name == lstClientList.SelectedItem.ToString())) {
+                if (TabControlClient.TabPages.OfType <TabPagePrivateChatClient>().Any(tabPagePrivateChat => tabPagePrivateChat.Name == ListBoxClientList.SelectedItem.ToString())) {
                     MessageBox.Show(@"That private chat already opned", @"Chat: 5" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                NewTabPagePrivateChatClient(lstClientList.SelectedItem.ToString());
+                NewTabPagePrivateChatClient(ListBoxClientList.SelectedItem.ToString());
                 var msgToSend = new MessageStracture {
                     Command = Command.PrivateStart,
                     ClientName = ClientConnection.ClientName,
-                    Private = lstClientList.SelectedItem.ToString()
+                    Private = ListBoxClientList.SelectedItem.ToString()
                 };
                 var msgToSendByte = msgToSend.ToByte();
                 ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
@@ -378,7 +382,7 @@ namespace MeowChatClient {
                 })));
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, @"Chat: 5" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message+ @" -> ListBoxClientList_DoubleClick", @"Chat: "  + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -472,7 +476,7 @@ namespace MeowChatClient {
             }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e) {
             var about = new FrmAbout();
             about.ShowDialog();
         }

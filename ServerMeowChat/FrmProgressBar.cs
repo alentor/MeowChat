@@ -22,20 +22,20 @@ namespace MeowChatServer {
             //}
 
             if (InvokeRequired) {
-                BeginInvoke(new Action(() => progressBar1.Maximum = clientList.Count - 1));
+                BeginInvoke(new Action(() => ProgressBar1.Maximum = clientList.Count - 1));
             }
             else {
-                progressBar1.Maximum = clientList.Count;
+                ProgressBar1.Maximum = clientList.Count;
             }
             if (InvokeRequired) {
-                BeginInvoke(new Action(() => progressBar1.Value = sections));
+                BeginInvoke(new Action(() => ProgressBar1.Value = sections));
             }
             else {
-                progressBar1.Value = sections;
+                ProgressBar1.Value = sections;
             }
             //Invoke(new Action((delegate{
-            //    progressBar1.Maximum = clientList.Count;
-            //    progressBar1.Value = sections;
+            //    ProgressBar1.Maximum = clientList.Count;
+            //    ProgressBar1.Value = sections;
             //})));
         }
     }

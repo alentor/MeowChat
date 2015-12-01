@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MeowChatClient
+namespace LibraryMeowChat
 {
     public static class ChatMethodsStatic
     {
