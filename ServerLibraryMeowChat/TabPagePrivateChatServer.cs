@@ -2,14 +2,17 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MeowChatServerLibrary {
-    public class TabPagePrivateChatServer: TabPage {
+namespace MeowChatServerLibrary
+{
+    public class TabPagePrivateChatServer : TabPage
+    {
         private int _CursorPosition = 0;
         private readonly RichTextBox _RchTxtPrivChtServer = new RichTextBox();
         public string TabName0, TabName1;
 
         //Constactor
-        public TabPagePrivateChatServer(string tabName0, string tabName1) {
+        public TabPagePrivateChatServer(string tabName0, string tabName1)
+        {
             TabName0 = tabName0;
             TabName1 = tabName1;
             // RchTxtPrivChat
@@ -36,19 +39,25 @@ namespace MeowChatServerLibrary {
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageServerEvent, which being fired in FrmServer
-        public void TabPagePrivateReceiveMessageServer(string tabName0, string tabName1, string message, int caseId) {
-            Invoke(new Action((delegate{
+        public void TabPagePrivateReceiveMessageServer(string tabName0, string tabName1, string message, int caseId)
+        {
+            Invoke(new Action((delegate
+            {
                 _RchTxtPrivChtServer.SelectionStart = _CursorPosition;
 
-                if (tabName0 == TabName0 || tabName0 == TabName1 && tabName1 == TabName0 || tabName1 == TabName1) {
-                    switch (caseId) {
+                if (tabName0 == TabName0 || tabName0 == TabName1 && tabName1 == TabName0 || tabName1 == TabName1)
+                {
+                    switch (caseId)
+                    {
                         case 0:
-                            if (tabName0 == TabName0) {
+                            if (tabName0 == TabName0)
+                            {
                                 _RchTxtPrivChtServer.SelectionColor = Color.Blue;
                                 _RchTxtPrivChtServer.SelectedText = TabName0 + @": " + message + Environment.NewLine;
                                 _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
                             }
-                            else {
+                            else
+                            {
                                 _RchTxtPrivChtServer.SelectionColor = Color.Red;
                                 _RchTxtPrivChtServer.SelectedText = TabName1 + @": " + message + Environment.NewLine;
                                 _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
@@ -68,7 +77,8 @@ namespace MeowChatServerLibrary {
                             break;
                     }
                 }
-                if (caseId == 3) {
+                if (caseId == 3)
+                {
                     _RchTxtPrivChtServer.SelectionBackColor = Color.LightGreen;
                     _RchTxtPrivChtServer.SelectedText = TabName0 + " have resumed the chat" + Environment.NewLine;
                     _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
@@ -76,7 +86,8 @@ namespace MeowChatServerLibrary {
             })));
         }
 
-        private void _RchTxtPrivChtServer_TextChanged(object sender, EventArgs e) {
+        private void _RchTxtPrivChtServer_TextChanged(object sender, EventArgs e)
+        {
             _RchTxtPrivChtServer.SelectionStart = _RchTxtPrivChtServer.Text.Length;
             _RchTxtPrivChtServer.ScrollToCaret();
         }

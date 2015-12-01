@@ -1,4 +1,4 @@
-﻿using CommonLibrary;
+﻿using LibraryMeowChat;
 using MeowChatClientLibrary;
 using System;
 using System.Collections.Generic;
@@ -14,10 +14,10 @@ namespace MeowChatClient {
         //List which stores all the colors of the Clients current connected
         private readonly List <ChatLines> _ListClientsColor = new List <ChatLines>();
 
-        private int _CursorPosition;
-
         //Max byte size to be recieved and sent
         private byte[] _ByteMessage = new byte[1024];
+
+        private int _CursorPosition;
 
         public FrmChat() {
             InitializeComponent();
@@ -54,22 +54,22 @@ namespace MeowChatClient {
                 }
                 //Convert message from bytes to messageStracure class and store it in msgReceieved
                 var msgReceived = new MessageStracture(_ByteMessage);
-                if (Command.Disconnect == msgReceived.Command) {
-                    ClientConnection.Disconnect();
-                    Invoke(new Action((delegate{
-                        btnPubSnd.Enabled = false;
-                        Text = @"Chat: " + ClientConnection.ClientName + @"[Disconnected]";
-                        rchTxtClientPub.SelectionColor = Color.Black;
-                        rchTxtClientPub.SelectionBackColor = Color.Crimson;
-                        rchTxtClientPub.SelectedText = @"Server was shutdown" + Environment.NewLine;
-                        lstClientList.Items.Clear();
-                        _ListClientsColor.Clear();
-                    })));
-                }
                 //Set new bytes and start recieving again
                 _ByteMessage = new byte[1024];
+                if (msgReceived.Command == Command.Disconnect) {
+                    Invoke(new Action((delegate{
+                        ClientConnection.ShutDown();
+                        btnPubSnd.Enabled = false;
+                        lstClientList.Items.Clear();
+                        rchTxtClientPub.SelectionStart = _CursorPosition;
+                        rchTxtClientPub.SelectionColor = Color.Black;
+                        rchTxtClientPub.SelectionBackColor = Color.Tomato;
+                        rchTxtClientPub.SelectedText = ChatMethodsStatic.Time() + " Disconnected from the server" + Environment.NewLine;
+                        _CursorPosition = rchTxtClientPub.SelectionStart;
+                    })));
+                    return;
+                }
                 ClientConnection.Socket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, null);
-
                 //Case switch statment message stracture
                 switch (msgReceived.Command) {
                     case Command.Login:
@@ -121,6 +121,7 @@ namespace MeowChatClient {
                         })));
                         break;
 
+
                     case Command.NameChange:
                         Invoke(new Action((delegate{
                             var index = lstClientList.FindString(msgReceived.ClientName);
@@ -171,15 +172,6 @@ namespace MeowChatClient {
                                 rchTxtClientPub.Select(selectedText[0], selectedText[1]);
                                 rchTxtClientPub.SelectionColor = newColor;
                             }
-                        })));
-                        break;
-
-                    case Command.Disconnect:
-                        Invoke(new Action((delegate{
-                            ClientConnection.Disconnect();
-                            MessageBox.Show(@"The server went down", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            btnPubSnd.Enabled = false;
-                            lstClientList.Items.Clear();
                         })));
                         break;
 
@@ -481,7 +473,7 @@ namespace MeowChatClient {
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
-            FrmAbout about = new FrmAbout();
+            var about = new FrmAbout();
             about.ShowDialog();
         }
     }

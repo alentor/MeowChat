@@ -1,4 +1,4 @@
-﻿namespace CommonLibrary
+﻿namespace LibraryMeowChat
 {
     //These are the commands which are being exchanged between the server and client
     public enum Command

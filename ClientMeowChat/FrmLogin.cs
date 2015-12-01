@@ -1,5 +1,4 @@
-﻿using CommonLibrary;
-using MeowChatClientLibrary;
+﻿using MeowChatClientLibrary;
 using System;
 using System.Windows.Forms;
 

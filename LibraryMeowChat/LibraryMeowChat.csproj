@@ -7,8 +7,8 @@
     <ProjectGuid>{1941FEED-BAE1-4248-A9E5-E7E488571D30}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CommonLibrary</RootNamespace>
-    <AssemblyName>CommonLibrary</AssemblyName>
+    <RootNamespace>LibraryMeowChat</RootNamespace>
+    <AssemblyName>LibraryMeowChat</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

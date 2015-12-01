@@ -1,4 +1,5 @@
-﻿using CommonLibrary;
+﻿using LibraryMeowChat;
+using MeowChatClient;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -78,7 +79,8 @@ namespace MeowChatClientLibrary
             try
             {
                 Status = false;
-                var msgToSend = new MessageStracture {
+                var msgToSend = new MessageStracture
+                {
                     Command = Command.Logout,
                     ClientName = ClientName
                 };
@@ -89,7 +91,29 @@ namespace MeowChatClientLibrary
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, @"Chat: 6" + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + " -> Disconnect", @"Chat: " + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //Shutdown Method
+        public static void ShutDown()
+        {
+            try
+            {
+                Status = false;
+                var msgToSend = new MessageStracture
+                {
+                    Command = Command.Disconnect,
+                    ClientName = ClientName
+                };
+                var b = msgToSend.ToByte();
+                Socket.Send(b, 0, b.Length, SocketFlags.None);
+                Socket.Shutdown(SocketShutdown.Both);
+                Socket.BeginDisconnect(true, (OnDisonnect), Socket);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + " -> Disconnect", @"Chat: " + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

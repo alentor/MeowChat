@@ -1,4 +1,7 @@
-﻿using System;
+﻿using LibraryMeowChat;
+using MeowChatClient;
+using MeowChatServerLibrary;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -7,8 +10,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
-using CommonLibrary;
-using MeowChatServerLibrary;
 
 namespace MeowChatServer {
     public partial class FrmServer: Form {
@@ -18,8 +19,8 @@ namespace MeowChatServer {
         private int _CursorPositionPub;
         private Socket _ServerSocket; //Server socket
         private TabPagePrivateChatReceiveServerHandler _TabPagePrivateChatReceiveServerEvent;
-        private bool _ListenStartedOnce = true;
-        private bool _IsRunning = true;
+        private bool _IsServerRunning = true;
+        private bool isDisconnectRunning = false;
 
         public FrmServer() {
             InitializeComponent();
@@ -31,25 +32,23 @@ namespace MeowChatServer {
                 //https://msdn.microsoft.com/en-us/library/system.windows.forms.tabpage.aspx
                 TabControlServer.TabPages[1].Show();
                 TabControlServer.TabPages[0].Show();
-                lblLocalIp.Text = GetLocalIpAddress(); //Get local IP address and display it on lblLocalIp
-                _ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                var ipAddress = IPAddress.Parse(txtBoxIpAddress.Text);
-                var ipEndPoint = new IPEndPoint(ipAddress, int.Parse(txtBoxPort.Text));
-                _ServerSocket.Bind(ipEndPoint); //Bind the socket to local endPoint
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message, @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // Button Start 
+        // Button Start
         private void btnStartSrv_Click(object sender, EventArgs e) {
             try {
-                //10 specifies the number of incoming connections that can be queued for acceptance
-                if (_ListenStartedOnce) {
-                    _ServerSocket.Listen(100); //Start listening for incoming connection
-                    _ListenStartedOnce = false;
-                }
+                lblLocalIp.Text = GetLocalIpAddress(); //Get local IP address and display it on lblLocalIp
+                _ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                var ipAddress = IPAddress.Parse(txtBoxIpAddress.Text);
+                var ipEndPoint = new IPEndPoint(ipAddress, int.Parse(txtBoxPort.Text));
+                _ServerSocket.Bind(ipEndPoint); //Bind the socket to local endPoint
+                _ServerSocket.Listen(100); //Start listening for incoming connection
+
+
                 //Start accppting incoming connection, on a succefull accept call to OnAccept method
                 _ServerSocket.BeginAccept((OnAccept), null);
                 //The inner server messages board
@@ -61,6 +60,7 @@ namespace MeowChatServer {
                 //Disbale/Enable buttons as needed
                 btnStartSrv.Enabled = false;
                 btnStopSrv.Enabled = true;
+                _IsServerRunning = true;
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> btnStartSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -70,25 +70,106 @@ namespace MeowChatServer {
         // Button stop
         private void btnStopSrv_Click(object sender, EventArgs e) {
             try {
+                if (isDisconnectRunning) {
+                    MessageBox.Show(@"A process is already running.");
+                    return;
+                }
+
+                FrmProgressBar frmProgressBarDisconnect = new FrmProgressBar();
+                //frmProgressBarDisconnect.ShowDialog();
+                //frmProgressBarDisconnect.UpdateProgressBar(_ClientList.Count, _ClientList);
+
+                // Initialize the dialog that will contain the progress bar
+
                 var msgToSend = new MessageStracture {
                     Command = Command.Disconnect
                 };
                 var msgToSendByte = msgToSend.ToByte();
-                foreach (Client client in _ClientList) {
-                    client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
-                    client.ClientSocket.Shutdown(SocketShutdown.Both);
-                    client.ClientSocket.BeginDisconnect(true, (OnDisonnect), client.ClientSocket);
-                    Thread.Sleep(100);
-                }
+
+                Thread backGroundDisconnectionThread = new Thread(new ThreadStart(() =>{
+                    // Set the flag that indicates if a process is currently running
+                    isDisconnectRunning = true;
+                    // Iterate from 0 - 99
+                    // On each iteration, pause the thread for .05 seconds, then update the dialog's progress bar
+                    //foreach (Client client in _ClientList)
+                    //{
+                    //    //{
+                    //    //    //frmProgressBarDisconnect.UpdateProgressBar(countrer, _ClientList);
+                    //    //    //client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
+                    //    //    Thread.Sleep(1000);
+
+                    //    //}
+                    //}
+                    for (int i = 0; i < _ClientList.Count; i++) {
+                        //foreach (Client client in _ClientList) {
+                        //    client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
+                        //}
+                        frmProgressBarDisconnect.UpdateProgressBar(i, _ClientList);
+                        _ClientList[i].ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, _ClientList[i].ClientSocket);
+                        //_ClientList[i].ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
+                        //Thread.Sleep(1000);
+                        //frmProgressBarDisconnect.UpdateProgressBar(i, _ClientList);
+                    }
+
+                    // Show a dialog box that confirms the process has completed
+                    Invoke(new Action((delegate {
+                        MessageBox.Show(this, @"Disconnction Complete");
+                    })));
+
+
+                    // Close the dialog if it hasn't been already
+
+                    Invoke(new Action((delegate{
+                        frmProgressBarDisconnect.Close();
+                    })));
+
+                    //if (frmProgressBarDisconnect.InvokeRequired) {
+                    //    frmProgressBarDisconnect.BeginInvoke(new Action(() => frmProgressBarDisconnect.Close()));
+                    //}
+                    //else {
+                    //    frmProgressBarDisconnect.Close();
+                    //}
+                    // Reset the flag that indicates if a process is currently running
+                    isDisconnectRunning = false;
+                }));
+
+                backGroundDisconnectionThread.Start();
+                frmProgressBarDisconnect.ShowDialog();
+
+                //var msgToSend = new MessageStracture
+                //{
+                //    Command = Command.Disconnect
+                //};
+                //var msgToSendByte = msgToSend.ToByte();
+
+                //foreach (Client client in _ClientList) {
+                //    client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
+                //    Thread.Sleep(1000);
+
+                //    //client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
+                //    //client.ClientSocket.Shutdown(SocketShutdown.Both);
+                //    //client.ClientSocket.BeginDisconnect(true, (OnDisonnect), client.ClientSocket);
+                //    //_ClientList.Remove(client);
+
+                //    //client.ClientSocket.Shutdown(SocketShutdown.Both);
+                //    //client.ClientSocket.BeginDisconnect(true, (OnDisonnect), client.ClientSocket);
+                //}
+
+                //for (int i = 0; i < _ClientList.Count; i++) {
+                //    _ClientList[i].ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, _ClientList[i].ClientSocket);
+                //    Thread.Sleep(1000);
+                //}
+
                 //_ServerSocket.Shutdown(SocketShutdown.Both);
                 //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
                 //_ServerSocket.Close();
                 //_ServerSocket.Shutdown(SocketShutdown.Both);
                 //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
-                MessageBox.Show(@"The server went down", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnStopSrv.Enabled = false;
                 btnStartSrv.Enabled = true;
-                _IsRunning = false;
+                _IsServerRunning = false;
+                _ServerSocket.Close();
+                _ClientList.Clear();
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> btnStopSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -96,7 +177,7 @@ namespace MeowChatServer {
         }
 
         private void OnAccept(IAsyncResult ar) {
-            if (!_IsRunning) {
+            if (!_IsServerRunning) {
                 return;
             }
             try {
@@ -150,6 +231,7 @@ namespace MeowChatServer {
                         //adding the current handedled established connection(client) to UI clientlist
                         var remoteIpEndPoint = receivedClientSocket.RemoteEndPoint as IPEndPoint;
                         var row = new ListViewItem(new[] {msgReceived.ClientName, remoteIpEndPoint.Address.ToString(), DateTime.Now.ToString()});
+                        row.Name = msgReceived.ClientName;
                         Invoke(new Action((delegate{
                             listViewClients.Items.Add(row);
                             //set the message which will be send (broadcasted) to all the established connections(clients)
@@ -168,20 +250,46 @@ namespace MeowChatServer {
                         //When the logout command received the server will remove the established connection(client) which
                         //have sent the command. The server will find the established connection(client) by the clientname
                         //close the connection, and remove the client form the UI clientList
-                        var clientIndexLogout = 0;
-                        foreach (var client in _ClientList) {
-                            if (client.ClientSocket == receivedClientSocket) {
-                                Invoke(new Action((delegate{
-                                    listViewClients.Items.RemoveAt(clientIndexLogout);
-                                })));
-                                _ClientList.RemoveAt(clientIndexLogout);
-                                break;
-                            }
-                            ++clientIndexLogout;
+                        foreach (var client in _ClientList.Where(client => client.ClientSocket == receivedClientSocket)) {
+                            Invoke(new Action((delegate{
+                                listViewClients.Items.RemoveByKey(client.ClientName);
+                            })));
+                            _ClientList.Remove(client);
+                            break;
                         }
+
                         receivedClientSocket.Shutdown(SocketShutdown.Both);
                         receivedClientSocket.BeginDisconnect(true, (OnDisonnect), receivedClientSocket);
                         msgToSend.Message = "<<< " + msgReceived.ClientName + " has just left the chat >>>";
+                        Invoke(new Action((delegate{
+                            rchTxtServerConn.SelectionStart = _CursorPositionConn;
+                            rchTxtServerConn.SelectionBackColor = Color.Tomato;
+                            rchTxtServerConn.SelectionColor = Color.Black;
+                            rchTxtServerConn.SelectedText += msgToSend.Message + " " + DateTime.Now + Environment.NewLine;
+                            _CursorPositionConn = rchTxtServerConn.SelectionStart;
+                            ChatMethodsStatic.FormatItemSize(TabControlServer);
+                            _TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 2);
+                        })));
+                        break;
+
+                    case Command.Disconnect:
+                        //When the logout command received the server will remove the established connection(client) which
+                        //have sent the command. The server will find the established connection(client) by the clientname
+                        //close the connection, and remove the client form the UI clientList
+                        foreach (var client in _ClientList.Where(client => client.ClientSocket == receivedClientSocket)) {
+                            Invoke(new Action((delegate{
+                                listViewClients.Items.RemoveByKey(client.ClientName);
+                            })));
+                            //client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
+                            //_ClientList.Remove(client);
+                            break;
+                        }
+
+                        foreach (var client in _ClientList) {
+                            receivedClientSocket.Shutdown(SocketShutdown.Both);
+                        }
+                        receivedClientSocket.BeginDisconnect(true, (OnDisonnect), receivedClientSocket);
+                        msgToSend.Message = "<<< " + msgReceived.ClientName + " Disconnection preformed successfully  >>>";
                         Invoke(new Action((delegate{
                             rchTxtServerConn.SelectionStart = _CursorPositionConn;
                             rchTxtServerConn.SelectionBackColor = Color.Tomato;
@@ -287,7 +395,6 @@ namespace MeowChatServer {
                                 client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
                             }
                             _TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 3);
-
                             break;
                         }
                         Invoke(new Action((delegate{
@@ -327,7 +434,7 @@ namespace MeowChatServer {
                         break;
                 }
                 //Send message to clients
-                if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStart && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStop) {
+                if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStart && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStop && msgToSend.Command != Command.Disconnect) {
                     //Convert msgToSend to a bytearray representative, this needed to send(broadcat) the message over the TCP protocol
                     messageBytes = msgToSend.ToByte();
                     foreach (var client in _ClientList) {
@@ -338,7 +445,7 @@ namespace MeowChatServer {
                     }
                 }
                 //Continue listneing to receivedClientSocket established connection(client)
-                if (msgReceived.Command != Command.Logout) {
+                if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect) {
                     receivedClientSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
                 }
             }

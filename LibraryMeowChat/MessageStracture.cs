@@ -1,8 +1,9 @@
-﻿using System;
+﻿using LibraryMeowChat;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonLibrary
+namespace MeowChatClient
 {
     public class MessageStracture
     {
