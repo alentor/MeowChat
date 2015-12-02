@@ -85,7 +85,7 @@ namespace MeowChatClientLibrary {
                     case 1:
                         if (tabName == Name) {
                             _RichTextPrivChtClient.SelectionBackColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = tabName + ChatMethodsStatic.Time() + " " + " has closed the chat" + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + tabName + " has closed the chat" + Environment.NewLine;
                             _BtnPrvSnd.Enabled = false;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
@@ -94,7 +94,7 @@ namespace MeowChatClientLibrary {
                     case 2:
                         if (tabName == Name) {
                             _RichTextPrivChtClient.SelectionBackColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + "Chat have been disconnected" + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + tabName + "Chat have been disconnected" + Environment.NewLine;
                             _BtnPrvSnd.Enabled = false;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
@@ -104,7 +104,7 @@ namespace MeowChatClientLibrary {
                         _BtnPrvSnd.Enabled = true;
                         _RichTextPrivChtClient.SelectionColor = Color.Black;
                         _RichTextPrivChtClient.SelectionBackColor = Color.LightGreen;
-                        _RichTextPrivChtClient.SelectedText = tabName + " " + " has resumed the chat" + Environment.NewLine;
+                        _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + tabName + " has resumed the chat" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
                 }

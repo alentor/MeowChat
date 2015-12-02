@@ -415,9 +415,9 @@ namespace MeowChatClient {
                 //Not active tab
                 if (i != TabControlClient.SelectedIndex) {
                     //Rectangle r = TabControlClient.TabPages[i].Text;
-                    //using (Brush brush = new SolidBrush(Color.Yellow)) {
-                    //    e.Graphics.FillRectangle(brush, tabXarea.X + tabXarea.Width - 18, 6, 16, 16);
-                    //}
+                    using (Brush brush = new SolidBrush(Color.OrangeRed)) {
+                        e.Graphics.FillRectangle(brush, tabRect.Right - 23, 6, 16, 16);
+                    }
                     using (var pen = new Pen(Color.Black, 2)) {
                         e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                         e.Graphics.DrawLine(pen, tabRect.Right - 9, 8, tabRect.Right - 21, 20);
@@ -433,10 +433,10 @@ namespace MeowChatClient {
                 else {
                     //Rectangle r = TabControlClient.TabPages[i].Text;
                     //RectangleF tabXarea = new Rectangle(tabRect.Right - TabControlClient.TabPages[i].Text.Length, tabRect.Top, 9, 7);
-                    //using (Brush brush = new SolidBrush(Color.Purple)) {
-                    //    e.Graphics.FillRectangle(brush, tabXarea.X + tabXarea.Width - 18, 6, 16, 16);
-                    //}
-                    using (var pen = new Pen(Color.Silver, 2)) {
+                    using (Brush brush = new SolidBrush(Color.Silver)) {
+                        e.Graphics.FillRectangle(brush, tabRect.Right - 23, 6, 16, 16);
+                    }
+                    using (var pen = new Pen(Color.Black, 2)) {
                         e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
                         e.Graphics.DrawLine(pen, tabRect.Right - 9, 8, tabRect.Right - 21, 20);
                         e.Graphics.DrawLine(pen, tabRect.Right - 9, 20, tabRect.Right - 21, 8);
