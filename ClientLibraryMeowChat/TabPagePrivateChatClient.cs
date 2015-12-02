@@ -4,12 +4,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using LibraryMeowChat;
 
-namespace MeowChatClientLibrary
-{
-    public class TabPagePrivateChatClient : TabPage
-    {
-        private readonly RichTextBox _RchTxtPrivChtClient = new RichTextBox();
-        private readonly TextBox _TxtBxPrvMsg = new TextBox();
+namespace MeowChatClientLibrary {
+    public class TabPagePrivateChatClient: TabPage {
+        private readonly RichTextBox _RichTextPrivChtClient = new RichTextBox();
+        private readonly TextBox _TextBoxPrvMsg = new TextBox();
         private readonly Button _BtnPrvSnd = new Button();
 
         public event TabPagePrivateChatSendClietHandler TabPagePrivateChatSendClientEvent;
@@ -17,27 +15,26 @@ namespace MeowChatClientLibrary
         private int _CursorPosition;
 
         //Constactor
-        public TabPagePrivateChatClient(string name)
-        {
+        public TabPagePrivateChatClient(string name) {
             Name = name;
             // RchTxtPrivChat
-            _RchTxtPrivChtClient.BackColor = Color.White;
-            _RchTxtPrivChtClient.ForeColor = Color.Black;
-            _RchTxtPrivChtClient.Location = new Point(3, 3);
-            _RchTxtPrivChtClient.Name = name + "RchTxtPrivChat";
-            _RchTxtPrivChtClient.ReadOnly = true;
-            _RchTxtPrivChtClient.ScrollBars = RichTextBoxScrollBars.Vertical;
-            _RchTxtPrivChtClient.Size = new Size(604, 370);
-            _RchTxtPrivChtClient.TabIndex = 12;
-            _RchTxtPrivChtClient.Text = "";
-            _RchTxtPrivChtClient.TextChanged += _RchTxtPrivChtClient_TextChanged;
+            _RichTextPrivChtClient.BackColor = Color.White;
+            _RichTextPrivChtClient.ForeColor = Color.Black;
+            _RichTextPrivChtClient.Location = new Point(3, 3);
+            _RichTextPrivChtClient.Name = name + "_RichTextPrivChat";
+            _RichTextPrivChtClient.ReadOnly = true;
+            _RichTextPrivChtClient.ScrollBars = RichTextBoxScrollBars.Vertical;
+            _RichTextPrivChtClient.Size = new Size(604, 370);
+            _RichTextPrivChtClient.TabIndex = 12;
+            _RichTextPrivChtClient.Text = "";
+            _RichTextPrivChtClient.TextChanged += RichTextPrivChtClientTextChanged;
 
             // txtBxPrvMsg
-            _TxtBxPrvMsg.Location = new Point(3, 379);
-            _TxtBxPrvMsg.Name = name + "TxtBxPrvMsg";
-            _TxtBxPrvMsg.Size = new Size(511, 20);
-            _TxtBxPrvMsg.TabIndex = 0;
-            _TxtBxPrvMsg.Select();
+            _TextBoxPrvMsg.Location = new Point(3, 379);
+            _TextBoxPrvMsg.Name = name + "TxtBxPrvMsg";
+            _TextBoxPrvMsg.Size = new Size(511, 20);
+            _TextBoxPrvMsg.TabIndex = 0;
+            _TextBoxPrvMsg.Select();
             // btnPrvSnd
             _BtnPrvSnd.Location = new Point(520, 377);
             _BtnPrvSnd.Name = name + "BtnPrvSnd";
@@ -47,8 +44,8 @@ namespace MeowChatClientLibrary
             _BtnPrvSnd.Click += BtnPrvSnd_Click;
             _BtnPrvSnd.UseVisualStyleBackColor = true;
             // TabPagePrivateChat
-            Controls.Add(_RchTxtPrivChtClient);
-            Controls.Add(_TxtBxPrvMsg);
+            Controls.Add(_RichTextPrivChtClient);
+            Controls.Add(_TextBoxPrvMsg);
             Controls.Add(_BtnPrvSnd);
             Location = new Point(4, 28);
             Name = name;
@@ -59,74 +56,64 @@ namespace MeowChatClientLibrary
         }
 
         //Button Send
-        private void BtnPrvSnd_Click(object sender, EventArgs e)
-        {
-            if (_TxtBxPrvMsg.Text.Length > 0)
-            {
-                TabPagePrivateChatSendClientEvent?.Invoke(Name, _TxtBxPrvMsg.Text);
-                _TxtBxPrvMsg.Text = "";
+        private void BtnPrvSnd_Click(object sender, EventArgs e) {
+            if (_TextBoxPrvMsg.Text.Length > 0) {
+                TabPagePrivateChatSendClientEvent?.Invoke(Name, _TextBoxPrvMsg.Text);
+                _TextBoxPrvMsg.Text = "";
             }
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageClientEvent, which being fired in FrmChat
-        public void TabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, int caseId)
-        {
-            Invoke(new Action((delegate
-            {
-                _RchTxtPrivChtClient.SelectionStart = _CursorPosition;
-                switch (caseId)
-                {
+        public void TabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, int caseId) {
+            Invoke(new Action((delegate{
+                _RichTextPrivChtClient.SelectionStart = _CursorPosition;
+                switch (caseId) {
                     case 0:
                         _BtnPrvSnd.Enabled = true;
-                        if (tabName == ClientConnection.ClientName && privateName == Name)
-                        {
-                            _RchTxtPrivChtClient.SelectionColor = Color.Blue;
-                            _RchTxtPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + ClientConnection.ClientName + @": " + message + Environment.NewLine;
-                            _CursorPosition = _RchTxtPrivChtClient.SelectionStart;
+                        if (tabName == ClientConnection.ClientName && privateName == Name) {
+                            _RichTextPrivChtClient.SelectionColor = Color.Blue;
+                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + ClientConnection.ClientName + @": " + message + Environment.NewLine;
+                            _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
-                        if (tabName == Name && privateName == ClientConnection.ClientName)
-                        {
-                            _RchTxtPrivChtClient.SelectionColor = Color.Red;
-                            _RchTxtPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + Name + @": " + message + Environment.NewLine;
-                            _CursorPosition = _RchTxtPrivChtClient.SelectionStart;
+                        if (tabName == Name && privateName == ClientConnection.ClientName) {
+                            _RichTextPrivChtClient.SelectionColor = Color.Red;
+                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + Name + @": " + message + Environment.NewLine;
+                            _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
                         break;
 
                     case 1:
-                        if (tabName == Name)
-                        {
-                            _RchTxtPrivChtClient.SelectionBackColor = Color.Red;
-                            _RchTxtPrivChtClient.SelectedText = tabName + ChatMethodsStatic.Time() + " " + " has closed the chat" + Environment.NewLine;
+                        if (tabName == Name) {
+                            _RichTextPrivChtClient.SelectionBackColor = Color.Red;
+                            _RichTextPrivChtClient.SelectedText = tabName + ChatMethodsStatic.Time() + " " + " has closed the chat" + Environment.NewLine;
                             _BtnPrvSnd.Enabled = false;
-                            _CursorPosition = _RchTxtPrivChtClient.SelectionStart;
+                            _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
                         break;
 
                     case 2:
-                        if (tabName == Name)
-                        {
-                            _RchTxtPrivChtClient.SelectionBackColor = Color.Red;
-                            _RchTxtPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + "Chat have been disconnected" + Environment.NewLine;
+                        if (tabName == Name) {
+                            _RichTextPrivChtClient.SelectionBackColor = Color.Red;
+                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + "Chat have been disconnected" + Environment.NewLine;
                             _BtnPrvSnd.Enabled = false;
-                            _CursorPosition = _RchTxtPrivChtClient.SelectionStart;
+                            _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
                         break;
 
                     case 3:
                         _BtnPrvSnd.Enabled = true;
-                        _RchTxtPrivChtClient.SelectionColor = Color.Black;
-                        _RchTxtPrivChtClient.SelectionBackColor = Color.LightGreen;
-                        _RchTxtPrivChtClient.SelectedText = tabName + " " + " has resumed the chat" + Environment.NewLine;
-                        _CursorPosition = _RchTxtPrivChtClient.SelectionStart;
+                        _RichTextPrivChtClient.SelectionColor = Color.Black;
+                        _RichTextPrivChtClient.SelectionBackColor = Color.LightGreen;
+                        _RichTextPrivChtClient.SelectedText = tabName + " " + " has resumed the chat" + Environment.NewLine;
+                        _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
                 }
             })));
         }
 
-        private void _RchTxtPrivChtClient_TextChanged(object sender, EventArgs e)
-        {
-            _RchTxtPrivChtClient.SelectionStart = _RchTxtPrivChtClient.Text.Length;
-            _RchTxtPrivChtClient.ScrollToCaret();
+        private void RichTextPrivChtClientTextChanged(object sender, EventArgs e) {
+            _RichTextPrivChtClient.SelectionStart = _RichTextPrivChtClient.Text.Length;
+            _RichTextPrivChtClient.ScrollToCaret();
         }
     }
 }

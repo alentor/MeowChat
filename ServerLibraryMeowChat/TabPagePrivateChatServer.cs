@@ -7,7 +7,7 @@ namespace MeowChatServerLibrary
     public class TabPagePrivateChatServer : TabPage
     {
         private int _CursorPosition = 0;
-        private readonly RichTextBox _RchTxtPrivChtServer = new RichTextBox();
+        private readonly RichTextBox _RichTextPrivChtServer = new RichTextBox();
         public string TabName0, TabName1;
 
         //Constactor
@@ -16,18 +16,18 @@ namespace MeowChatServerLibrary
             TabName0 = tabName0;
             TabName1 = tabName1;
             // RchTxtPrivChat
-            _RchTxtPrivChtServer.BackColor = Color.White;
-            _RchTxtPrivChtServer.ForeColor = Color.Black;
-            _RchTxtPrivChtServer.Location = new Point(0, 3);
-            _RchTxtPrivChtServer.Name = tabName0 + " - " + tabName1 + "TabPagePrivateChatServer";
-            _RchTxtPrivChtServer.ReadOnly = true;
-            _RchTxtPrivChtServer.ScrollBars = RichTextBoxScrollBars.Vertical;
-            _RchTxtPrivChtServer.Size = new Size(406, 312);
-            _RchTxtPrivChtServer.TabIndex = 12;
-            _RchTxtPrivChtServer.Text = "";
-            _RchTxtPrivChtServer.TextChanged += _RchTxtPrivChtServer_TextChanged;
+            _RichTextPrivChtServer.BackColor = Color.White;
+            _RichTextPrivChtServer.ForeColor = Color.Black;
+            _RichTextPrivChtServer.Location = new Point(0, 3);
+            _RichTextPrivChtServer.Name = tabName0 + " - " + tabName1 + "TabPagePrivateChatServer";
+            _RichTextPrivChtServer.ReadOnly = true;
+            _RichTextPrivChtServer.ScrollBars = RichTextBoxScrollBars.Vertical;
+            _RichTextPrivChtServer.Size = new Size(406, 312);
+            _RichTextPrivChtServer.TabIndex = 12;
+            _RichTextPrivChtServer.Text = "";
+            _RichTextPrivChtServer.TextChanged += RichTextPrivChtServerTextChanged;
             // TabPagePrivateChat
-            Controls.Add(_RchTxtPrivChtServer);
+            Controls.Add(_RichTextPrivChtServer);
             Location = new Point(4, 28);
             Name = TabName0 + " - " + TabName1;
             Padding = new Padding(3);
@@ -43,7 +43,7 @@ namespace MeowChatServerLibrary
         {
             Invoke(new Action((delegate
             {
-                _RchTxtPrivChtServer.SelectionStart = _CursorPosition;
+                _RichTextPrivChtServer.SelectionStart = _CursorPosition;
 
                 if (tabName0 == TabName0 || tabName0 == TabName1 && tabName1 == TabName0 || tabName1 == TabName1)
                 {
@@ -52,44 +52,44 @@ namespace MeowChatServerLibrary
                         case 0:
                             if (tabName0 == TabName0)
                             {
-                                _RchTxtPrivChtServer.SelectionColor = Color.Blue;
-                                _RchTxtPrivChtServer.SelectedText = TabName0 + @": " + message + Environment.NewLine;
-                                _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
+                                _RichTextPrivChtServer.SelectionColor = Color.Blue;
+                                _RichTextPrivChtServer.SelectedText = TabName0 + @": " + message + Environment.NewLine;
+                                _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                             }
                             else
                             {
-                                _RchTxtPrivChtServer.SelectionColor = Color.Red;
-                                _RchTxtPrivChtServer.SelectedText = TabName1 + @": " + message + Environment.NewLine;
-                                _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
+                                _RichTextPrivChtServer.SelectionColor = Color.Red;
+                                _RichTextPrivChtServer.SelectedText = TabName1 + @": " + message + Environment.NewLine;
+                                _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                             }
                             break;
 
                         case 1:
-                            _RchTxtPrivChtServer.SelectionBackColor = Color.Red;
-                            _RchTxtPrivChtServer.SelectedText = TabName0 + " have closed the chat" + Environment.NewLine;
-                            _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
+                            _RichTextPrivChtServer.SelectionBackColor = Color.Red;
+                            _RichTextPrivChtServer.SelectedText = TabName0 + " have closed the chat" + Environment.NewLine;
+                            _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                             break;
 
                         case 2:
-                            _RchTxtPrivChtServer.SelectionBackColor = Color.Red;
-                            _RchTxtPrivChtServer.SelectedText = TabName0 + " have quit" + Environment.NewLine;
-                            _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
+                            _RichTextPrivChtServer.SelectionBackColor = Color.Red;
+                            _RichTextPrivChtServer.SelectedText = TabName0 + " have quit" + Environment.NewLine;
+                            _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                             break;
                     }
                 }
                 if (caseId == 3)
                 {
-                    _RchTxtPrivChtServer.SelectionBackColor = Color.LightGreen;
-                    _RchTxtPrivChtServer.SelectedText = TabName0 + " have resumed the chat" + Environment.NewLine;
-                    _CursorPosition = _RchTxtPrivChtServer.SelectionStart;
+                    _RichTextPrivChtServer.SelectionBackColor = Color.LightGreen;
+                    _RichTextPrivChtServer.SelectedText = TabName0 + " have resumed the chat" + Environment.NewLine;
+                    _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                 }
             })));
         }
 
-        private void _RchTxtPrivChtServer_TextChanged(object sender, EventArgs e)
+        private void RichTextPrivChtServerTextChanged(object sender, EventArgs e)
         {
-            _RchTxtPrivChtServer.SelectionStart = _RchTxtPrivChtServer.Text.Length;
-            _RchTxtPrivChtServer.ScrollToCaret();
+            _RichTextPrivChtServer.SelectionStart = _RichTextPrivChtServer.Text.Length;
+            _RichTextPrivChtServer.ScrollToCaret();
         }
     }
 }

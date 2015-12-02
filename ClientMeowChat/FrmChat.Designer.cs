@@ -196,7 +196,7 @@ namespace MeowChatClient
             this.BtnColorPick.Location = new System.Drawing.Point(491, 377);
             this.BtnColorPick.Name = "BtnColorPick";
             this.BtnColorPick.Size = new System.Drawing.Size(23, 23);
-            this.BtnColorPick.TabIndex = 7;
+            this.BtnColorPick.TabIndex = 2;
             this.BtnColorPick.UseVisualStyleBackColor = true;
             this.BtnColorPick.Click += new System.EventHandler(this.BtnColorPick_Click);
             // 

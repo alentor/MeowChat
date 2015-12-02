@@ -229,7 +229,7 @@ namespace MeowChatServer
             this.BtnStopSrv.TabIndex = 18;
             this.BtnStopSrv.Text = "S&top";
             this.BtnStopSrv.UseVisualStyleBackColor = true;
-            this.BtnStopSrv.Click += new System.EventHandler(this.BtnStopSrv_Click);
+            this.BtnStopSrv.Click += new System.EventHandler(this.btnStopSrv_Click);
             // 
             // FrmServer
             // 

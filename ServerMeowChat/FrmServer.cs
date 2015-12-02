@@ -42,20 +42,19 @@ namespace MeowChatServer {
                 var ipEndPoint = new IPEndPoint(ipAddress, int.Parse(TxtBoxPort.Text));
                 _ServerSocket.Bind(ipEndPoint); //Bind the socket to local endPoint
                 _ServerSocket.Listen(100); //Start listening for incoming connection
-
-
                 //Start accppting incoming connection, on a succefull accept call to OnAccept method
                 _ServerSocket.BeginAccept((OnAccept), null);
                 //The inner server messages board
                 RichTextServerConn.SelectionStart = _CursorPositionConn;
                 RichTextServerConn.SelectionColor = Color.Black;
-                RichTextServerConn.SelectionBackColor = Color.Blue;
+                RichTextServerConn.SelectionBackColor = Color.BlueViolet;
                 RichTextServerConn.SelectedText += @"Server have started " + DateTime.Now + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
                 //Disbale/Enable buttons as needed
                 BtnStartSrv.Enabled = false;
                 BtnStopSrv.Enabled = true;
                 _IsServerRunning = true;
+                
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> BtnStartSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -63,14 +62,14 @@ namespace MeowChatServer {
         }
 
         // Button stop
-        private void BtnStopSrv_Click(object sender, EventArgs e) {
+        private void btnStopSrv_Click(object sender, EventArgs e) {
             try {
                 if (isDisconnectRunning) {
                     MessageBox.Show(@"A process is already running.");
                     return;
                 }
 
-                FrmProgressBar frmProgressBarDisconnect = new FrmProgressBar();
+                FrmProgressBar frmProgressBarDisconnect = new FrmProgressBar(_ClientList);
                 //frmProgressBarDisconnect.ShowDialog();
                 //frmProgressBarDisconnect.UpdateProgressBar(_ClientList.Count, _ClientList);
 
@@ -99,24 +98,22 @@ namespace MeowChatServer {
                         //foreach (Client client in _ClientList) {
                         //    client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
                         //}
-                        frmProgressBarDisconnect.UpdateProgressBar(i, _ClientList);
+                        frmProgressBarDisconnect.UpdateProgressBar(i);
                         _ClientList[i].ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, _ClientList[i].ClientSocket);
                         //_ClientList[i].ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
-                        //Thread.Sleep(1000);
+                        //Necesary to make the system print out the names correctly 
+                        Thread.Sleep(150);
                         //frmProgressBarDisconnect.UpdateProgressBar(i, _ClientList);
                     }
 
-                    // Show a dialog box that confirms the process has completed
-                    Invoke(new Action((delegate{
-                        MessageBox.Show(this, @"Disconnction Complete");
-                    })));
-
 
                     // Close the dialog if it hasn't been already
-
+                    // Show a dialog box that confirms the process has completed
                     Invoke(new Action((delegate{
                         frmProgressBarDisconnect.Close();
+                        //MessageBox.Show(this, @"Disconnction Complete");
                     })));
+
 
                     //if (frmProgressBarDisconnect.InvokeRequired) {
                     //    frmProgressBarDisconnect.BeginInvoke(new Action(() => frmProgressBarDisconnect.Close()));
@@ -160,6 +157,13 @@ namespace MeowChatServer {
                 //_ServerSocket.Close();
                 //_ServerSocket.Shutdown(SocketShutdown.Both);
                 //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
+
+                RichTextServerConn.SelectionStart = _CursorPositionConn;
+                RichTextServerConn.SelectionColor = Color.Black;
+                RichTextServerConn.SelectionBackColor = Color.OrangeRed;
+                RichTextServerConn.SelectedText += @"Server have Stopped " + DateTime.Now + Environment.NewLine;
+                _CursorPositionConn = RichTextServerConn.SelectionStart;
+
                 BtnStopSrv.Enabled = false;
                 BtnStartSrv.Enabled = true;
                 _IsServerRunning = false;
@@ -167,7 +171,7 @@ namespace MeowChatServer {
                 _ClientList.Clear();
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message + @" -> BtnStopSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> btnStopSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -189,25 +193,32 @@ namespace MeowChatServer {
         }
 
         private void OnReceive(IAsyncResult ar) {
-            try {
+            if (!_IsServerRunning) {
+                return;
+            }
+            try
+            {
                 //establised connection(client), and casting it to a socket class.
                 //passing down the AsyncState information of the established connection
-                var receivedClientSocket = (Socket) ar.AsyncState;
+                var receivedClientSocket = (Socket)ar.AsyncState;
                 //Transfering the array of received bytes from the established connection(client)
                 //into an intelligent form of object MessageStracture
                 var msgReceived = new MessageStracture(_ByteMessage);
                 //Constractor for new object MessageStracture which will be sent to all establihed connections(clients)
-                var msgToSend = new MessageStracture {
+                var msgToSend = new MessageStracture
+                {
                     Command = msgReceived.Command,
                     ClientName = msgReceived.ClientName,
                     Color = msgReceived.Color
                 };
                 //Create a new byte[] to write into it msgToSend
                 byte[] messageBytes;
-                switch (msgReceived.Command) {
+                switch (msgReceived.Command)
+                {
                     case Command.Login:
                         //checks if we don't have already a user with the same Name, if we do. we random a number to add to the name
-                        foreach (var client in _ClientList.Where(clientLinq => msgReceived.ClientName == clientLinq.ClientName)) {
+                        foreach (var client in _ClientList.Where(clientLinq => msgReceived.ClientName == clientLinq.ClientName))
+                        {
                             var rnd = new Random();
                             msgReceived.ClientName = client.ClientName + rnd.Next(1, 999999);
                             msgToSend.ClientName = msgReceived.ClientName;
@@ -216,7 +227,8 @@ namespace MeowChatServer {
                         //when the Login command received the server will add the established connection(client)
                         //to the ClientList and let every other established connection(clients)
                         //know of a new established connection(cleint)
-                        var newClient = new Client {
+                        var newClient = new Client
+                        {
                             ClientSocket = receivedClientSocket,
                             ClientName = msgReceived.ClientName,
                             Color = msgReceived.Color
@@ -225,9 +237,10 @@ namespace MeowChatServer {
                         _ClientList.Add(newClient);
                         //adding the current handedled established connection(client) to UI clientlist
                         var remoteIpEndPoint = receivedClientSocket.RemoteEndPoint as IPEndPoint;
-                        var row = new ListViewItem(new[] {msgReceived.ClientName, remoteIpEndPoint.Address.ToString(), DateTime.Now.ToString()});
+                        var row = new ListViewItem(new[] { msgReceived.ClientName, remoteIpEndPoint.Address.ToString(), DateTime.Now.ToString() });
                         row.Name = msgReceived.ClientName;
-                        Invoke(new Action((delegate{
+                        Invoke(new Action((delegate
+                        {
                             ListViewClients.Items.Add(row);
                             //set the message which will be send (broadcasted) to all the established connections(clients)
                             msgToSend.Message = "<<< " + newClient.ClientName + " has joined the room at >>>";
@@ -245,8 +258,10 @@ namespace MeowChatServer {
                         //When the logout command received the server will remove the established connection(client) which
                         //have sent the command. The server will find the established connection(client) by the clientname
                         //close the connection, and remove the client form the UI clientList
-                        foreach (var client in _ClientList.Where(client => client.ClientSocket == receivedClientSocket)) {
-                            Invoke(new Action((delegate{
+                        foreach (var client in _ClientList.Where(client => client.ClientSocket == receivedClientSocket))
+                        {
+                            Invoke(new Action((delegate
+                            {
                                 ListViewClients.Items.RemoveByKey(client.ClientName);
                             })));
                             _ClientList.Remove(client);
@@ -256,7 +271,8 @@ namespace MeowChatServer {
                         receivedClientSocket.Shutdown(SocketShutdown.Both);
                         receivedClientSocket.BeginDisconnect(true, (OnDisonnect), receivedClientSocket);
                         msgToSend.Message = "<<< " + msgReceived.ClientName + " has just left the chat >>>";
-                        Invoke(new Action((delegate{
+                        Invoke(new Action((delegate
+                        {
                             RichTextServerConn.SelectionStart = _CursorPositionConn;
                             RichTextServerConn.SelectionBackColor = Color.Tomato;
                             RichTextServerConn.SelectionColor = Color.Black;
@@ -271,8 +287,10 @@ namespace MeowChatServer {
                         //When the logout command received the server will remove the established connection(client) which
                         //have sent the command. The server will find the established connection(client) by the clientname
                         //close the connection, and remove the client form the UI clientList
-                        foreach (var client in _ClientList.Where(client => client.ClientSocket == receivedClientSocket)) {
-                            Invoke(new Action((delegate{
+                        foreach (var client in _ClientList.Where(client => client.ClientSocket == receivedClientSocket))
+                        {
+                            Invoke(new Action((delegate
+                            {
                                 ListViewClients.Items.RemoveByKey(client.ClientName);
                             })));
                             //client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
@@ -280,12 +298,14 @@ namespace MeowChatServer {
                             break;
                         }
 
-                        foreach (var client in _ClientList) {
+                        foreach (var client in _ClientList)
+                        {
                             receivedClientSocket.Shutdown(SocketShutdown.Both);
                         }
                         receivedClientSocket.BeginDisconnect(true, (OnDisonnect), receivedClientSocket);
                         msgToSend.Message = "<<< " + msgReceived.ClientName + " Disconnection preformed successfully  >>>";
-                        Invoke(new Action((delegate{
+                        Invoke(new Action((delegate
+                        {
                             RichTextServerConn.SelectionStart = _CursorPositionConn;
                             RichTextServerConn.SelectionBackColor = Color.Tomato;
                             RichTextServerConn.SelectionColor = Color.Black;
@@ -302,8 +322,10 @@ namespace MeowChatServer {
                         msgToSend.Command = Command.List;
                         var lastItem = _ClientList[_ClientList.Count - 1];
                         msgToSend.ClientName = lastItem.ClientName;
-                        foreach (var client in _ClientList) {
-                            if (msgReceived.ClientName == client.ClientName) {
+                        foreach (var client in _ClientList)
+                        {
+                            if (msgReceived.ClientName == client.ClientName)
+                            {
                             }
                             //To keep things simple we use a marker to separate the user names
                             msgToSend.Message += client.ClientName + ",";
@@ -318,7 +340,8 @@ namespace MeowChatServer {
                         //Set the message that we will send(broadcasted) to established connections(clients)
                         msgToSend.Message = msgReceived.Message;
                         var color = ColorTranslator.FromHtml(msgToSend.Color);
-                        Invoke(new Action((delegate{
+                        Invoke(new Action((delegate
+                        {
                             RichTextServerPub.SelectionStart = _CursorPositionPub;
                             RichTextServerPub.SelectedText = ChatMethodsStatic.Time() + " ";
                             var selectionStart = RichTextServerPub.SelectionStart;
@@ -326,8 +349,9 @@ namespace MeowChatServer {
                             RichTextServerPub.SelectedText = msgToSend.ClientName + @" :" + msgToSend.Message;
                             RichTextServerPub.SelectedText = Environment.NewLine;
                             _CursorPositionPub = RichTextServerPub.SelectionStart;
-                            foreach (var clientColor in _ClientList.Where(clientLinq => clientLinq.ClientName == msgToSend.ClientName)) {
-                                int[] selectionArr = {selectionStart, RichTextServerPub.TextLength - selectionStart};
+                            foreach (var clientColor in _ClientList.Where(clientLinq => clientLinq.ClientName == msgToSend.ClientName))
+                            {
+                                int[] selectionArr = { selectionStart, RichTextServerPub.TextLength - selectionStart };
                                 clientColor.Messages.Add(selectionArr);
                             }
                         })));
@@ -335,10 +359,13 @@ namespace MeowChatServer {
 
                     case Command.NameChange:
                         var clientIndexNameChange = 0;
-                        foreach (var client in _ClientList) {
-                            if (client.ClientName == msgReceived.ClientName) {
+                        foreach (var client in _ClientList)
+                        {
+                            if (client.ClientName == msgReceived.ClientName)
+                            {
                                 client.ClientName = msgReceived.Message;
-                                Invoke(new Action((delegate{
+                                Invoke(new Action((delegate
+                                {
                                     ListViewClients.Items[clientIndexNameChange].Text = msgReceived.Message;
                                 })));
                                 break;
@@ -346,19 +373,23 @@ namespace MeowChatServer {
                             ++clientIndexNameChange;
                         }
                         msgToSend.Message = msgReceived.Message;
-                        Invoke(new Action((delegate{
+                        Invoke(new Action((delegate
+                        {
                             RichTextServerConn.SelectionStart = _CursorPositionConn;
                             RichTextServerConn.SelectionColor = Color.Black;
                             RichTextServerConn.SelectionBackColor = Color.CornflowerBlue;
                             RichTextServerConn.SelectedText += @"<<< " + msgToSend.ClientName + @" have changed nickname to " + msgToSend.Message + " " + DateTime.Now + @" >>>" + Environment.NewLine;
                             _CursorPositionConn = RichTextServerConn.SelectionStart;
-                            foreach (var tabPage in TabControlServer.TabPages.OfType <TabPagePrivateChatServer>()) {
-                                if (tabPage.TabName0 == msgReceived.ClientName) {
+                            foreach (var tabPage in TabControlServer.TabPages.OfType<TabPagePrivateChatServer>())
+                            {
+                                if (tabPage.TabName0 == msgReceived.ClientName)
+                                {
                                     tabPage.TabName0 = msgReceived.Message;
                                     tabPage.Text = msgReceived.Message + @" - " + tabPage.TabName1;
                                     TabControlServer.Invalidate();
                                 }
-                                if (tabPage.TabName1 == msgReceived.ClientName) {
+                                if (tabPage.TabName1 == msgReceived.ClientName)
+                                {
                                     tabPage.TabName1 = msgReceived.Message;
                                     tabPage.Text = tabPage.TabName0 + @" - " + msgReceived.Message;
                                     TabControlServer.Invalidate();
@@ -370,10 +401,13 @@ namespace MeowChatServer {
 
                     case Command.ColorChange:
                         var newColor = ColorTranslator.FromHtml(msgToSend.Color);
-                        foreach (var client in _ClientList.Where(client => client.ClientName == msgReceived.ClientName)) {
+                        foreach (var client in _ClientList.Where(client => client.ClientName == msgReceived.ClientName))
+                        {
                             client.Color = msgReceived.Color;
-                            foreach (var selectedText in client.Messages) {
-                                Invoke(new Action((delegate{
+                            foreach (var selectedText in client.Messages)
+                            {
+                                Invoke(new Action((delegate
+                                {
                                     RichTextServerPub.Select(selectedText[0], selectedText[1]);
                                     RichTextServerPub.SelectionColor = newColor;
                                 })));
@@ -383,8 +417,10 @@ namespace MeowChatServer {
                         break;
 
                     case Command.PrivateStart:
-                        if (TabControlServer.TabPages.OfType <TabPagePrivateChatServer>().Any(tabPagePrivateChatServer => tabPagePrivateChatServer.TabName0 == msgReceived.ClientName && tabPagePrivateChatServer.TabName1 == msgReceived.Private || tabPagePrivateChatServer.TabName0 == msgReceived.Private && tabPagePrivateChatServer.TabName1 == msgReceived.ClientName)) {
-                            foreach (var client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private)) {
+                        if (TabControlServer.TabPages.OfType<TabPagePrivateChatServer>().Any(tabPagePrivateChatServer => tabPagePrivateChatServer.TabName0 == msgReceived.ClientName && tabPagePrivateChatServer.TabName1 == msgReceived.Private || tabPagePrivateChatServer.TabName0 == msgReceived.Private && tabPagePrivateChatServer.TabName1 == msgReceived.ClientName))
+                        {
+                            foreach (var client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private))
+                            {
                                 msgToSend.Private = msgReceived.Private;
                                 messageBytes = msgToSend.ToByte();
                                 client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
@@ -392,23 +428,28 @@ namespace MeowChatServer {
                             _TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 3);
                             break;
                         }
-                        Invoke(new Action((delegate{
+                        Invoke(new Action((delegate
+                        {
                             NewTabPagePrivateChatServer(msgReceived.ClientName, msgReceived.Private);
                         })));
-                        foreach (var client in _ClientList) {
-                            if (client.ClientName == msgReceived.Private) {
+                        foreach (var client in _ClientList)
+                        {
+                            if (client.ClientName == msgReceived.Private)
+                            {
                                 msgToSend.Private = msgReceived.Private;
                                 messageBytes = msgToSend.ToByte();
                                 client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
                             }
                         }
-                        Invoke(new Action((delegate{
+                        Invoke(new Action((delegate
+                        {
                             ChatMethodsStatic.FormatItemSize(TabControlServer);
                         })));
                         break;
 
                     case Command.PrivateMessage:
-                        foreach (var client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private)) {
+                        foreach (var client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private))
+                        {
                             msgToSend.Private = msgReceived.Private;
                             msgToSend.Message = msgReceived.Message;
                             messageBytes = msgToSend.ToByte();
@@ -419,7 +460,8 @@ namespace MeowChatServer {
                         break;
 
                     case Command.PrivateStop:
-                        foreach (var client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private)) {
+                        foreach (var client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private))
+                        {
                             msgToSend.Private = msgReceived.Private;
                             messageBytes = msgToSend.ToByte();
                             client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
@@ -429,22 +471,27 @@ namespace MeowChatServer {
                         break;
                 }
                 //Send message to clients
-                if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStart && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStop && msgToSend.Command != Command.Disconnect) {
+                if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStart && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStop && msgToSend.Command != Command.Disconnect)
+                {
                     //Convert msgToSend to a bytearray representative, this needed to send(broadcat) the message over the TCP protocol
                     messageBytes = msgToSend.ToByte();
-                    foreach (var client in _ClientList) {
-                        if (client.ClientSocket != receivedClientSocket || msgToSend.Command != Command.Login) {
+                    foreach (var client in _ClientList)
+                    {
+                        if (client.ClientSocket != receivedClientSocket || msgToSend.Command != Command.Login)
+                        {
                             //Send(broadcast) the message to established connections(clients)
                             client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
                         }
                     }
                 }
                 //Continue listneing to receivedClientSocket established connection(client)
-                if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect) {
+                if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect)
+                {
                     receivedClientSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> OnReceive", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -480,12 +527,13 @@ namespace MeowChatServer {
 
         private static string GetLocalIpAddress() {
             var host = Dns.GetHostEntry(Dns.GetHostName());
+
             foreach (var ip in host.AddressList) {
                 if (ip.AddressFamily == AddressFamily.InterNetwork) {
                     return ip.ToString();
                 }
             }
-            throw new Exception("Local IP Address Not Found!");
+            return "Local IP Address Not Found!";
         }
 
         //TabControl DrawItem, used to the draw the X on each tab

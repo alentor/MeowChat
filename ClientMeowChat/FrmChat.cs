@@ -382,7 +382,7 @@ namespace MeowChatClient {
                 })));
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message+ @" -> ListBoxClientList_DoubleClick", @"Chat: "  + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @" -> ListBoxClientList_DoubleClick", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

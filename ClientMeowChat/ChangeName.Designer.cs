@@ -82,6 +82,8 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.txtNewName);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ChangeName";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ChangeName";
