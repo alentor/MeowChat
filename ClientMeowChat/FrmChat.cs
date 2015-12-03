@@ -14,6 +14,9 @@ namespace MeowChatClient {
         //List which stores all the colors of the Clients current connected
         private readonly List <ChatLines> _ListClientsColor = new List <ChatLines>();
 
+        //Fired when the client recieves a message with one of the following commands from the servers PrivateMessage/PrivateStart and PrivateStop
+        public event TabPagePrivateChatReceiveClientHandler PrivateReceivedMessageClientEvent;
+
         //Max byte size to be recieved and sent
         private byte[] _ByteMessage = new byte[1024];
 
@@ -24,8 +27,6 @@ namespace MeowChatClient {
             TextBoxPubMsg.Select();
         }
 
-        //Event to connect FrmChat with every TabPagePrivateChatClient in TabControlClient
-        public event TabPagePrivateChatReceiveClientHandler PrivateReceivedMessageClientEvent;
 
         //On FrmChat Load we are sending a reuqest to get the list of all the connected clients form the server
         private void FrmChat_Load(object sender, EventArgs e) {

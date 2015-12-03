@@ -36,6 +36,7 @@ namespace MeowChatClient
             this.ReconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DisconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.staticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,6 +70,7 @@ namespace MeowChatClient
             // FileToolStripMenuItem
             // 
             this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.staticsToolStripMenuItem,
             this.ReconnectToolStripMenuItem,
             this.DisconnectToolStripMenuItem,
             this.ExitToolStripMenuItem});
@@ -79,23 +81,29 @@ namespace MeowChatClient
             // ReconnectToolStripMenuItem
             // 
             this.ReconnectToolStripMenuItem.Name = "ReconnectToolStripMenuItem";
-            this.ReconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.ReconnectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ReconnectToolStripMenuItem.Text = "&Reconnect";
             this.ReconnectToolStripMenuItem.Click += new System.EventHandler(this.ReconnectToolStripMenuItem_Click);
             // 
             // DisconnectToolStripMenuItem
             // 
             this.DisconnectToolStripMenuItem.Name = "DisconnectToolStripMenuItem";
-            this.DisconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.DisconnectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.DisconnectToolStripMenuItem.Text = "&Disconnect";
             this.DisconnectToolStripMenuItem.Click += new System.EventHandler(this.DisconnectToolStripMenuItem_Click);
             // 
             // ExitToolStripMenuItem
             // 
             this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExitToolStripMenuItem.Text = "E&xit";
             this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ClickExitToolStripMenuItem);
+            // 
+            // staticsToolStripMenuItem
+            // 
+            this.staticsToolStripMenuItem.Name = "staticsToolStripMenuItem";
+            this.staticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.staticsToolStripMenuItem.Text = "&Statistics";
             // 
             // chatToolStripMenuItem
             // 
@@ -259,5 +267,6 @@ namespace MeowChatClient
         private ListBox ListBoxClientList;
         private Button BtnColorPick;
         private TabControl TabControlClient;
+        private ToolStripMenuItem staticsToolStripMenuItem;
     }
 }

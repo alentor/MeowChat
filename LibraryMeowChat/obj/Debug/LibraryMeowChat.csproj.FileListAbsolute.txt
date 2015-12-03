@@ -6,3 +6,4 @@ E:\Porjects\c#\MeowChat\LibraryMeowChat\bin\Debug\LibraryMeowChat.dll
 E:\Porjects\c#\MeowChat\LibraryMeowChat\bin\Debug\LibraryMeowChat.pdb
 E:\Porjects\c#\MeowChat\LibraryMeowChat\obj\Debug\LibraryMeowChat.dll
 E:\Porjects\c#\MeowChat\LibraryMeowChat\obj\Debug\LibraryMeowChat.pdb
+E:\Porjects\c#\MeowChat\LibraryMeowChat\obj\Debug\LibraryMeowChat.csprojResolveAssemblyReference.cache
