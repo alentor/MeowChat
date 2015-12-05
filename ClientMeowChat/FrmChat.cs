@@ -12,7 +12,7 @@ using System.Windows.Forms;
 namespace MeowChatClient {
     public partial class FrmChat: Form {
         //List which stores all the colors of the Clients current connected
-        private readonly List <ChatLines> _ListClientsColor = new List <ChatLines>();
+        private readonly List <ClientChatHistory> _ListClientsColor = new List <ClientChatHistory>();
 
         //Fired when the client recieves a message with one of the following commands from the servers PrivateMessage/PrivateStart and PrivateStop
         public event TabPagePrivateChatReceiveClientHandler PrivateReceivedMessageClientEvent;
@@ -21,6 +21,8 @@ namespace MeowChatClient {
         private byte[] _ByteMessage = new byte[1024];
 
         private int _CursorPosition;
+
+        private FrmStatistics  _FrmStatistics = new FrmStatistics();
 
         public FrmChat() {
             InitializeComponent();
@@ -81,7 +83,7 @@ namespace MeowChatClient {
                             ListBoxClientList.Items.Add(msgReceived.ClientName);
                             RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
                             if (msgReceived.ClientName != ClientConnection.ClientName) {
-                                _ListClientsColor.Add(new ChatLines(msgReceived.ClientName));
+                                _ListClientsColor.Add(new ClientChatHistory(msgReceived.ClientName));
                             }
                             _CursorPosition = RichTextClientPub.SelectionStart;
                         })));
@@ -100,7 +102,7 @@ namespace MeowChatClient {
                             ListBoxClientList.Items.RemoveAt(ListBoxClientList.Items.Count - 1);
                             //Add all the connected clients to ClientChatProp list
                             foreach (var t in ListBoxClientList.Items) {
-                                _ListClientsColor.Add(new ChatLines(t.ToString()));
+                                _ListClientsColor.Add(new ClientChatHistory(t.ToString()));
                             }
                         })));
                         break;
@@ -480,6 +482,10 @@ namespace MeowChatClient {
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e) {
             var about = new FrmAbout();
             about.ShowDialog();
+        }
+
+        private void staticsToolStripMenuItem_Click(object sender, EventArgs e) {
+            _FrmStatistics.ShowDialog();
         }
     }
 }

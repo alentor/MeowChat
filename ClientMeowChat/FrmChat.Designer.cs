@@ -33,10 +33,10 @@ namespace MeowChatClient
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmChat));
             this.MenuStripClient = new System.Windows.Forms.MenuStrip();
             this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.staticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DisconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.staticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +78,13 @@ namespace MeowChatClient
             this.FileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.FileToolStripMenuItem.Text = "&File";
             // 
+            // staticsToolStripMenuItem
+            // 
+            this.staticsToolStripMenuItem.Name = "staticsToolStripMenuItem";
+            this.staticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.staticsToolStripMenuItem.Text = "&Statistics";
+            this.staticsToolStripMenuItem.Click += new System.EventHandler(this.staticsToolStripMenuItem_Click);
+            // 
             // ReconnectToolStripMenuItem
             // 
             this.ReconnectToolStripMenuItem.Name = "ReconnectToolStripMenuItem";
@@ -98,12 +105,6 @@ namespace MeowChatClient
             this.ExitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExitToolStripMenuItem.Text = "E&xit";
             this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ClickExitToolStripMenuItem);
-            // 
-            // staticsToolStripMenuItem
-            // 
-            this.staticsToolStripMenuItem.Name = "staticsToolStripMenuItem";
-            this.staticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.staticsToolStripMenuItem.Text = "&Statistics";
             // 
             // chatToolStripMenuItem
             // 

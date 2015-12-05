@@ -20,7 +20,7 @@ namespace MeowChatServer {
         private Socket _ServerSocket; //Server socket
         private TabPagePrivateChatReceiveServerHandler _TabPagePrivateChatReceiveServerEvent;
         private bool _IsServerRunning = true;
-        private bool isDisconnectRunning = false;
+        private bool _IsDisconnectRunning;
 
         public FrmServer() {
             InitializeComponent();
@@ -63,7 +63,7 @@ namespace MeowChatServer {
         // Button stop
         private void btnStopSrv_Click(object sender, EventArgs e) {
             try {
-                if (isDisconnectRunning) {
+                if (_IsDisconnectRunning) {
                     MessageBox.Show(@"A process is already running.");
                     return;
                 }
@@ -81,7 +81,7 @@ namespace MeowChatServer {
 
                 Thread backGroundDisconnectionThread = new Thread(new ThreadStart(() =>{
                     // Set the flag that indicates if a process is currently running
-                    isDisconnectRunning = true;
+                    _IsDisconnectRunning = true;
                     // Iterate from 0 - 99
                     // On each iteration, pause the thread for .05 seconds, then update the dialog's progress bar
                     //foreach (Client client in _ClientList)
@@ -100,8 +100,8 @@ namespace MeowChatServer {
                         frmProgressBarDisconnect.UpdateProgressBar(i);
                         _ClientList[i].ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, _ClientList[i].ClientSocket);
                         //_ClientList[i].ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
-                        //Necesary to make the system print out the names correctly 
-                        Thread.Sleep(150);
+                        //Not necessary but in place to only make it "feel" like the clients are actually being disconencted instead split second disconnect
+                        Thread.Sleep(250);
                         //frmProgressBarDisconnect.UpdateProgressBar(i, _ClientList);
                     }
 
@@ -121,7 +121,7 @@ namespace MeowChatServer {
                     //    frmProgressBarDisconnect.Close();
                     //}
                     // Reset the flag that indicates if a process is currently running
-                    isDisconnectRunning = false;
+                    _IsDisconnectRunning = false;
                 }));
 
                 backGroundDisconnectionThread.Start();

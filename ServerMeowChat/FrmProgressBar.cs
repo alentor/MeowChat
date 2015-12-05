@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MeowChatServerLibrary;
@@ -24,29 +25,17 @@ namespace MeowChatServer {
 
 
         public void UpdateProgressBar(int sections) {
-            //if (sections == 0) {
-            //    return;
-            //}
-
-            //if (InvokeRequired) {
-            //    BeginInvoke(new Action(() => ProgressBar1.Maximum = _InternalClientList.Count - 1));
-            //}
-            //else {
-            //    ProgressBar1.Maximum = _InternalClientList.Count - 1;
-            //}
             if (sections < _InternalClientList.Count - 1) {
                 ++sections;
             }
             if (InvokeRequired) {
                 BeginInvoke(new Action(() => ProgressBar1.Value = sections));
+                BeginInvoke(new Action(() => LblDisconnecting.Text = @"Disconnecting " + _InternalClientList[sections].ClientName));
+                BeginInvoke(new Action(() => LblDisconnecting.Update()));
             }
             else {
                 ProgressBar1.Value = sections;
             }
-
-            //Invoke(new Action((delegate{
-            //    ProgressBar1.Value = sections;
-            //})));
         }
     }
 }

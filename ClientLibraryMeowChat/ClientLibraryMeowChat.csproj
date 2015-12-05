@@ -43,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatProp.cs" />
+    <Compile Include="ClientChatHistory.cs" />
     <Compile Include="ClientConnection.cs" />
+    <Compile Include="ClientStatistics.cs" />
     <Compile Include="EventHandlersClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TabPagePrivateChatClient.cs">
