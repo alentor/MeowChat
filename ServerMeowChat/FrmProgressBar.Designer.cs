@@ -42,7 +42,7 @@
             // LblDisconnecting
             // 
             this.LblDisconnecting.AutoSize = true;
-            this.LblDisconnecting.Location = new System.Drawing.Point(79, 17);
+            this.LblDisconnecting.Location = new System.Drawing.Point(79, 16);
             this.LblDisconnecting.Name = "LblDisconnecting";
             this.LblDisconnecting.Size = new System.Drawing.Size(101, 13);
             this.LblDisconnecting.TabIndex = 1;

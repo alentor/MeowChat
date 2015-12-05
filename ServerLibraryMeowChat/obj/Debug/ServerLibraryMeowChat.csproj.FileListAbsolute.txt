@@ -7,3 +7,5 @@ E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\bin\Debug\MeowChatServerLibrary.pd
 E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.dll
 E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\obj\Debug\MeowChatServerLibrary.pdb
 E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\obj\Debug\ServerLibraryMeowChat.csprojResolveAssemblyReference.cache
+E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\bin\Debug\LibraryMeowChat.dll
+E:\Porjects\c#\MeowChat\ServerLibraryMeowChat\bin\Debug\LibraryMeowChat.pdb

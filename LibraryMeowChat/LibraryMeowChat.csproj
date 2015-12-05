@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />
-    <Compile Include="ChatMethodsStatic.cs" />
+    <Compile Include="GenericStatic.cs" />
     <Compile Include="MessageStracture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

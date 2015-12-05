@@ -72,12 +72,12 @@ namespace MeowChatClientLibrary {
                         _BtnPrvSnd.Enabled = true;
                         if (tabName == ClientConnection.ClientName && privateName == Name) {
                             _RichTextPrivChtClient.SelectionColor = Color.Blue;
-                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + ClientConnection.ClientName + @": " + message + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + ClientConnection.ClientName + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
                         if (tabName == Name && privateName == ClientConnection.ClientName) {
                             _RichTextPrivChtClient.SelectionColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + Name + @": " + message + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + Name + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
                         break;
@@ -85,7 +85,7 @@ namespace MeowChatClientLibrary {
                     case 1:
                         if (tabName == Name) {
                             _RichTextPrivChtClient.SelectionBackColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + tabName + " has closed the chat" + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + " has closed the chat" + Environment.NewLine;
                             _BtnPrvSnd.Enabled = false;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
@@ -94,7 +94,7 @@ namespace MeowChatClientLibrary {
                     case 2:
                         if (tabName == Name) {
                             _RichTextPrivChtClient.SelectionBackColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + tabName + "Chat have been disconnected" + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + "Chat have been disconnected" + Environment.NewLine;
                             _BtnPrvSnd.Enabled = false;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
@@ -104,7 +104,7 @@ namespace MeowChatClientLibrary {
                         _BtnPrvSnd.Enabled = true;
                         _RichTextPrivChtClient.SelectionColor = Color.Black;
                         _RichTextPrivChtClient.SelectionBackColor = Color.LightGreen;
-                        _RichTextPrivChtClient.SelectedText = ChatMethodsStatic.Time() + " " + tabName + " has resumed the chat" + Environment.NewLine;
+                        _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + " has resumed the chat" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
                 }

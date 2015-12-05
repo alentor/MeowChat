@@ -67,7 +67,7 @@ namespace MeowChatClient {
                         RichTextClientPub.SelectionStart = _CursorPosition;
                         RichTextClientPub.SelectionColor = Color.Black;
                         RichTextClientPub.SelectionBackColor = Color.Tomato;
-                        RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " Disconnected from the server" + Environment.NewLine;
+                        RichTextClientPub.SelectedText = GenericStatic.Time() + " Disconnected from the server" + Environment.NewLine;
                         _CursorPosition = RichTextClientPub.SelectionStart;
                     })));
                     return;
@@ -81,7 +81,7 @@ namespace MeowChatClient {
                             RichTextClientPub.SelectionColor = Color.Black;
                             RichTextClientPub.SelectionBackColor = Color.LightGreen;
                             ListBoxClientList.Items.Add(msgReceived.ClientName);
-                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
+                            RichTextClientPub.SelectedText = GenericStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
                             if (msgReceived.ClientName != ClientConnection.ClientName) {
                                 _ListClientsColor.Add(new ClientChatHistory(msgReceived.ClientName));
                             }
@@ -119,7 +119,7 @@ namespace MeowChatClient {
                             RichTextClientPub.SelectionStart = _CursorPosition;
                             RichTextClientPub.SelectionColor = Color.Black;
                             RichTextClientPub.SelectionBackColor = Color.Tomato;
-                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
+                            RichTextClientPub.SelectedText = GenericStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
                             _CursorPosition = RichTextClientPub.SelectionStart;
                         })));
                         break;
@@ -135,7 +135,7 @@ namespace MeowChatClient {
                             RichTextClientPub.SelectionStart = _CursorPosition;
                             RichTextClientPub.SelectionColor = Color.Black;
                             RichTextClientPub.SelectionBackColor = Color.CornflowerBlue;
-                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + @"<<< " + msgReceived.ClientName + @" have changed nickname to " + msgReceived.Message + @" >>>" + Environment.NewLine;
+                            RichTextClientPub.SelectedText = GenericStatic.Time() + " " + @"<<< " + msgReceived.ClientName + @" have changed nickname to " + msgReceived.Message + @" >>>" + Environment.NewLine;
                             _CursorPosition = RichTextClientPub.SelectionStart;
                             if (ClientConnection.ClientName == msgReceived.ClientName) {
                                 Text = @"Chat: " + msgReceived.Message;
@@ -146,7 +146,7 @@ namespace MeowChatClient {
                                 tabPage.Text = msgReceived.Message;
                                 TabControlClient.Invalidate();
                             }
-                            ChatMethodsStatic.FormatItemSize(TabControlClient);
+                            GenericStatic.FormatItemSize(TabControlClient);
                         })));
                         goto case Command.ColorChange;
 
@@ -154,7 +154,7 @@ namespace MeowChatClient {
                         Invoke(new Action((delegate{
                             RichTextClientPub.SelectionStart = _CursorPosition;
                             var color = ColorTranslator.FromHtml(msgReceived.Color);
-                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " ";
+                            RichTextClientPub.SelectedText = GenericStatic.Time() + " ";
                             var selectionStart = RichTextClientPub.SelectionStart;
                             RichTextClientPub.SelectionColor = color;
                             RichTextClientPub.SelectedText = msgReceived.ClientName + ": " + msgReceived.Message /*+ Environment.NewLine*/;
@@ -184,7 +184,7 @@ namespace MeowChatClient {
                         }
                         Invoke(new Action((delegate{
                             NewTabPagePrivateChatClient(msgReceived.ClientName);
-                            ChatMethodsStatic.FormatItemSize(TabControlClient);
+                            GenericStatic.FormatItemSize(TabControlClient);
                         })));
                         break;
 
@@ -201,7 +201,7 @@ namespace MeowChatClient {
                             RichTextClientPub.SelectionStart = _CursorPosition;
                             RichTextClientPub.SelectionColor = Color.Black;
                             RichTextClientPub.SelectionBackColor = Color.MediumPurple;
-                            RichTextClientPub.SelectedText = ChatMethodsStatic.Time() + " " + "Server Message: " + msgReceived.Message + Environment.NewLine;
+                            RichTextClientPub.SelectedText = GenericStatic.Time() + " " + "Server Message: " + msgReceived.Message + Environment.NewLine;
                             _CursorPosition = RichTextClientPub.SelectionStart;
                         })));
                         break;
@@ -338,7 +338,7 @@ namespace MeowChatClient {
             var pickColor = ColorPicker.ShowDialog();
             try {
                 if (pickColor == DialogResult.OK) {
-                    var colorHex = ChatMethodsStatic.HexConverter(ColorPicker.Color);
+                    var colorHex = GenericStatic.HexConverter(ColorPicker.Color);
                     ClientConnection.Color = colorHex;
                     var msgToSend = new MessageStracture {
                         Command = Command.ColorChange,
@@ -381,7 +381,7 @@ namespace MeowChatClient {
                 ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
 
                 Invoke(new Action((delegate{
-                    ChatMethodsStatic.FormatItemSize(TabControlClient);
+                    GenericStatic.FormatItemSize(TabControlClient);
                 })));
             }
             catch (Exception ex) {

@@ -23,7 +23,6 @@ namespace MeowChatServer {
             ProgressBar1.Maximum = _InternalClientList.Count - 1;
         }
 
-
         public void UpdateProgressBar(int sections) {
             if (sections < _InternalClientList.Count - 1) {
                 ++sections;
