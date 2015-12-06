@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace LibraryMeowChat {
     public static class GenericStatic {
@@ -35,8 +36,8 @@ namespace LibraryMeowChat {
             string timeFormat = "HH:mm:ss";
             return time.ToString(timeFormat);
         }
-        public static string TimeDate()
-        {
+
+        public static string TimeDate() {
             DateTime time = DateTime.Now;
             string timeFormat = "HH:mm:ss - dd/MM/yyyy";
             return time.ToString(timeFormat);

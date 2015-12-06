@@ -17,12 +17,12 @@ namespace MeowChatClient {
         //Fired when the client recieves a message with one of the following commands from the servers PrivateMessage/PrivateStart and PrivateStop
         public event TabPagePrivateChatReceiveClientHandler PrivateReceivedMessageClientEvent;
 
+
         //Max byte size to be recieved and sent
         private byte[] _ByteMessage = new byte[1024];
-
         private int _CursorPosition;
-
-        private FrmStatistics  _FrmStatistics = new FrmStatistics();
+        private readonly FrmStatistics _FrmStatistics = new FrmStatistics();
+        //private Thread frmStatisticsThread;
 
         public FrmChat() {
             InitializeComponent();
@@ -32,6 +32,8 @@ namespace MeowChatClient {
 
         //On FrmChat Load we are sending a reuqest to get the list of all the connected clients form the server
         private void FrmChat_Load(object sender, EventArgs e) {
+            ClientStatistics.StartCountConnectedTime();
+
             try {
                 var msgToSend = new MessageStracture {
                     Command = Command.List,
@@ -463,29 +465,44 @@ namespace MeowChatClient {
                 //Rectangle tabXarea = new Rectangle(tabRect.Right - TabControlClient.TabPages[i].Text.Length, tabRect.Top, 9, 7);
                 var closeXButtonArea = new Rectangle(tabRect.Right - 23, 6, 16, 16);
                 //Rectangle closeButton = new Rectangle(tabRect.Right - 13, tabRect.Top + 6, 9, 7);
-                if (closeXButtonArea.Contains(e.Location)) {
-                    if (MessageBox.Show(@"Would you like to Close this Tab?", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
-                        var msgToSend = new MessageStracture {
-                            Command = Command.PrivateStop,
-                            ClientName = ClientConnection.ClientName,
-                            Private = TabControlClient.TabPages[i].Name
-                        };
-                        var msgToSendByte = msgToSend.ToByte();
-                        ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
-                        TabControlClient.TabPages.RemoveAt(i);
-                        break;
-                    }
+                if (!closeXButtonArea.Contains(e.Location)) {
+                    continue;
                 }
+                if (MessageBox.Show(@"Would you like to Close this Tab?", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) {
+                    continue;
+                }
+                var msgToSend = new MessageStracture {
+                    Command = Command.PrivateStop,
+                    ClientName = ClientConnection.ClientName,
+                    Private = TabControlClient.TabPages[i].Name
+                };
+                var msgToSendByte = msgToSend.ToByte();
+                ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+                TabControlClient.TabPages.RemoveAt(i);
+                break;
             }
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e) {
             var about = new FrmAbout();
-            about.ShowDialog();
+            about.Show();
         }
 
-        private void staticsToolStripMenuItem_Click(object sender, EventArgs e) {
-            _FrmStatistics.ShowDialog();
+        private void StaticsToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (_FrmStatistics == null) {
+                // Start the window in a new background thread
+                Thread disconnectingThread = new Thread(new ThreadStart(() =>{
+                    _FrmStatistics.Show();
+                }));
+                disconnectingThread.IsBackground = true;
+                disconnectingThread.Start();
+                return;
+            }
+            if (_FrmStatistics.Visible) {
+                _FrmStatistics.BringToFront();
+                return;
+            }
+            _FrmStatistics.Show();
         }
     }
 }

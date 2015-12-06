@@ -28,9 +28,15 @@ namespace MeowChatServer {
                 ++sections;
             }
             if (InvokeRequired) {
-                BeginInvoke(new Action(() => ProgressBar1.Value = sections));
-                BeginInvoke(new Action(() => LblDisconnecting.Text = @"Disconnecting " + _InternalClientList[sections].ClientName));
-                BeginInvoke(new Action(() => LblDisconnecting.Update()));
+                Invoke(new Action((delegate{
+                    ProgressBar1.Value = sections;
+                })));
+                Invoke(new Action((delegate{
+                    LblDisconnecting.Text = @"Disconnecting " + _InternalClientList[sections].ClientName + @" " + sections + @"/" + ProgressBar1.Maximum;
+                })));
+                Invoke(new Action((delegate{
+                    ProgressBar1.Update();
+                })));
             }
             else {
                 ProgressBar1.Value = sections;

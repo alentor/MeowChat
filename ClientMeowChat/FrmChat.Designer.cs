@@ -33,7 +33,7 @@ namespace MeowChatClient
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmChat));
             this.MenuStripClient = new System.Windows.Forms.MenuStrip();
             this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.staticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.StaticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DisconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,7 +70,7 @@ namespace MeowChatClient
             // FileToolStripMenuItem
             // 
             this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.staticsToolStripMenuItem,
+            this.StaticsToolStripMenuItem,
             this.ReconnectToolStripMenuItem,
             this.DisconnectToolStripMenuItem,
             this.ExitToolStripMenuItem});
@@ -78,12 +78,12 @@ namespace MeowChatClient
             this.FileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.FileToolStripMenuItem.Text = "&File";
             // 
-            // staticsToolStripMenuItem
+            // StaticsToolStripMenuItem
             // 
-            this.staticsToolStripMenuItem.Name = "staticsToolStripMenuItem";
-            this.staticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.staticsToolStripMenuItem.Text = "&Statistics";
-            this.staticsToolStripMenuItem.Click += new System.EventHandler(this.staticsToolStripMenuItem_Click);
+            this.StaticsToolStripMenuItem.Name = "StaticsToolStripMenuItem";
+            this.StaticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.StaticsToolStripMenuItem.Text = "&Statistics";
+            this.StaticsToolStripMenuItem.Click += new System.EventHandler(this.StaticsToolStripMenuItem_Click);
             // 
             // ReconnectToolStripMenuItem
             // 
@@ -268,6 +268,6 @@ namespace MeowChatClient
         private ListBox ListBoxClientList;
         private Button BtnColorPick;
         private TabControl TabControlClient;
-        private ToolStripMenuItem staticsToolStripMenuItem;
+        private ToolStripMenuItem StaticsToolStripMenuItem;
     }
 }

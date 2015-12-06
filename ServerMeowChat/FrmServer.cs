@@ -69,94 +69,28 @@ namespace MeowChatServer {
                 }
 
                 FrmProgressBar frmProgressBarDisconnect = new FrmProgressBar(_ClientList);
-                //frmProgressBarDisconnect.ShowDialog();
-                //frmProgressBarDisconnect.UpdateProgressBar(_ClientList.Count, _ClientList);
-
                 // Initialize the dialog that will contain the progress bar
-
                 var msgToSend = new MessageStracture {
                     Command = Command.Disconnect
                 };
                 var msgToSendByte = msgToSend.ToByte();
 
-                Thread backGroundDisconnectionThread = new Thread(new ThreadStart(() =>{
-                    // Set the flag that indicates if a process is currently running
+                Thread disconnectingThread = new Thread(new ThreadStart(() =>{
+                    // Sets the flag to indicates the process is running
                     _IsDisconnectRunning = true;
-                    // Iterate from 0 - 99
-                    // On each iteration, pause the thread for .05 seconds, then update the dialog's progress bar
-                    //foreach (Client client in _ClientList)
-                    //{
-                    //    //{
-                    //    //    //frmProgressBarDisconnect.UpdateProgressBar(countrer, _ClientList);
-                    //    //    //client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
-                    //    //    Thread.Sleep(1000);
-
-                    //    //}
-                    //}
                     for (int i = 0; i < _ClientList.Count; i++) {
-                        //foreach (Client client in _ClientList) {
-                        //    client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
-                        //}
                         frmProgressBarDisconnect.UpdateProgressBar(i);
                         _ClientList[i].ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, _ClientList[i].ClientSocket);
-                        //_ClientList[i].ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
-                        //Not necessary but in place to only make it "feel" like the clients are actually being disconencted instead split second disconnect
+                        // Not necessary but in place to only make it "feel" like the clients are actually being disconencted instead split second disconnect
                         Thread.Sleep(250);
-                        //frmProgressBarDisconnect.UpdateProgressBar(i, _ClientList);
                     }
-
-
-                    // Close the dialog if it hasn't been already
-                    // Show a dialog box that confirms the process has completed
                     Invoke(new Action((delegate{
                         frmProgressBarDisconnect.Close();
-                        //MessageBox.Show(this, @"Disconnction Complete");
                     })));
-
-
-                    //if (frmProgressBarDisconnect.InvokeRequired) {
-                    //    frmProgressBarDisconnect.BeginInvoke(new Action(() => frmProgressBarDisconnect.Close()));
-                    //}
-                    //else {
-                    //    frmProgressBarDisconnect.Close();
-                    //}
-                    // Reset the flag that indicates if a process is currently running
                     _IsDisconnectRunning = false;
                 }));
-
-                backGroundDisconnectionThread.Start();
+                disconnectingThread.Start();
                 frmProgressBarDisconnect.ShowDialog();
-
-                //var msgToSend = new MessageStracture
-                //{
-                //    Command = Command.Disconnect
-                //};
-                //var msgToSendByte = msgToSend.ToByte();
-
-                //foreach (Client client in _ClientList) {
-                //    client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
-                //    Thread.Sleep(1000);
-
-                //    //client.ClientSocket.Send(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None);
-                //    //client.ClientSocket.Shutdown(SocketShutdown.Both);
-                //    //client.ClientSocket.BeginDisconnect(true, (OnDisonnect), client.ClientSocket);
-                //    //_ClientList.Remove(client);
-
-                //    //client.ClientSocket.Shutdown(SocketShutdown.Both);
-                //    //client.ClientSocket.BeginDisconnect(true, (OnDisonnect), client.ClientSocket);
-                //}
-
-                //for (int i = 0; i < _ClientList.Count; i++) {
-                //    _ClientList[i].ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, _ClientList[i].ClientSocket);
-                //    Thread.Sleep(1000);
-                //}
-
-                //_ServerSocket.Shutdown(SocketShutdown.Both);
-                //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
-                //_ServerSocket.Close();
-                //_ServerSocket.Shutdown(SocketShutdown.Both);
-                //_ServerSocket.BeginDisconnect(true, (OnDisonnect), _ServerSocket);
-
                 RichTextServerConn.SelectionStart = _CursorPositionConn;
                 RichTextServerConn.SelectionColor = Color.Black;
                 RichTextServerConn.SelectionBackColor = Color.OrangeRed;
@@ -165,6 +99,7 @@ namespace MeowChatServer {
 
                 BtnStopSrv.Enabled = false;
                 BtnStartSrv.Enabled = true;
+                // Sets the flag to indicates the process has stopped
                 _IsServerRunning = false;
                 _ServerSocket.Close();
                 _ClientList.Clear();
