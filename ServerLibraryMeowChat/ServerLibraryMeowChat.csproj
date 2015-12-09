@@ -49,6 +49,12 @@
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibraryMeowChat\LibraryMeowChat.csproj">
+      <Project>{1941feed-bae1-4248-a9e5-e7e488571d30}</Project>
+      <Name>LibraryMeowChat</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

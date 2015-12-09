@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CommonLibrary
+namespace LibraryMeowChat
 {
-    public static class ChatMethodsStatic
+    public static class GenericStatic
     {
         //Convert Color class to HEX color code string
         public static string HexConverter(Color c)
@@ -35,11 +35,18 @@ namespace CommonLibrary
             tabControl.ItemSize = newTabSize;
         }
 
-        //Returns the current time in HH:mm format
+        //Returns the current time in the specified format
         public static string Time()
         {
             DateTime time = DateTime.Now;
-            string timeFormat = "HH:mm";
+            string timeFormat = "HH:mm:ss";
+            return time.ToString(timeFormat);
+        }
+
+        public static string TimeDate()
+        {
+            DateTime time = DateTime.Now;
+            string timeFormat = "HH:mm:ss - dd/MM/yyyy";
             return time.ToString(timeFormat);
         }
     }

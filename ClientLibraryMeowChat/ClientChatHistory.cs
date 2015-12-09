@@ -2,14 +2,14 @@
 
 namespace MeowChatClientLibrary
 {
-    //Stores the clients name and it's messages
-    public class ChatLines
+    //Stores the clients name and it's messages history
+    public class ClientChatHistory
     {
         public string Name;
         public readonly List<int[]> Messages = new List<int[]>();
 
         //Constarctor
-        public ChatLines(string name)
+        public ClientChatHistory(string name)
         {
             Name = name;
         }

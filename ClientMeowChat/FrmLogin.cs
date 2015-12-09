@@ -1,4 +1,4 @@
-﻿using CommonLibrary;
+﻿using LibraryMeowChat;
 using MeowChatClientLibrary;
 using System;
 using System.Windows.Forms;
@@ -74,7 +74,7 @@ namespace MeowChatClient
             DialogResult pickColor = colorPicker.ShowDialog();
             if (pickColor == DialogResult.OK)
             {
-                string color = ChatMethodsStatic.HexConverter(colorPicker.Color);
+                string color = GenericStatic.HexConverter(colorPicker.Color);
                 ClientConnection.Color = color;
                 //MessageBox.Show(str, @"Chat: " + ClientConnection.FrmPrivateName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

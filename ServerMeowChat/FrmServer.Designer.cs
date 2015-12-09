@@ -31,148 +31,149 @@ namespace MeowChatServer
         /// 
         private void InitializeComponent()
         {
-            this.btnStartSrv = new System.Windows.Forms.Button();
-            this.listViewClients = new System.Windows.Forms.ListView();
-            this.colClientName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colClientHash = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colConctDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.rchTxtServerConn = new System.Windows.Forms.RichTextBox();
-            this.lblLocalIp = new System.Windows.Forms.Label();
-            this.txtBoxIpAddress = new System.Windows.Forms.TextBox();
-            this.txtBoxPort = new System.Windows.Forms.TextBox();
-            this.lblIp = new System.Windows.Forms.Label();
-            this.lblPort = new System.Windows.Forms.Label();
-            this.btnServerSnd = new System.Windows.Forms.Button();
-            this.txtBxServer = new System.Windows.Forms.TextBox();
+            this.BtnStartSrv = new System.Windows.Forms.Button();
+            this.ListViewClients = new System.Windows.Forms.ListView();
+            this.ColClientName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColClientHash = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColConctDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.RichTextServerConn = new System.Windows.Forms.RichTextBox();
+            this.LblLocalIp = new System.Windows.Forms.Label();
+            this.TxtBoxIpAddress = new System.Windows.Forms.TextBox();
+            this.TxtBoxPort = new System.Windows.Forms.TextBox();
+            this.LblIp = new System.Windows.Forms.Label();
+            this.LblPort = new System.Windows.Forms.Label();
+            this.BtnServerSnd = new System.Windows.Forms.Button();
+            this.TxtBxServer = new System.Windows.Forms.TextBox();
             this.TabControlServer = new System.Windows.Forms.TabControl();
-            this.tabConnTrack = new System.Windows.Forms.TabPage();
-            this.tabPagePublicChatServer = new System.Windows.Forms.TabPage();
-            this.rchTxtServerPub = new System.Windows.Forms.RichTextBox();
+            this.TabConnTrack = new System.Windows.Forms.TabPage();
+            this.TabPagePublicChatServer = new System.Windows.Forms.TabPage();
+            this.RichTextServerPub = new System.Windows.Forms.RichTextBox();
+            this.BtnStopSrv = new System.Windows.Forms.Button();
             this.TabControlServer.SuspendLayout();
-            this.tabConnTrack.SuspendLayout();
-            this.tabPagePublicChatServer.SuspendLayout();
+            this.TabConnTrack.SuspendLayout();
+            this.TabPagePublicChatServer.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnStartSrv
+            // BtnStartSrv
             // 
-            this.btnStartSrv.Location = new System.Drawing.Point(175, 361);
-            this.btnStartSrv.Name = "btnStartSrv";
-            this.btnStartSrv.Size = new System.Drawing.Size(73, 23);
-            this.btnStartSrv.TabIndex = 0;
-            this.btnStartSrv.Text = "&Start Server";
-            this.btnStartSrv.UseVisualStyleBackColor = true;
-            this.btnStartSrv.Click += new System.EventHandler(this.btnStartSrv_Click);
+            this.BtnStartSrv.Location = new System.Drawing.Point(175, 361);
+            this.BtnStartSrv.Name = "BtnStartSrv";
+            this.BtnStartSrv.Size = new System.Drawing.Size(73, 23);
+            this.BtnStartSrv.TabIndex = 0;
+            this.BtnStartSrv.Text = "&Start Server";
+            this.BtnStartSrv.UseVisualStyleBackColor = true;
+            this.BtnStartSrv.Click += new System.EventHandler(this.BtnStartSrv_Click);
             // 
-            // listViewClients
+            // ListViewClients
             // 
-            this.listViewClients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colClientName,
-            this.colClientHash,
-            this.colConctDate});
-            this.listViewClients.FullRowSelect = true;
-            this.listViewClients.GridLines = true;
-            this.listViewClients.Location = new System.Drawing.Point(13, 12);
-            this.listViewClients.Name = "listViewClients";
-            this.listViewClients.Size = new System.Drawing.Size(317, 341);
-            this.listViewClients.TabIndex = 2;
-            this.listViewClients.UseCompatibleStateImageBehavior = false;
-            this.listViewClients.View = System.Windows.Forms.View.Details;
+            this.ListViewClients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ColClientName,
+            this.ColClientHash,
+            this.ColConctDate});
+            this.ListViewClients.FullRowSelect = true;
+            this.ListViewClients.GridLines = true;
+            this.ListViewClients.Location = new System.Drawing.Point(13, 12);
+            this.ListViewClients.Name = "ListViewClients";
+            this.ListViewClients.Size = new System.Drawing.Size(317, 341);
+            this.ListViewClients.TabIndex = 2;
+            this.ListViewClients.UseCompatibleStateImageBehavior = false;
+            this.ListViewClients.View = System.Windows.Forms.View.Details;
             // 
-            // colClientName
+            // ColClientName
             // 
-            this.colClientName.Text = "Client Name";
-            this.colClientName.Width = 117;
+            this.ColClientName.Text = "Client Name";
+            this.ColClientName.Width = 117;
             // 
-            // colClientHash
+            // ColClientHash
             // 
-            this.colClientHash.Text = "Client IP";
-            this.colClientHash.Width = 80;
+            this.ColClientHash.Text = "Client IP";
+            this.ColClientHash.Width = 80;
             // 
-            // colConctDate
+            // ColConctDate
             // 
-            this.colConctDate.Text = "Connect Date";
-            this.colConctDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.colConctDate.Width = 115;
+            this.ColConctDate.Text = "Connect Date";
+            this.ColConctDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ColConctDate.Width = 115;
             // 
-            // rchTxtServerConn
+            // RichTextServerConn
             // 
-            this.rchTxtServerConn.BackColor = System.Drawing.Color.White;
-            this.rchTxtServerConn.ForeColor = System.Drawing.Color.Black;
-            this.rchTxtServerConn.Location = new System.Drawing.Point(0, 3);
-            this.rchTxtServerConn.Name = "rchTxtServerConn";
-            this.rchTxtServerConn.ReadOnly = true;
-            this.rchTxtServerConn.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rchTxtServerConn.Size = new System.Drawing.Size(406, 312);
-            this.rchTxtServerConn.TabIndex = 9;
-            this.rchTxtServerConn.Text = "";
-            this.rchTxtServerConn.TextChanged += new System.EventHandler(this.richTxtChatBox_TextChanged);
+            this.RichTextServerConn.BackColor = System.Drawing.Color.White;
+            this.RichTextServerConn.ForeColor = System.Drawing.Color.Black;
+            this.RichTextServerConn.Location = new System.Drawing.Point(0, 3);
+            this.RichTextServerConn.Name = "RichTextServerConn";
+            this.RichTextServerConn.ReadOnly = true;
+            this.RichTextServerConn.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.RichTextServerConn.Size = new System.Drawing.Size(406, 312);
+            this.RichTextServerConn.TabIndex = 9;
+            this.RichTextServerConn.Text = "";
+            this.RichTextServerConn.TextChanged += new System.EventHandler(this.RichTextChatBox_TextChanged);
             // 
-            // lblLocalIp
+            // LblLocalIp
             // 
-            this.lblLocalIp.AutoSize = true;
-            this.lblLocalIp.Location = new System.Drawing.Point(333, 366);
-            this.lblLocalIp.Name = "lblLocalIp";
-            this.lblLocalIp.Size = new System.Drawing.Size(52, 13);
-            this.lblLocalIp.TabIndex = 10;
-            this.lblLocalIp.Text = "lblLocalIp";
+            this.LblLocalIp.AutoSize = true;
+            this.LblLocalIp.Location = new System.Drawing.Point(333, 366);
+            this.LblLocalIp.Name = "LblLocalIp";
+            this.LblLocalIp.Size = new System.Drawing.Size(56, 13);
+            this.LblLocalIp.TabIndex = 10;
+            this.LblLocalIp.Text = "LblLocalIp";
             // 
-            // txtBoxIpAddress
+            // TxtBoxIpAddress
             // 
-            this.txtBoxIpAddress.Location = new System.Drawing.Point(30, 362);
-            this.txtBoxIpAddress.Name = "txtBoxIpAddress";
-            this.txtBoxIpAddress.Size = new System.Drawing.Size(60, 20);
-            this.txtBoxIpAddress.TabIndex = 11;
-            this.txtBoxIpAddress.Text = "127.0.0.1";
+            this.TxtBoxIpAddress.Location = new System.Drawing.Point(30, 362);
+            this.TxtBoxIpAddress.Name = "TxtBoxIpAddress";
+            this.TxtBoxIpAddress.Size = new System.Drawing.Size(60, 20);
+            this.TxtBoxIpAddress.TabIndex = 11;
+            this.TxtBoxIpAddress.Text = "127.0.0.1";
             // 
-            // txtBoxPort
+            // TxtBoxPort
             // 
-            this.txtBoxPort.Location = new System.Drawing.Point(121, 362);
-            this.txtBoxPort.Name = "txtBoxPort";
-            this.txtBoxPort.Size = new System.Drawing.Size(36, 20);
-            this.txtBoxPort.TabIndex = 12;
-            this.txtBoxPort.Text = "8888";
+            this.TxtBoxPort.Location = new System.Drawing.Point(121, 362);
+            this.TxtBoxPort.Name = "TxtBoxPort";
+            this.TxtBoxPort.Size = new System.Drawing.Size(36, 20);
+            this.TxtBoxPort.TabIndex = 12;
+            this.TxtBoxPort.Text = "8888";
             // 
-            // lblIp
+            // LblIp
             // 
-            this.lblIp.AutoSize = true;
-            this.lblIp.Location = new System.Drawing.Point(10, 366);
-            this.lblIp.Name = "lblIp";
-            this.lblIp.Size = new System.Drawing.Size(20, 13);
-            this.lblIp.TabIndex = 13;
-            this.lblIp.Text = "IP:";
+            this.LblIp.AutoSize = true;
+            this.LblIp.Location = new System.Drawing.Point(10, 366);
+            this.LblIp.Name = "LblIp";
+            this.LblIp.Size = new System.Drawing.Size(20, 13);
+            this.LblIp.TabIndex = 13;
+            this.LblIp.Text = "IP:";
             // 
-            // lblPort
+            // LblPort
             // 
-            this.lblPort.AutoSize = true;
-            this.lblPort.Location = new System.Drawing.Point(92, 366);
-            this.lblPort.Name = "lblPort";
-            this.lblPort.Size = new System.Drawing.Size(29, 13);
-            this.lblPort.TabIndex = 14;
-            this.lblPort.Text = "Port:";
+            this.LblPort.AutoSize = true;
+            this.LblPort.Location = new System.Drawing.Point(92, 366);
+            this.LblPort.Name = "LblPort";
+            this.LblPort.Size = new System.Drawing.Size(29, 13);
+            this.LblPort.TabIndex = 14;
+            this.LblPort.Text = "Port:";
             // 
-            // btnServerSnd
+            // BtnServerSnd
             // 
-            this.btnServerSnd.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnServerSnd.Location = new System.Drawing.Point(708, 360);
-            this.btnServerSnd.Name = "btnServerSnd";
-            this.btnServerSnd.Size = new System.Drawing.Size(43, 23);
-            this.btnServerSnd.TabIndex = 15;
-            this.btnServerSnd.Text = "Send";
-            this.btnServerSnd.UseVisualStyleBackColor = true;
-            this.btnServerSnd.Click += new System.EventHandler(this.btnServerSnd_Click);
+            this.BtnServerSnd.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BtnServerSnd.Location = new System.Drawing.Point(708, 360);
+            this.BtnServerSnd.Name = "BtnServerSnd";
+            this.BtnServerSnd.Size = new System.Drawing.Size(43, 23);
+            this.BtnServerSnd.TabIndex = 15;
+            this.BtnServerSnd.Text = "Send";
+            this.BtnServerSnd.UseVisualStyleBackColor = true;
+            this.BtnServerSnd.Click += new System.EventHandler(this.BtnServerSnd_Click);
             // 
-            // txtBxServer
+            // TxtBxServer
             // 
-            this.txtBxServer.Location = new System.Drawing.Point(421, 362);
-            this.txtBxServer.Name = "txtBxServer";
-            this.txtBxServer.Size = new System.Drawing.Size(281, 20);
-            this.txtBxServer.TabIndex = 16;
-            this.txtBxServer.Text = "Global message";
+            this.TxtBxServer.Location = new System.Drawing.Point(421, 362);
+            this.TxtBxServer.Name = "TxtBxServer";
+            this.TxtBxServer.Size = new System.Drawing.Size(281, 20);
+            this.TxtBxServer.TabIndex = 16;
+            this.TxtBxServer.Text = "Global message";
             // 
             // TabControlServer
             // 
-            this.TabControlServer.Controls.Add(this.tabConnTrack);
-            this.TabControlServer.Controls.Add(this.tabPagePublicChatServer);
+            this.TabControlServer.Controls.Add(this.TabConnTrack);
+            this.TabControlServer.Controls.Add(this.TabPagePublicChatServer);
             this.TabControlServer.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.TabControlServer.ItemSize = new System.Drawing.Size(110, 24);
             this.TabControlServer.Location = new System.Drawing.Point(336, 12);
@@ -184,63 +185,78 @@ namespace MeowChatServer
             this.TabControlServer.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControlServer_DrawItem);
             this.TabControlServer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TabControlServert_MouseClick);
             // 
-            // tabConnTrack
+            // TabConnTrack
             // 
-            this.tabConnTrack.Controls.Add(this.rchTxtServerConn);
-            this.tabConnTrack.Location = new System.Drawing.Point(4, 28);
-            this.tabConnTrack.Name = "tabConnTrack";
-            this.tabConnTrack.Padding = new System.Windows.Forms.Padding(3);
-            this.tabConnTrack.Size = new System.Drawing.Size(407, 309);
-            this.tabConnTrack.TabIndex = 0;
-            this.tabConnTrack.Text = "Connection Track";
-            this.tabConnTrack.UseVisualStyleBackColor = true;
+            this.TabConnTrack.Controls.Add(this.RichTextServerConn);
+            this.TabConnTrack.Location = new System.Drawing.Point(4, 28);
+            this.TabConnTrack.Name = "TabConnTrack";
+            this.TabConnTrack.Padding = new System.Windows.Forms.Padding(3);
+            this.TabConnTrack.Size = new System.Drawing.Size(407, 309);
+            this.TabConnTrack.TabIndex = 0;
+            this.TabConnTrack.Text = "Connection Track";
+            this.TabConnTrack.UseVisualStyleBackColor = true;
             // 
-            // tabPagePublicChatServer
+            // TabPagePublicChatServer
             // 
-            this.tabPagePublicChatServer.Controls.Add(this.rchTxtServerPub);
-            this.tabPagePublicChatServer.Location = new System.Drawing.Point(4, 28);
-            this.tabPagePublicChatServer.Name = "tabPagePublicChatServer";
-            this.tabPagePublicChatServer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePublicChatServer.Size = new System.Drawing.Size(407, 309);
-            this.tabPagePublicChatServer.TabIndex = 1;
-            this.tabPagePublicChatServer.Text = "Pubic chat";
-            this.tabPagePublicChatServer.UseVisualStyleBackColor = true;
+            this.TabPagePublicChatServer.Controls.Add(this.RichTextServerPub);
+            this.TabPagePublicChatServer.Location = new System.Drawing.Point(4, 28);
+            this.TabPagePublicChatServer.Name = "TabPagePublicChatServer";
+            this.TabPagePublicChatServer.Padding = new System.Windows.Forms.Padding(3);
+            this.TabPagePublicChatServer.Size = new System.Drawing.Size(407, 309);
+            this.TabPagePublicChatServer.TabIndex = 1;
+            this.TabPagePublicChatServer.Text = "Pubic chat";
+            this.TabPagePublicChatServer.UseVisualStyleBackColor = true;
             // 
-            // rchTxtServerPub
+            // RichTextServerPub
             // 
-            this.rchTxtServerPub.BackColor = System.Drawing.Color.White;
-            this.rchTxtServerPub.ForeColor = System.Drawing.Color.Black;
-            this.rchTxtServerPub.Location = new System.Drawing.Point(0, 3);
-            this.rchTxtServerPub.Name = "rchTxtServerPub";
-            this.rchTxtServerPub.ReadOnly = true;
-            this.rchTxtServerPub.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rchTxtServerPub.Size = new System.Drawing.Size(406, 312);
-            this.rchTxtServerPub.TabIndex = 10;
-            this.rchTxtServerPub.Text = "";
+            this.RichTextServerPub.BackColor = System.Drawing.Color.White;
+            this.RichTextServerPub.ForeColor = System.Drawing.Color.Black;
+            this.RichTextServerPub.Location = new System.Drawing.Point(0, 3);
+            this.RichTextServerPub.Name = "RichTextServerPub";
+            this.RichTextServerPub.ReadOnly = true;
+            this.RichTextServerPub.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.RichTextServerPub.Size = new System.Drawing.Size(406, 312);
+            this.RichTextServerPub.TabIndex = 10;
+            this.RichTextServerPub.Text = "";
+            // 
+            // BtnStopSrv
+            // 
+            this.BtnStopSrv.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BtnStopSrv.Enabled = false;
+            this.BtnStopSrv.Location = new System.Drawing.Point(254, 362);
+            this.BtnStopSrv.Name = "BtnStopSrv";
+            this.BtnStopSrv.Size = new System.Drawing.Size(73, 23);
+            this.BtnStopSrv.TabIndex = 18;
+            this.BtnStopSrv.Text = "S&top";
+            this.BtnStopSrv.UseVisualStyleBackColor = true;
+            this.BtnStopSrv.Click += new System.EventHandler(this.btnStopSrv_Click);
             // 
             // FrmServer
             // 
-            this.AcceptButton = this.btnStartSrv;
+            this.AcceptButton = this.BtnStartSrv;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.BtnStopSrv;
             this.ClientSize = new System.Drawing.Size(754, 391);
+            this.Controls.Add(this.BtnStopSrv);
             this.Controls.Add(this.TabControlServer);
-            this.Controls.Add(this.txtBxServer);
-            this.Controls.Add(this.btnServerSnd);
-            this.Controls.Add(this.lblPort);
-            this.Controls.Add(this.lblIp);
-            this.Controls.Add(this.txtBoxPort);
-            this.Controls.Add(this.txtBoxIpAddress);
-            this.Controls.Add(this.lblLocalIp);
-            this.Controls.Add(this.listViewClients);
-            this.Controls.Add(this.btnStartSrv);
+            this.Controls.Add(this.TxtBxServer);
+            this.Controls.Add(this.BtnServerSnd);
+            this.Controls.Add(this.LblPort);
+            this.Controls.Add(this.LblIp);
+            this.Controls.Add(this.TxtBoxPort);
+            this.Controls.Add(this.TxtBoxIpAddress);
+            this.Controls.Add(this.LblLocalIp);
+            this.Controls.Add(this.ListViewClients);
+            this.Controls.Add(this.BtnStartSrv);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmServer";
             this.Text = "Server";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmServer_FormClosing);
             this.Load += new System.EventHandler(this.ServerForm_Load);
             this.TabControlServer.ResumeLayout(false);
-            this.tabConnTrack.ResumeLayout(false);
-            this.tabPagePublicChatServer.ResumeLayout(false);
+            this.TabConnTrack.ResumeLayout(false);
+            this.TabPagePublicChatServer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -248,23 +264,24 @@ namespace MeowChatServer
 
         #endregion
 
-        private System.Windows.Forms.Button btnStartSrv;
-        private System.Windows.Forms.ListView listViewClients;
-        private System.Windows.Forms.ColumnHeader colClientName;
-        private System.Windows.Forms.ColumnHeader colClientHash;
-        private System.Windows.Forms.ColumnHeader colConctDate;
-        private System.Windows.Forms.RichTextBox rchTxtServerConn;
-        private System.Windows.Forms.Label lblLocalIp;
-        private System.Windows.Forms.TextBox txtBoxIpAddress;
-        private System.Windows.Forms.TextBox txtBoxPort;
-        private System.Windows.Forms.Label lblIp;
-        private System.Windows.Forms.Label lblPort;
-        private System.Windows.Forms.Button btnServerSnd;
-        private System.Windows.Forms.TextBox txtBxServer;
+        private System.Windows.Forms.Button BtnStartSrv;
+        private System.Windows.Forms.ListView ListViewClients;
+        private System.Windows.Forms.ColumnHeader ColClientName;
+        private System.Windows.Forms.ColumnHeader ColClientHash;
+        private System.Windows.Forms.ColumnHeader ColConctDate;
+        private System.Windows.Forms.RichTextBox RichTextServerConn;
+        private System.Windows.Forms.Label LblLocalIp;
+        private System.Windows.Forms.TextBox TxtBoxIpAddress;
+        private System.Windows.Forms.TextBox TxtBoxPort;
+        private System.Windows.Forms.Label LblIp;
+        private System.Windows.Forms.Label LblPort;
+        private System.Windows.Forms.Button BtnServerSnd;
+        private System.Windows.Forms.TextBox TxtBxServer;
         private System.Windows.Forms.TabControl TabControlServer;
-        private System.Windows.Forms.TabPage tabConnTrack;
-        private System.Windows.Forms.TabPage tabPagePublicChatServer;
-        private RichTextBox rchTxtServerPub;
+        private System.Windows.Forms.TabPage TabConnTrack;
+        private System.Windows.Forms.TabPage TabPagePublicChatServer;
+        private RichTextBox RichTextServerPub;
+        private Button BtnStopSrv;
     }
 }
 

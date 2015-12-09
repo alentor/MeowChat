@@ -1,14 +1,12 @@
-﻿using CommonLibrary;
+﻿using LibraryMeowChat;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
-namespace MeowChatClientLibrary
-{
+namespace MeowChatClientLibrary {
     //Stores the clients connection information, as well as handless clients connect and disconnect actions
-    public static class ClientConnection
-    {
+    public static class ClientConnection {
         public static bool Status;
         public static string ClientName;
         public static string Color;
@@ -19,83 +17,94 @@ namespace MeowChatClientLibrary
         public static event FrmLoginCloseHandler LoginFrmCloseEvent;
 
         //Connect
-        public static void Connect(string address, int port, string name)
-        {
-            try
-            {
+        public static void Connect(string address, int port, string name) {
+            try {
                 Address = address;
                 ClientName = name;
                 Port = port;
-                var ipAdressText = IPAddress.Parse(address);
+                IPAddress ipAdressText = IPAddress.Parse(address);
                 Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                var ipEndPoint = new IPEndPoint(ipAdressText, Port);
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAdressText, Port);
                 Socket.BeginConnect(ipEndPoint, Connected, null);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + @" -> ListBoxClientList_DoubleClick", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private static void Connected(IAsyncResult ar)
-        {
-            try
-            {
+        private static void Connected(IAsyncResult ar) {
+            try {
                 Socket.EndConnect(ar); //notify the server the connection was established succefully
-                var msgToSend = new MessageStracture
-                {
-                    Command = Command.Login,
+                MessageStracture msgToSend = new MessageStracture {
+                    MessageType = MessageType.Login,
                     ClientName = ClientName,
                     Message = null
                 };
-                var msgToSendByte = msgToSend.ToByte();
+                byte[] msgToSendByte = msgToSend.ToByte();
                 //send the login credinails of the established connection to the server and call to the methood OnSend
                 Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + @" -> Connected", @"Chat: ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private static void OnSend(IAsyncResult ar)
-        {
-            try
-            {
+        private static void OnSend(IAsyncResult ar) {
+            try {
                 Socket.EndSend(ar);
                 Status = true;
                 LoginFrmCloseEvent?.Invoke(); //Fire event to close the FrmLogin
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + " -> OnSend", @"Chat: " + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         //Disconnect method
-        public static void Disconnect()
-        {
-            try
-            {
+        public static void Disconnect() {
+            try {
                 Status = false;
-                var msgToSend = new MessageStracture();
-                msgToSend.Command = Command.Logout;
-                msgToSend.ClientName = ClientName;
-                var b = msgToSend.ToByte();
+                MessageStracture msgToSend = new MessageStracture {
+                    MessageType = MessageType.Logout,
+                    ClientName = ClientName
+                };
+                byte[] b = msgToSend.ToByte();
                 Socket.Send(b, 0, b.Length, SocketFlags.None);
                 Socket.Shutdown(SocketShutdown.Both);
                 Socket.BeginDisconnect(true, (OnDisonnect), Socket);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Chat: 6" + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + " -> Disconnect", @"Chat: " + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private static void OnDisonnect(IAsyncResult ar)
-        {
-            Socket = (Socket)ar.AsyncState;
-            Socket.EndDisconnect(ar);
+        //Shutdown Method
+        public static void ServerDisconnectCall() {
+            try {
+                Status = false;
+                MessageStracture msgToSend = new MessageStracture {
+                    MessageType = MessageType.Disconnect,
+                    ClientName = ClientName
+                };
+                byte[] b = msgToSend.ToByte();
+                Socket.Send(b, 0, b.Length, SocketFlags.None);
+                Socket.Shutdown(SocketShutdown.Both);
+                Socket.BeginDisconnect(true, (OnDisonnect), Socket);
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + " -> ServerDisconnectCall", @"Chat: " + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static void OnDisonnect(IAsyncResult ar) {
+            try {
+                Socket = (Socket) ar.AsyncState;
+                Socket.EndDisconnect(ar);
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + " -> OnDisonnect", @"Chat: " + ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            ;
         }
     }
 }
