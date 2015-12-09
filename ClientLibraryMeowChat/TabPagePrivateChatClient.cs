@@ -1,5 +1,4 @@
-﻿using MeowChatClient;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using LibraryMeowChat;
@@ -60,11 +59,12 @@ namespace MeowChatClientLibrary {
             if (_TextBoxPrvMsg.Text.Length > 0) {
                 TabPagePrivateChatSendClientEvent?.Invoke(Name, _TextBoxPrvMsg.Text);
                 _TextBoxPrvMsg.Text = "";
+                ++ClientStatistics.MessagesPrivateSent;
             }
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageClientEvent, which being fired in FrmChat
-        public void TabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, int caseId) {
+        public void TabPageTabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, int caseId) {
             Invoke(new Action((delegate{
                 _RichTextPrivChtClient.SelectionStart = _CursorPosition;
                 switch (caseId) {

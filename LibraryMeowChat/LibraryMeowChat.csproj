@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command.cs" />
+    <Compile Include="MessageStractureCommand.cs" />
     <Compile Include="GenericStatic.cs" />
     <Compile Include="MessageStracture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

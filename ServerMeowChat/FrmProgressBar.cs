@@ -32,7 +32,7 @@ namespace MeowChatServer {
                     ProgressBar1.Value = sections;
                 })));
                 Invoke(new Action((delegate{
-                    LblDisconnecting.Text = @"Disconnecting " + _InternalClientList[sections].ClientName + @" " + sections + @"/" + ProgressBar1.Maximum;
+                    LblDisconnecting.Text = @"Disconnecting " + _InternalClientList[sections].ClientName + @" " + sections + @" of " + ProgressBar1.Maximum;
                 })));
                 Invoke(new Action((delegate{
                     ProgressBar1.Update();

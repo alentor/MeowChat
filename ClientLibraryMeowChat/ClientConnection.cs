@@ -1,5 +1,4 @@
 ﻿using LibraryMeowChat;
-using MeowChatClient;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -23,9 +22,9 @@ namespace MeowChatClientLibrary {
                 Address = address;
                 ClientName = name;
                 Port = port;
-                var ipAdressText = IPAddress.Parse(address);
+                IPAddress ipAdressText = IPAddress.Parse(address);
                 Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                var ipEndPoint = new IPEndPoint(ipAdressText, Port);
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAdressText, Port);
                 Socket.BeginConnect(ipEndPoint, Connected, null);
             }
             catch (Exception ex) {
@@ -36,12 +35,12 @@ namespace MeowChatClientLibrary {
         private static void Connected(IAsyncResult ar) {
             try {
                 Socket.EndConnect(ar); //notify the server the connection was established succefully
-                var msgToSend = new MessageStracture {
-                    Command = Command.Login,
+                MessageStracture msgToSend = new MessageStracture {
+                    MessageType = MessageType.Login,
                     ClientName = ClientName,
                     Message = null
                 };
-                var msgToSendByte = msgToSend.ToByte();
+                byte[] msgToSendByte = msgToSend.ToByte();
                 //send the login credinails of the established connection to the server and call to the methood OnSend
                 Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
@@ -65,11 +64,11 @@ namespace MeowChatClientLibrary {
         public static void Disconnect() {
             try {
                 Status = false;
-                var msgToSend = new MessageStracture {
-                    Command = Command.Logout,
+                MessageStracture msgToSend = new MessageStracture {
+                    MessageType = MessageType.Logout,
                     ClientName = ClientName
                 };
-                var b = msgToSend.ToByte();
+                byte[] b = msgToSend.ToByte();
                 Socket.Send(b, 0, b.Length, SocketFlags.None);
                 Socket.Shutdown(SocketShutdown.Both);
                 Socket.BeginDisconnect(true, (OnDisonnect), Socket);
@@ -83,11 +82,11 @@ namespace MeowChatClientLibrary {
         public static void ServerDisconnectCall() {
             try {
                 Status = false;
-                var msgToSend = new MessageStracture {
-                    Command = Command.Disconnect,
+                MessageStracture msgToSend = new MessageStracture {
+                    MessageType = MessageType.Disconnect,
                     ClientName = ClientName
                 };
-                var b = msgToSend.ToByte();
+                byte[] b = msgToSend.ToByte();
                 Socket.Send(b, 0, b.Length, SocketFlags.None);
                 Socket.Shutdown(SocketShutdown.Both);
                 Socket.BeginDisconnect(true, (OnDisonnect), Socket);

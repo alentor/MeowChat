@@ -1,27 +1,32 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Diagnostics;
 
-namespace LibraryMeowChat {
-    public static class GenericStatic {
+namespace LibraryMeowChat
+{
+    public static class GenericStatic
+    {
         //Convert Color class to HEX color code string
-        public static string HexConverter(Color c) {
+        public static string HexConverter(Color c)
+        {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
 
         //Formats the size of TabPages in a provided TabControll
-        public static void FormatItemSize(TabControl tabControl) {
+        public static void FormatItemSize(TabControl tabControl)
+        {
             //go thro and resize
             // get the inital length
             int tabLength = tabControl.ItemSize.Width;
             // measure the text in each tab and make adjustment to the size
-            for (int i = 1; i < tabControl.TabPages.Count; i++) {
+            for (int i = 1; i < tabControl.TabPages.Count; i++)
+            {
                 TabPage currentPage = tabControl.TabPages[i];
                 int currentTabLength = TextRenderer.MeasureText(currentPage.Text, tabControl.Font).Width;
                 // adjust the length for what text is written
                 currentTabLength += 40;
-                if (currentTabLength > tabLength) {
+                if (currentTabLength > tabLength)
+                {
                     tabLength = currentTabLength;
                 }
             }
@@ -31,13 +36,15 @@ namespace LibraryMeowChat {
         }
 
         //Returns the current time in the specified format
-        public static string Time() {
+        public static string Time()
+        {
             DateTime time = DateTime.Now;
             string timeFormat = "HH:mm:ss";
             return time.ToString(timeFormat);
         }
 
-        public static string TimeDate() {
+        public static string TimeDate()
+        {
             DateTime time = DateTime.Now;
             string timeFormat = "HH:mm:ss - dd/MM/yyyy";
             return time.ToString(timeFormat);

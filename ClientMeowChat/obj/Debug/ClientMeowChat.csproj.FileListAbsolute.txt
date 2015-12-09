@@ -46,4 +46,4 @@ E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\MeowChatClient.Properties.Resou
 E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\ClientMeowChat.csproj.GenerateResource.Cache
 E:\Porjects\c#\MeowChat\ClientMeowChat\bin\Debug\LibraryMeowChat.dll
 E:\Porjects\c#\MeowChat\ClientMeowChat\bin\Debug\LibraryMeowChat.pdb
-E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\MeowChatClient.FrmStatistics.resources
+E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\MeowChatClient.Statistic.resources

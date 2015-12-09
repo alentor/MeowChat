@@ -113,7 +113,7 @@ namespace MeowChatServer
             this.LblLocalIp.AutoSize = true;
             this.LblLocalIp.Location = new System.Drawing.Point(333, 366);
             this.LblLocalIp.Name = "LblLocalIp";
-            this.LblLocalIp.Size = new System.Drawing.Size(52, 13);
+            this.LblLocalIp.Size = new System.Drawing.Size(56, 13);
             this.LblLocalIp.TabIndex = 10;
             this.LblLocalIp.Text = "LblLocalIp";
             // 
@@ -252,6 +252,7 @@ namespace MeowChatServer
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmServer";
             this.Text = "Server";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmServer_FormClosing);
             this.Load += new System.EventHandler(this.ServerForm_Load);
             this.TabControlServer.ResumeLayout(false);
             this.TabConnTrack.ResumeLayout(false);

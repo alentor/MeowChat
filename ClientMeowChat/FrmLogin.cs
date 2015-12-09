@@ -1,7 +1,7 @@
-﻿using MeowChatClientLibrary;
+﻿using LibraryMeowChat;
+using MeowChatClientLibrary;
 using System;
 using System.Windows.Forms;
-using LibraryMeowChat;
 
 namespace MeowChatClient
 {

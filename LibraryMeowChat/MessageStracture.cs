@@ -3,30 +3,41 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MeowChatClient
-{
-    public class MessageStracture
-    {
+namespace LibraryMeowChat {
+    public enum MessageType {
+        Login,
+        Logout,
+        Message,
+        List,
+        NameChange,
+        ColorChange,
+        Disconnect,
+        PrivateStart,
+        PrivateMessage,
+        PrivateStop,
+        ServerMessage,
+        Null //No command, only used in MessageStracture constarctor
+    }
+
+    public class MessageStracture {
         //Constructor
-        public MessageStracture()
-        {
-            Command = Command.Null;
+        public MessageStracture() {
+            MessageType = MessageType.Null;
             Color = null;
             ClientName = null;
             Private = null;
             Message = null;
         }
 
-        public Command Command; //Command type (Login, Logout, Message etc...)
+        public MessageType MessageType; //MessageType type (Login, Logout, Message etc...)
         public string ClientName; //The name by which the server and client recognizes the establised connection(client) also the name which is displayed in the UI
         public string Color; //Reserved for Color of the message
         public string Private; // Reserved for if the message is private
         public string Message; //The message itself
 
         //Convert bytes[] into MessageStracture object
-        public MessageStracture(byte[] data)
-        {
-            Command = (Command)BitConverter.ToInt32(data, 0);
+        public MessageStracture(byte[] data) {
+            MessageType = (MessageType) BitConverter.ToInt32(data, 0);
             //Next four bytes store the length of the clientName
             int clientNameLen = BitConverter.ToInt32(data, 4);
             //Next four bytes store the length of the color
@@ -46,14 +57,13 @@ namespace MeowChatClient
         }
 
         //Convert MessageStracture object into bytes[]
-        public byte[] ToByte()
-        {
+        public byte[] ToByte() {
             //emptyByte for usage in LINQ expression
-            byte[] emptyByte = { };
+            byte[] emptyByte = {};
             //create list of bytes to which the object MessageStracture will be translated
-            List<byte> bytesList = new List<byte>();
+            List <byte> bytesList = new List <byte>();
             //First add command to the bytesList
-            bytesList.AddRange(BitConverter.GetBytes((int)Command));
+            bytesList.AddRange(BitConverter.GetBytes((int) MessageType));
             //add clientName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(ClientName != null ? BitConverter.GetBytes(ClientName.Length) : BitConverter.GetBytes(0));
             //add color length to the bytesList, add zero bytes if clintName is null

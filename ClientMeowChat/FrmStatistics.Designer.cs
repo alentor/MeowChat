@@ -1,6 +1,6 @@
 ﻿namespace MeowChatClient
 {
-    partial class FrmStatistics
+    partial class Statistic
     {
         /// <summary>
         /// Required designer variable.
@@ -30,23 +30,6 @@
         {
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox13 = new System.Windows.Forms.GroupBox();
-            this.GroupBox14 = new System.Windows.Forms.GroupBox();
-            this.LblTotalBytesReceived = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
-            this.LblTotalBytesSent = new System.Windows.Forms.Label();
-            this.GroupBox15 = new System.Windows.Forms.GroupBox();
-            this.LblPrivateBytesReceived = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
-            this.label40 = new System.Windows.Forms.Label();
-            this.LblPrivateBytesSent = new System.Windows.Forms.Label();
-            this.GroupBox16 = new System.Windows.Forms.GroupBox();
-            this.LblBytesReceived = new System.Windows.Forms.Label();
-            this.label43 = new System.Windows.Forms.Label();
-            this.label44 = new System.Windows.Forms.Label();
-            this.LblBytesSent = new System.Windows.Forms.Label();
-            this.GroupBox1 = new System.Windows.Forms.GroupBox();
             this.GroupBox10 = new System.Windows.Forms.GroupBox();
             this.LblTotalMessagReceived = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
@@ -62,14 +45,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.LblMessagSent = new System.Windows.Forms.Label();
-            this.LblSercerMessages = new System.Windows.Forms.Label();
+            this.LblServerMessages = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.LblTime = new System.Windows.Forms.Label();
-            this.groupBox13.SuspendLayout();
-            this.GroupBox14.SuspendLayout();
-            this.GroupBox15.SuspendLayout();
-            this.GroupBox16.SuspendLayout();
-            this.GroupBox1.SuspendLayout();
             this.GroupBox10.SuspendLayout();
             this.GroupBox12.SuspendLayout();
             this.GroupBox2.SuspendLayout();
@@ -87,182 +65,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(166, 215);
+            this.label1.Location = new System.Drawing.Point(3, 211);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 13);
             this.label1.TabIndex = 16;
             this.label1.Text = "&Connected for:";
-            // 
-            // groupBox13
-            // 
-            this.groupBox13.Controls.Add(this.GroupBox14);
-            this.groupBox13.Controls.Add(this.GroupBox15);
-            this.groupBox13.Controls.Add(this.GroupBox16);
-            this.groupBox13.Location = new System.Drawing.Point(151, 12);
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(154, 200);
-            this.groupBox13.TabIndex = 17;
-            this.groupBox13.TabStop = false;
-            this.groupBox13.Text = "Bandwidth usage ";
-            // 
-            // GroupBox14
-            // 
-            this.GroupBox14.Controls.Add(this.LblTotalBytesReceived);
-            this.GroupBox14.Controls.Add(this.label35);
-            this.GroupBox14.Controls.Add(this.label36);
-            this.GroupBox14.Controls.Add(this.LblTotalBytesSent);
-            this.GroupBox14.Location = new System.Drawing.Point(6, 139);
-            this.GroupBox14.Name = "GroupBox14";
-            this.GroupBox14.Size = new System.Drawing.Size(142, 54);
-            this.GroupBox14.TabIndex = 12;
-            this.GroupBox14.TabStop = false;
-            this.GroupBox14.Text = "Total";
-            // 
-            // LblTotalBytesReceived
-            // 
-            this.LblTotalBytesReceived.AutoSize = true;
-            this.LblTotalBytesReceived.Location = new System.Drawing.Point(93, 36);
-            this.LblTotalBytesReceived.Name = "LblTotalBytesReceived";
-            this.LblTotalBytesReceived.Size = new System.Drawing.Size(46, 13);
-            this.LblTotalBytesReceived.TabIndex = 10;
-            this.LblTotalBytesReceived.Text = "30 Kbps";
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(6, 36);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(53, 13);
-            this.label35.TabIndex = 9;
-            this.label35.Text = "&Received";
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(6, 16);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(29, 13);
-            this.label36.TabIndex = 4;
-            this.label36.Text = "&Sent";
-            // 
-            // LblTotalBytesSent
-            // 
-            this.LblTotalBytesSent.AutoSize = true;
-            this.LblTotalBytesSent.Location = new System.Drawing.Point(93, 16);
-            this.LblTotalBytesSent.Name = "LblTotalBytesSent";
-            this.LblTotalBytesSent.Size = new System.Drawing.Size(46, 13);
-            this.LblTotalBytesSent.TabIndex = 5;
-            this.LblTotalBytesSent.Text = "30 Kbps";
-            // 
-            // GroupBox15
-            // 
-            this.GroupBox15.Controls.Add(this.LblPrivateBytesReceived);
-            this.GroupBox15.Controls.Add(this.label39);
-            this.GroupBox15.Controls.Add(this.label40);
-            this.GroupBox15.Controls.Add(this.LblPrivateBytesSent);
-            this.GroupBox15.Location = new System.Drawing.Point(6, 79);
-            this.GroupBox15.Name = "GroupBox15";
-            this.GroupBox15.Size = new System.Drawing.Size(142, 54);
-            this.GroupBox15.TabIndex = 11;
-            this.GroupBox15.TabStop = false;
-            this.GroupBox15.Text = "Private";
-            // 
-            // LblPrivateBytesReceived
-            // 
-            this.LblPrivateBytesReceived.AutoSize = true;
-            this.LblPrivateBytesReceived.Location = new System.Drawing.Point(93, 36);
-            this.LblPrivateBytesReceived.Name = "LblPrivateBytesReceived";
-            this.LblPrivateBytesReceived.Size = new System.Drawing.Size(46, 13);
-            this.LblPrivateBytesReceived.TabIndex = 10;
-            this.LblPrivateBytesReceived.Text = "30 Kbps";
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(6, 36);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(53, 13);
-            this.label39.TabIndex = 9;
-            this.label39.Text = "&Received";
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(6, 16);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(29, 13);
-            this.label40.TabIndex = 4;
-            this.label40.Text = "&Sent";
-            // 
-            // LblPrivateBytesSent
-            // 
-            this.LblPrivateBytesSent.AutoSize = true;
-            this.LblPrivateBytesSent.Location = new System.Drawing.Point(93, 16);
-            this.LblPrivateBytesSent.Name = "LblPrivateBytesSent";
-            this.LblPrivateBytesSent.Size = new System.Drawing.Size(46, 13);
-            this.LblPrivateBytesSent.TabIndex = 5;
-            this.LblPrivateBytesSent.Text = "30 Kbps";
-            // 
-            // GroupBox16
-            // 
-            this.GroupBox16.Controls.Add(this.LblBytesReceived);
-            this.GroupBox16.Controls.Add(this.label43);
-            this.GroupBox16.Controls.Add(this.label44);
-            this.GroupBox16.Controls.Add(this.LblBytesSent);
-            this.GroupBox16.Location = new System.Drawing.Point(6, 19);
-            this.GroupBox16.Name = "GroupBox16";
-            this.GroupBox16.Size = new System.Drawing.Size(142, 54);
-            this.GroupBox16.TabIndex = 9;
-            this.GroupBox16.TabStop = false;
-            this.GroupBox16.Text = "Public";
-            // 
-            // LblBytesReceived
-            // 
-            this.LblBytesReceived.AutoSize = true;
-            this.LblBytesReceived.Location = new System.Drawing.Point(93, 36);
-            this.LblBytesReceived.Name = "LblBytesReceived";
-            this.LblBytesReceived.Size = new System.Drawing.Size(46, 13);
-            this.LblBytesReceived.TabIndex = 10;
-            this.LblBytesReceived.Text = "30 Kbps";
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(6, 36);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(53, 13);
-            this.label43.TabIndex = 9;
-            this.label43.Text = "&Received";
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(6, 16);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(29, 13);
-            this.label44.TabIndex = 4;
-            this.label44.Text = "&Sent";
-            // 
-            // LblBytesSent
-            // 
-            this.LblBytesSent.AutoSize = true;
-            this.LblBytesSent.Location = new System.Drawing.Point(93, 16);
-            this.LblBytesSent.Name = "LblBytesSent";
-            this.LblBytesSent.Size = new System.Drawing.Size(46, 13);
-            this.LblBytesSent.TabIndex = 5;
-            this.LblBytesSent.Text = "30 Kbps";
-            // 
-            // GroupBox1
-            // 
-            this.GroupBox1.Controls.Add(this.GroupBox10);
-            this.GroupBox1.Controls.Add(this.GroupBox12);
-            this.GroupBox1.Controls.Add(this.GroupBox2);
-            this.GroupBox1.Location = new System.Drawing.Point(12, 12);
-            this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Size = new System.Drawing.Size(132, 200);
-            this.GroupBox1.TabIndex = 15;
-            this.GroupBox1.TabStop = false;
-            this.GroupBox1.Text = "Message Statistics";
             // 
             // GroupBox10
             // 
@@ -270,7 +77,7 @@
             this.GroupBox10.Controls.Add(this.label22);
             this.GroupBox10.Controls.Add(this.label30);
             this.GroupBox10.Controls.Add(this.LblTotalMessagSent);
-            this.GroupBox10.Location = new System.Drawing.Point(8, 140);
+            this.GroupBox10.Location = new System.Drawing.Point(7, 131);
             this.GroupBox10.Name = "GroupBox10";
             this.GroupBox10.Size = new System.Drawing.Size(118, 54);
             this.GroupBox10.TabIndex = 12;
@@ -282,9 +89,9 @@
             this.LblTotalMessagReceived.AutoSize = true;
             this.LblTotalMessagReceived.Location = new System.Drawing.Point(93, 36);
             this.LblTotalMessagReceived.Name = "LblTotalMessagReceived";
-            this.LblTotalMessagReceived.Size = new System.Drawing.Size(19, 13);
+            this.LblTotalMessagReceived.Size = new System.Drawing.Size(25, 13);
             this.LblTotalMessagReceived.TabIndex = 10;
-            this.LblTotalMessagReceived.Text = "30";
+            this.LblTotalMessagReceived.Text = "Null";
             // 
             // label22
             // 
@@ -309,9 +116,9 @@
             this.LblTotalMessagSent.AutoSize = true;
             this.LblTotalMessagSent.Location = new System.Drawing.Point(93, 16);
             this.LblTotalMessagSent.Name = "LblTotalMessagSent";
-            this.LblTotalMessagSent.Size = new System.Drawing.Size(19, 13);
+            this.LblTotalMessagSent.Size = new System.Drawing.Size(25, 13);
             this.LblTotalMessagSent.TabIndex = 5;
-            this.LblTotalMessagSent.Text = "30";
+            this.LblTotalMessagSent.Text = "Null";
             // 
             // GroupBox12
             // 
@@ -319,7 +126,7 @@
             this.GroupBox12.Controls.Add(this.label27);
             this.GroupBox12.Controls.Add(this.label28);
             this.GroupBox12.Controls.Add(this.LblPrivateMessagSent);
-            this.GroupBox12.Location = new System.Drawing.Point(6, 79);
+            this.GroupBox12.Location = new System.Drawing.Point(5, 70);
             this.GroupBox12.Name = "GroupBox12";
             this.GroupBox12.Size = new System.Drawing.Size(118, 54);
             this.GroupBox12.TabIndex = 11;
@@ -331,9 +138,9 @@
             this.LblPrivateMessagReceived.AutoSize = true;
             this.LblPrivateMessagReceived.Location = new System.Drawing.Point(93, 36);
             this.LblPrivateMessagReceived.Name = "LblPrivateMessagReceived";
-            this.LblPrivateMessagReceived.Size = new System.Drawing.Size(19, 13);
+            this.LblPrivateMessagReceived.Size = new System.Drawing.Size(25, 13);
             this.LblPrivateMessagReceived.TabIndex = 10;
-            this.LblPrivateMessagReceived.Text = "30";
+            this.LblPrivateMessagReceived.Text = "Null";
             // 
             // label27
             // 
@@ -358,9 +165,9 @@
             this.LblPrivateMessagSent.AutoSize = true;
             this.LblPrivateMessagSent.Location = new System.Drawing.Point(93, 16);
             this.LblPrivateMessagSent.Name = "LblPrivateMessagSent";
-            this.LblPrivateMessagSent.Size = new System.Drawing.Size(19, 13);
+            this.LblPrivateMessagSent.Size = new System.Drawing.Size(25, 13);
             this.LblPrivateMessagSent.TabIndex = 5;
-            this.LblPrivateMessagSent.Text = "30";
+            this.LblPrivateMessagSent.Text = "Null";
             // 
             // GroupBox2
             // 
@@ -368,7 +175,7 @@
             this.GroupBox2.Controls.Add(this.label7);
             this.GroupBox2.Controls.Add(this.label11);
             this.GroupBox2.Controls.Add(this.LblMessagSent);
-            this.GroupBox2.Location = new System.Drawing.Point(6, 19);
+            this.GroupBox2.Location = new System.Drawing.Point(5, 10);
             this.GroupBox2.Name = "GroupBox2";
             this.GroupBox2.Size = new System.Drawing.Size(118, 54);
             this.GroupBox2.TabIndex = 9;
@@ -380,9 +187,9 @@
             this.LblMessagReceived.AutoSize = true;
             this.LblMessagReceived.Location = new System.Drawing.Point(93, 36);
             this.LblMessagReceived.Name = "LblMessagReceived";
-            this.LblMessagReceived.Size = new System.Drawing.Size(19, 13);
+            this.LblMessagReceived.Size = new System.Drawing.Size(25, 13);
             this.LblMessagReceived.TabIndex = 10;
-            this.LblMessagReceived.Text = "30";
+            this.LblMessagReceived.Text = "Null";
             // 
             // label7
             // 
@@ -407,23 +214,23 @@
             this.LblMessagSent.AutoSize = true;
             this.LblMessagSent.Location = new System.Drawing.Point(93, 16);
             this.LblMessagSent.Name = "LblMessagSent";
-            this.LblMessagSent.Size = new System.Drawing.Size(19, 13);
+            this.LblMessagSent.Size = new System.Drawing.Size(25, 13);
             this.LblMessagSent.TabIndex = 5;
-            this.LblMessagSent.Text = "30";
+            this.LblMessagSent.Text = "Null";
             // 
-            // LblSercerMessages
+            // LblServerMessages
             // 
-            this.LblSercerMessages.AutoSize = true;
-            this.LblSercerMessages.Location = new System.Drawing.Point(111, 215);
-            this.LblSercerMessages.Name = "LblSercerMessages";
-            this.LblSercerMessages.Size = new System.Drawing.Size(19, 13);
-            this.LblSercerMessages.TabIndex = 11;
-            this.LblSercerMessages.Text = "30";
+            this.LblServerMessages.AutoSize = true;
+            this.LblServerMessages.Location = new System.Drawing.Point(106, 191);
+            this.LblServerMessages.Name = "LblServerMessages";
+            this.LblServerMessages.Size = new System.Drawing.Size(25, 13);
+            this.LblServerMessages.TabIndex = 11;
+            this.LblServerMessages.Text = "Null";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(17, 215);
+            this.label5.Location = new System.Drawing.Point(12, 191);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(95, 13);
             this.label5.TabIndex = 7;
@@ -432,36 +239,31 @@
             // LblTime
             // 
             this.LblTime.AutoSize = true;
-            this.LblTime.Location = new System.Drawing.Point(241, 215);
+            this.LblTime.Location = new System.Drawing.Point(78, 211);
             this.LblTime.Name = "LblTime";
-            this.LblTime.Size = new System.Drawing.Size(49, 13);
+            this.LblTime.Size = new System.Drawing.Size(25, 13);
             this.LblTime.TabIndex = 19;
-            this.LblTime.Text = "00:00:00";
+            this.LblTime.Text = "Null";
             // 
-            // FrmStatistics
+            // Statistic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(317, 234);
+            this.ClientSize = new System.Drawing.Size(128, 230);
+            this.Controls.Add(this.GroupBox10);
             this.Controls.Add(this.LblTime);
-            this.Controls.Add(this.LblSercerMessages);
+            this.Controls.Add(this.GroupBox12);
+            this.Controls.Add(this.LblServerMessages);
+            this.Controls.Add(this.GroupBox2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.groupBox13);
-            this.Controls.Add(this.GroupBox1);
             this.Controls.Add(this.label5);
-            this.Name = "FrmStatistics";
-            this.Text = "FrmStatistics";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "Statistic";
+            this.Text = "Statistics";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmStatistics_FormClosing);
-            this.Load += new System.EventHandler(this.FrmStatistics_Load);
-            this.groupBox13.ResumeLayout(false);
-            this.GroupBox14.ResumeLayout(false);
-            this.GroupBox14.PerformLayout();
-            this.GroupBox15.ResumeLayout(false);
-            this.GroupBox15.PerformLayout();
-            this.GroupBox16.ResumeLayout(false);
-            this.GroupBox16.PerformLayout();
-            this.GroupBox1.ResumeLayout(false);
             this.GroupBox10.ResumeLayout(false);
             this.GroupBox10.PerformLayout();
             this.GroupBox12.ResumeLayout(false);
@@ -477,24 +279,7 @@
 
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox13;
-        private System.Windows.Forms.GroupBox GroupBox14;
-        private System.Windows.Forms.Label LblTotalBytesReceived;
-        private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.Label LblTotalBytesSent;
-        private System.Windows.Forms.GroupBox GroupBox15;
-        private System.Windows.Forms.Label LblPrivateBytesReceived;
-        private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.Label LblPrivateBytesSent;
-        private System.Windows.Forms.GroupBox GroupBox16;
-        private System.Windows.Forms.Label LblBytesReceived;
-        private System.Windows.Forms.Label label43;
-        private System.Windows.Forms.Label label44;
-        private System.Windows.Forms.Label LblBytesSent;
-        private System.Windows.Forms.GroupBox GroupBox1;
-        private System.Windows.Forms.Label LblSercerMessages;
+        private System.Windows.Forms.Label LblServerMessages;
         private System.Windows.Forms.GroupBox GroupBox10;
         private System.Windows.Forms.Label LblTotalMessagReceived;
         private System.Windows.Forms.Label label22;
