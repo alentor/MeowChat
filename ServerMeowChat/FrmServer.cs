@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -12,7 +13,7 @@ using System.Windows.Forms;
 
 namespace MeowChatServer {
     public partial class FrmServer: Form {
-        private readonly byte[] _ByteMessage = new byte[1024]; //Max byte size to be recieved and sent
+        private readonly byte[] _ByteMessage = new byte[2097152]; //Max byte size to be recieved and sent
         private readonly List <Client> _ClientList = new List <Client>(); //List which contains all the connected clients
         private int _CursorPositionConn;
         private int _CursorPositionPub;
@@ -507,20 +508,43 @@ namespace MeowChatServer {
 
         //Button send
         private void BtnServerSnd_Click(object sender, EventArgs e) {
-            MessageStracture msgToSend = new MessageStracture {
-                MessageType = MessageType.ServerMessage,
-                Message = TxtBxServer.Text
-            };
-            _CursorPositionPub = RichTextServerPub.SelectionStart;
-            RichTextServerPub.SelectionColor = Color.Black;
-            RichTextServerPub.SelectionBackColor = Color.MediumPurple;
-            RichTextServerPub.SelectedText = TxtBxServer.Text + Environment.NewLine;
-            RichTextServerPub.SelectionStart = _CursorPositionPub;
+            //MessageStracture msgToSend = new MessageStracture {
+            //    MessageType = MessageType.ServerMessage,
+            //    Message = TxtBxServer.Text
+            //};
+            //_CursorPositionPub = RichTextServerPub.SelectionStart;
+            //RichTextServerPub.SelectionColor = Color.Black;
+            //RichTextServerPub.SelectionBackColor = Color.MediumPurple;
+            //RichTextServerPub.SelectedText = TxtBxServer.Text + Environment.NewLine;
+            //RichTextServerPub.SelectionStart = _CursorPositionPub;
+            //byte[] msgToSendByte = msgToSend.ToByte();
+            //foreach (Client client in _ClientList) {
+            //    client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
+            //}
+            //TxtBxServer.Text = "";
+            MessageStracture msgToSend = new MessageStracture();
+            msgToSend.MessageType = MessageType.Image;
+            msgToSend.Message = "asdaddadsa";
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                openFileDialog.Title = "Open Image";
+                openFileDialog.Filter = "Images|*.png;*.bmp;*.jpg;*.gif*";
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                    // Create a new Bitmap object from the picture file on disk,
+                    // and assign that to the PictureBox.Image property
+
+                    //workign 1
+                    //_Image0 = new Bitmap(openFileDialog.FileName);
+
+                    msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
+
+
+                    //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
+                }
+            }
             byte[] msgToSendByte = msgToSend.ToByte();
             foreach (Client client in _ClientList) {
                 client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
             }
-            TxtBxServer.Text = "";
         }
     }
 }

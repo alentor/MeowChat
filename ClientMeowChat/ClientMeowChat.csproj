@@ -79,6 +79,12 @@
     <Compile Include="FrmChat.Designer.cs">
       <DependentUpon>FrmChat.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmImage.Designer.cs">
+      <DependentUpon>FrmImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmChat.resx">
       <DependentUpon>FrmChat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmImage.resx">
+      <DependentUpon>FrmImage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>

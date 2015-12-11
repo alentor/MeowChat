@@ -19,9 +19,11 @@ namespace MeowChatClient {
         public event FrmStatisticsUpdateHandler FrmStatisticsUpdateEvent;
 
         //Max byte size to be recieved and sent
-        private byte[] _ByteMessage = new byte[1024];
+        private byte[] _ByteMessage = new byte[2097152];
         private int _CursorPosition;
         private readonly Statistic _FrmStatistics = new Statistic();
+        private FrmImage _FrmImage = new FrmImage();
+
 
         public FrmChat() {
             InitializeComponent();
@@ -41,7 +43,7 @@ namespace MeowChatClient {
                 };
                 _ByteMessage = msgToSend.ToByte();
                 ClientConnection.Socket.BeginSend(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnSend, null);
-                _ByteMessage = new byte[1024];
+                _ByteMessage = new byte[2097152];
                 ClientConnection.Socket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, null);
             }
             catch (Exception ex) {
@@ -60,7 +62,7 @@ namespace MeowChatClient {
                 //Convert message from bytes to messageStracure class and store it in msgReceieved
                 MessageStracture msgReceived = new MessageStracture(_ByteMessage);
                 //Set new bytes and start recieving again
-                _ByteMessage = new byte[1024];
+                _ByteMessage = new byte[2097152];
                 if (msgReceived.MessageType == MessageType.Disconnect) {
                     Invoke(new Action((delegate{
                         ClientConnection.ServerDisconnectCall();
@@ -224,6 +226,40 @@ namespace MeowChatClient {
                         })));
                         ++ClientStatistics.ServerMessage;
                         FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ServerMessage);
+                        break;
+
+                    case MessageType.Image:
+                        //_FrmImage.Imgbyte = msgReceived.ImgByte;
+                        _FrmImage.NewImage(msgReceived.ImgByte);
+
+                        //newImageThread.Start();
+                        //if (_FrmImage.Visible) {
+                        //    Invoke(new Action((delegate{
+                        //        _FrmImage.BringToFront();
+                        //    })));
+
+                        //}
+                        //else {
+                        //    _FrmImage.ShowDialog();
+                        //}
+
+                        //Thread newImageThread = new Thread(new ThreadStart(() => {
+                        //    _FrmImage.Show();
+                        //}));
+                        //newImageThread.Start();
+                        if (_FrmImage.Visible == false) {
+                            if (InvokeRequired) {
+                                BeginInvoke(new MethodInvoker(delegate{
+                                    _FrmImage.Visible = true;
+                                    _FrmImage.BringToFront();
+                                }));
+                            }
+                            else {
+                                _FrmImage.Visible = true;
+                                _FrmImage.BringToFront();
+                            }
+                        }
+
                         break;
                 }
             }
@@ -515,6 +551,11 @@ namespace MeowChatClient {
             }
             _FrmStatistics.Visible = true;
             //_FrmStatistics.Show();
+        }
+
+        private void receivedImagesToolStripMenuItem_Click(object sender, EventArgs e) {
+            //_FrmImage.Show();
+            _FrmImage.Visible = true;
         }
     }
 }
