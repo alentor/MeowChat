@@ -74,7 +74,7 @@ namespace MeowChatServer {
                 _IsDisconnectRunning = true;
                 FrmProgressBar frmProgressBarDisconnect = new FrmProgressBar(_ClientList);
                 // Initialize the dialog that will contain the progress bar
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.Disconnect
                 };
                 byte[] msgToSendByte = msgToSend.ToByte();
@@ -137,10 +137,10 @@ namespace MeowChatServer {
                 //passing down the AsyncState information of the established connection
                 Socket receivedClientSocket = (Socket) ar.AsyncState;
                 //Transfering the array of received bytes from the established connection(client)
-                //into an intelligent form of object MessageStracture
-                MessageStracture msgReceived = new MessageStracture(_ByteMessage);
-                //Constractor for new object MessageStracture which will be sent to all establihed connections(clients)
-                MessageStracture msgToSend = new MessageStracture {
+                //into an intelligent form of object MessageStructure
+                MessageStructure msgReceived = new MessageStructure(_ByteMessage);
+                //Constractor for new object MessageStructure which will be sent to all establihed connections(clients)
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = msgReceived.MessageType,
                     ClientName = msgReceived.ClientName,
                     Color = msgReceived.Color
@@ -362,6 +362,7 @@ namespace MeowChatServer {
                             messageBytes = msgToSend.ToByte();
                             client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
                             receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
+                            break;
                         }
                         _TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 0);
                         break;
@@ -375,9 +376,54 @@ namespace MeowChatServer {
                         }
                         _TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 1);
                         break;
+                    case MessageType.Image:
+                        if (msgReceived.Private != null) {
+                            Thread threadSendImagePrivate = new Thread(new ThreadStart(() =>{
+                                foreach (Client client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private)) {
+                                    msgToSend.Private = msgReceived.Private;
+                                    msgToSend.ImgByte = msgReceived.ImgByte;
+                                    messageBytes = msgToSend.ToByte();
+                                    client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
+                                    receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
+                                }
+                            }));
+                            threadSendImagePrivate.Start();
+                            Invoke(new Action((delegate{
+                                msgToSend.ImgByte = msgReceived.ImgByte;
+                                RichTextServerPub.SelectionStart = _CursorPositionPub;
+                                RichTextServerPub.SelectedText = GenericStatic.Time() + " ";
+                                RichTextServerConn.SelectionBackColor = Color.DarkBlue;
+                                RichTextServerConn.SelectionColor = Color.Yellow;
+                                RichTextServerPub.SelectedText = msgToSend.ClientName + @" :" + "sent a photo to " + msgReceived.Private + " +. => " /*+ tabnumber here */;
+                                RichTextServerPub.SelectedText = Environment.NewLine;
+                                _CursorPositionPub = RichTextServerPub.SelectionStart;
+                            })));
+                            break;
+                        }
+                        Invoke(new Action((delegate{
+                            msgToSend.ImgByte = msgReceived.ImgByte;
+                            RichTextServerPub.SelectionStart = _CursorPositionPub;
+                            RichTextServerPub.SelectedText = GenericStatic.Time() + " ";
+                            RichTextServerConn.SelectionBackColor = Color.DarkBlue;
+                            RichTextServerConn.SelectionColor = Color.Yellow;
+                            RichTextServerPub.SelectedText = msgToSend.ClientName + @" :" + "sent a photo. => " /*+ tabnumber here */;
+                            RichTextServerPub.SelectedText = Environment.NewLine;
+                            _CursorPositionPub = RichTextServerPub.SelectionStart;
+                        })));
+                        msgToSend.ImgByte = msgReceived.ImgByte;
+                        messageBytes = msgToSend.ToByte();
+                        Thread threadSendImageToAll = new Thread(new ThreadStart(() =>{
+                            foreach (Client client in _ClientList) {
+                                client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
+                            }
+                        }));
+                        //ThreadSendImageToAll.IsBackground = true;
+                        threadSendImageToAll.Start();
+
+                        break;
                 }
                 //Send message to clients
-                if (msgToSend.MessageType != MessageType.List && msgToSend.MessageType != MessageType.PrivateStart && msgToSend.MessageType != MessageType.PrivateMessage && msgToSend.MessageType != MessageType.PrivateStop && msgToSend.MessageType != MessageType.Disconnect) {
+                if (msgToSend.MessageType != MessageType.List && msgToSend.MessageType != MessageType.PrivateStart && msgToSend.MessageType != MessageType.PrivateMessage && msgToSend.MessageType != MessageType.PrivateStop && msgToSend.MessageType != MessageType.Disconnect && msgToSend.MessageType != MessageType.Image) {
                     //Convert msgToSend to a bytearray representative, this needed to send(broadcat) the message over the TCP protocol
                     messageBytes = msgToSend.ToByte();
                     foreach (Client client in _ClientList) {
@@ -508,43 +554,47 @@ namespace MeowChatServer {
 
         //Button send
         private void BtnServerSnd_Click(object sender, EventArgs e) {
-            //MessageStracture msgToSend = new MessageStracture {
-            //    MessageType = MessageType.ServerMessage,
-            //    Message = TxtBxServer.Text
-            //};
-            //_CursorPositionPub = RichTextServerPub.SelectionStart;
-            //RichTextServerPub.SelectionColor = Color.Black;
-            //RichTextServerPub.SelectionBackColor = Color.MediumPurple;
-            //RichTextServerPub.SelectedText = TxtBxServer.Text + Environment.NewLine;
-            //RichTextServerPub.SelectionStart = _CursorPositionPub;
-            //byte[] msgToSendByte = msgToSend.ToByte();
-            //foreach (Client client in _ClientList) {
-            //    client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
-            //}
-            //TxtBxServer.Text = "";
-            MessageStracture msgToSend = new MessageStracture();
-            msgToSend.MessageType = MessageType.Image;
-            msgToSend.Message = "asdaddadsa";
-            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-                openFileDialog.Title = "Open Image";
-                openFileDialog.Filter = "Images|*.png;*.bmp;*.jpg;*.gif*";
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                    // Create a new Bitmap object from the picture file on disk,
-                    // and assign that to the PictureBox.Image property
-
-                    //workign 1
-                    //_Image0 = new Bitmap(openFileDialog.FileName);
-
-                    msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
-
-
-                    //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
-                }
-            }
+            MessageStructure msgToSend = new MessageStructure {
+                MessageType = MessageType.ServerMessage,
+                Message = TxtBxServer.Text
+            };
+            _CursorPositionPub = RichTextServerPub.SelectionStart;
+            RichTextServerPub.SelectionColor = Color.Black;
+            RichTextServerPub.SelectionBackColor = Color.MediumPurple;
+            RichTextServerPub.SelectedText = TxtBxServer.Text + Environment.NewLine;
+            RichTextServerPub.SelectionStart = _CursorPositionPub;
             byte[] msgToSendByte = msgToSend.ToByte();
             foreach (Client client in _ClientList) {
                 client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
             }
+            TxtBxServer.Text = "";
+
+
+            //MessageStructure msgToSend = new MessageStructure();
+            //msgToSend.MessageType = MessageType.Image;
+            //msgToSend.Message = "asdaddadsa";
+            //using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+            //    openFileDialog.Title = "Open Image";
+            //    openFileDialog.Filter = "Images|*.png;*.bmp;*.jpg;*.gif*";
+            //    if (openFileDialog.ShowDialog() == DialogResult.OK) {
+            //        // Create a new Bitmap object from the picture file on disk,
+            //        // and assign that to the PictureBox.Image property
+
+            //        //workign 1
+            //        //_Image0 = new Bitmap(openFileDialog.FileName);
+
+            //        msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
+
+            //        //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
+            //    }
+            //}
+            //byte[] msgToSendByte = msgToSend.ToByte();
+            //foreach (Client client in _ClientList) {
+            //    client.ClientSocket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.ClientSocket);
+            //}
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
         }
     }
 }

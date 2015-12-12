@@ -40,17 +40,18 @@ namespace MeowChatClient
             this.chatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.receivedImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.TabPagePublicChatClient = new System.Windows.Forms.TabPage();
+            this.BtnSendPhotoPublic = new System.Windows.Forms.Button();
             this.RichTextClientPub = new System.Windows.Forms.RichTextBox();
             this.TextBoxPubMsg = new System.Windows.Forms.TextBox();
             this.BtnPubSnd = new System.Windows.Forms.Button();
             this.ListBoxClientList = new System.Windows.Forms.ListBox();
             this.BtnColorPick = new System.Windows.Forms.Button();
             this.TabControlClient = new System.Windows.Forms.TabControl();
-            this.receivedImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStripClient.SuspendLayout();
             this.TabPagePublicChatClient.SuspendLayout();
             this.TabControlClient.SuspendLayout();
@@ -131,6 +132,13 @@ namespace MeowChatClient
             this.ChangeColorToolStripMenuItem.Text = "Change &Color";
             this.ChangeColorToolStripMenuItem.Click += new System.EventHandler(this.ChangeColorToolStripMenuItem_Click);
             // 
+            // receivedImagesToolStripMenuItem
+            // 
+            this.receivedImagesToolStripMenuItem.Name = "receivedImagesToolStripMenuItem";
+            this.receivedImagesToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.receivedImagesToolStripMenuItem.Text = "Received I&mages";
+            this.receivedImagesToolStripMenuItem.Click += new System.EventHandler(this.receivedImagesToolStripMenuItem_Click);
+            // 
             // HelpToolStripMenuItem
             // 
             this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -148,6 +156,7 @@ namespace MeowChatClient
             // 
             // TabPagePublicChatClient
             // 
+            this.TabPagePublicChatClient.Controls.Add(this.BtnSendPhotoPublic);
             this.TabPagePublicChatClient.Controls.Add(this.RichTextClientPub);
             this.TabPagePublicChatClient.Controls.Add(this.TextBoxPubMsg);
             this.TabPagePublicChatClient.Controls.Add(this.BtnPubSnd);
@@ -160,6 +169,17 @@ namespace MeowChatClient
             this.TabPagePublicChatClient.TabIndex = 10;
             this.TabPagePublicChatClient.Text = "Public Chat";
             this.TabPagePublicChatClient.UseVisualStyleBackColor = true;
+            // 
+            // BtnSendPhotoPublic
+            // 
+            this.BtnSendPhotoPublic.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BtnSendPhotoPublic.BackgroundImage")));
+            this.BtnSendPhotoPublic.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnSendPhotoPublic.Location = new System.Drawing.Point(464, 377);
+            this.BtnSendPhotoPublic.Name = "BtnSendPhotoPublic";
+            this.BtnSendPhotoPublic.Size = new System.Drawing.Size(23, 23);
+            this.BtnSendPhotoPublic.TabIndex = 9;
+            this.BtnSendPhotoPublic.UseVisualStyleBackColor = true;
+            this.BtnSendPhotoPublic.Click += new System.EventHandler(this.BtnSendPhotoPublic_Click);
             // 
             // RichTextClientPub
             // 
@@ -178,7 +198,7 @@ namespace MeowChatClient
             // 
             this.TextBoxPubMsg.Location = new System.Drawing.Point(3, 379);
             this.TextBoxPubMsg.Name = "TextBoxPubMsg";
-            this.TextBoxPubMsg.Size = new System.Drawing.Size(482, 20);
+            this.TextBoxPubMsg.Size = new System.Drawing.Size(455, 20);
             this.TextBoxPubMsg.TabIndex = 0;
             // 
             // BtnPubSnd
@@ -224,13 +244,6 @@ namespace MeowChatClient
             this.TabControlClient.TabIndex = 9;
             this.TabControlClient.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControlClient_DrawItem);
             this.TabControlClient.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TabControlClient_MouseClick);
-            // 
-            // receivedImagesToolStripMenuItem
-            // 
-            this.receivedImagesToolStripMenuItem.Name = "receivedImagesToolStripMenuItem";
-            this.receivedImagesToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.receivedImagesToolStripMenuItem.Text = "Received I&mages";
-            this.receivedImagesToolStripMenuItem.Click += new System.EventHandler(this.receivedImagesToolStripMenuItem_Click);
             // 
             // FrmChat
             // 
@@ -279,5 +292,6 @@ namespace MeowChatClient
         private TabControl TabControlClient;
         private ToolStripMenuItem StaticsToolStripMenuItem;
         private ToolStripMenuItem receivedImagesToolStripMenuItem;
+        private Button BtnSendPhotoPublic;
     }
 }

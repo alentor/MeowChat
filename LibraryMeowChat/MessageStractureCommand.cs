@@ -14,6 +14,6 @@
 //        PrivateMessage,
 //        PrivateStop,
 //        ServerMessage,
-//        Null //No command, only used in MessageStracture constarctor
+//        Null //No command, only used in MessageStructure constarctor
 //    }
 //}

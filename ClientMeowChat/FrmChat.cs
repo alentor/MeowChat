@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
@@ -22,7 +23,7 @@ namespace MeowChatClient {
         private byte[] _ByteMessage = new byte[2097152];
         private int _CursorPosition;
         private readonly Statistic _FrmStatistics = new Statistic();
-        private FrmImage _FrmImage = new FrmImage();
+        private readonly FrmImage _FrmImage = new FrmImage();
 
 
         public FrmChat() {
@@ -37,7 +38,7 @@ namespace MeowChatClient {
             _FrmStatistics.Start();
             FrmStatisticsUpdateEvent += _FrmStatistics.UpdateStatics;
             try {
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.List,
                     ClientName = ClientConnection.ClientName
                 };
@@ -60,7 +61,7 @@ namespace MeowChatClient {
                     return;
                 }
                 //Convert message from bytes to messageStracure class and store it in msgReceieved
-                MessageStracture msgReceived = new MessageStracture(_ByteMessage);
+                MessageStructure msgReceived = new MessageStructure(_ByteMessage);
                 //Set new bytes and start recieving again
                 _ByteMessage = new byte[2097152];
                 if (msgReceived.MessageType == MessageType.Disconnect) {
@@ -193,7 +194,7 @@ namespace MeowChatClient {
                     case MessageType.PrivateStart:
                         if (TabControlClient.TabPages.Cast <TabPage>().Any(tabPagePrivateChat => tabPagePrivateChat.Name == msgReceived.ClientName)) {
                             TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 3);
-                            return;
+                            break;
                         }
                         Invoke(new Action((delegate{
                             NewTabPagePrivateChatClient(msgReceived.ClientName);
@@ -230,23 +231,38 @@ namespace MeowChatClient {
 
                     case MessageType.Image:
                         //_FrmImage.Imgbyte = msgReceived.ImgByte;
-                        _FrmImage.NewImage(msgReceived.ImgByte);
-
-                        //newImageThread.Start();
-                        //if (_FrmImage.Visible) {
-                        //    Invoke(new Action((delegate{
-                        //        _FrmImage.BringToFront();
-                        //    })));
-
-                        //}
-                        //else {
-                        //    _FrmImage.ShowDialog();
-                        //}
-
-                        //Thread newImageThread = new Thread(new ThreadStart(() => {
-                        //    _FrmImage.Show();
-                        //}));
-                        //newImageThread.Start();
+                        if (msgReceived.Private != null) {
+                            if (ClientConnection.ClientName == msgReceived.ClientName) {
+                                TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 4);
+                                break;
+                            }
+                            _FrmImage.NewImage(msgReceived.ImgByte, msgReceived.ClientName + " Private");
+                            TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 4);
+                            if (_FrmImage.Visible == false) {
+                                if (InvokeRequired) {
+                                    BeginInvoke(new MethodInvoker(delegate{
+                                        _FrmImage.Visible = true;
+                                        _FrmImage.BringToFront();
+                                    }));
+                                }
+                                else {
+                                    _FrmImage.Visible = true;
+                                    _FrmImage.BringToFront();
+                                }
+                            }
+                            break;
+                        }
+                        if (ClientConnection.ClientName == msgReceived.ClientName) {
+                            Invoke(new Action((delegate{
+                                RichTextClientPub.SelectionStart = _CursorPosition;
+                                RichTextClientPub.SelectionColor = Color.Black;
+                                RichTextClientPub.SelectionBackColor = Color.CornflowerBlue;
+                                RichTextClientPub.SelectedText = GenericStatic.Time() + " " + " Image sent successfully" + Environment.NewLine;
+                                _CursorPosition = RichTextClientPub.SelectionStart;
+                            })));
+                            break;
+                        }
+                        _FrmImage.NewImage(msgReceived.ImgByte, msgReceived.ClientName);
                         if (_FrmImage.Visible == false) {
                             if (InvokeRequired) {
                                 BeginInvoke(new MethodInvoker(delegate{
@@ -259,8 +275,23 @@ namespace MeowChatClient {
                                 _FrmImage.BringToFront();
                             }
                         }
-
                         break;
+
+                    //newImageThread.Start();
+                    //if (_FrmImage.Visible) {
+                    //    Invoke(new Action((delegate{
+                    //        _FrmImage.BringToFront();
+                    //    })));
+
+                    //}
+                    //else {
+                    //    _FrmImage.ShowDialog();
+                    //}
+
+                    //Thread newImageThread = new Thread(new ThreadStart(() => {
+                    //    _FrmImage.Show();
+                    //}));
+                    //newImageThread.Start();
                 }
             }
             catch (Exception ex) {
@@ -285,7 +316,7 @@ namespace MeowChatClient {
                     return;
                 }
 
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.Message,
                     ClientName = ClientConnection.ClientName,
                     Color = ClientConnection.Color,
@@ -352,7 +383,7 @@ namespace MeowChatClient {
                         MessageBox.Show(@"The name " + changeName.NameNew + @"already taken", @"Chat: 5" + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    MessageStracture msgToSend = new MessageStracture {
+                    MessageStructure msgToSend = new MessageStructure {
                         MessageType = MessageType.NameChange,
                         ClientName = ClientConnection.ClientName,
                         Message = changeName.NameNew
@@ -399,13 +430,47 @@ namespace MeowChatClient {
                 }
                 string colorHex = GenericStatic.HexConverter(ColorPicker.Color);
                 ClientConnection.Color = colorHex;
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.ColorChange,
                     ClientName = ClientConnection.ClientName,
                     Color = colorHex
                 };
                 byte[] msgToSendByte = msgToSend.ToByte();
                 ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + @" -> BtnColorPick_Click", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //Pick Photo
+        private void BtnSendPhotoPublic_Click(object sender, EventArgs e) {
+            if (!ClientConnection.Status) {
+                return;
+            }
+            try {
+                MessageStructure msgToSend = new MessageStructure {
+                    ClientName = ClientConnection.ClientName,
+                    MessageType = MessageType.Image
+                };
+                using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                    openFileDialog.Title = @"Open Image";
+                    openFileDialog.Filter = @"Images|*.png;*.bmp;*.jpg;*.gif*";
+                    if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                        // Create a new Bitmap object from the picture file on disk,
+                        // and assign that to the PictureBox.Image property
+
+                        //workign 1
+                        //_Image0 = new Bitmap(openFileDialog.FileName);
+
+                        msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
+
+
+                        //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
+                        byte[] msgToSendByte = msgToSend.ToByte();
+                        ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+                    }
+                }
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> BtnColorPick_Click", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -430,7 +495,7 @@ namespace MeowChatClient {
                     return;
                 }
                 NewTabPagePrivateChatClient(ListBoxClientList.SelectedItem.ToString());
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.PrivateStart,
                     ClientName = ClientConnection.ClientName,
                     Private = ListBoxClientList.SelectedItem.ToString()
@@ -449,15 +514,20 @@ namespace MeowChatClient {
 
         //Method to which createsa new class of TabPagePrivateChatClient and adds it to TabControlClient
         private void NewTabPagePrivateChatClient(string tabName) {
+            if (!ClientConnection.Status) {
+                return;
+            }
             TabPagePrivateChatClient newPrivateTab = new TabPagePrivateChatClient(tabName);
             TabPagePrivateChatReceiveClientEvent += newPrivateTab.TabPageTabPagePrivateReceiveMessageClient;
             newPrivateTab.TabPagePrivateChatSendClientEvent += TabPagePrivateChatSendClient;
+            newPrivateTab.TabPagePrivateChatSendImageClientEvent += TabPagePrivateChatSendImageClient;
+
             TabControlClient.TabPages.Add(newPrivateTab);
         }
 
         //Send private message method event
         private void TabPagePrivateChatSendClient(string namePrivate, string message) {
-            MessageStracture msgToSend = new MessageStracture {
+            MessageStructure msgToSend = new MessageStructure {
                 MessageType = MessageType.PrivateMessage,
                 ClientName = ClientConnection.ClientName,
                 Private = namePrivate,
@@ -465,6 +535,50 @@ namespace MeowChatClient {
             };
             byte[] msgToSendByte = msgToSend.ToByte();
             ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+        }
+
+        //Send private Photo method event
+        private void TabPagePrivateChatSendImageClient(string namePrivate, string message) {
+            if (!ClientConnection.Status) {
+                return;
+            }
+            try {
+                MessageStructure msgToSend = new MessageStructure {
+                    MessageType = MessageType.Image,
+                    Private = namePrivate,
+                    ClientName = ClientConnection.ClientName
+                };
+                using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                    openFileDialog.Title = @"Open Image";
+                    openFileDialog.Filter = @"Images|*.png;*.bmp;*.jpg;*.gif*";
+                    if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                        // Create a new Bitmap object from the picture file on disk,
+                        // and assign that to the PictureBox.Image property
+
+                        //workign 1
+                        //_Image0 = new Bitmap(openFileDialog.FileName);
+
+                        msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
+
+
+                        //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
+                        byte[] msgToSendByte = msgToSend.ToByte();
+                        ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + @" -> BtnColorPick_Click", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
+            //MessageStructure msgToSend = new MessageStructure {
+            //    MessageType = MessageType.Image,
+            //    ClientName = ClientConnection.ClientName,
+            //    Private = namePrivate,
+            //};
+            //byte[] msgToSendByte = msgToSend.ToByte();
+            //ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
         }
 
         //TabControl DrawItem, used to the draw the X on each tab
@@ -527,7 +641,7 @@ namespace MeowChatClient {
                 if (MessageBox.Show(@"Would you like to Close this Tab?", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) {
                     continue;
                 }
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.PrivateStop,
                     ClientName = ClientConnection.ClientName,
                     Private = TabControlClient.TabPages[i].Name
@@ -554,7 +668,6 @@ namespace MeowChatClient {
         }
 
         private void receivedImagesToolStripMenuItem_Click(object sender, EventArgs e) {
-            //_FrmImage.Show();
             _FrmImage.Visible = true;
         }
     }

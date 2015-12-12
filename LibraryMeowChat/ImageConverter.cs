@@ -16,9 +16,5 @@ public class ImageConverter {
         return ms.ToArray();
     }
 
-    public Image byteArrayToImage(byte[] byteArrayIn) {
-        MemoryStream ms = new MemoryStream(byteArrayIn);
-        Image returnImage = Image.FromStream(ms);
-        return returnImage;
-    }
+ 
 }

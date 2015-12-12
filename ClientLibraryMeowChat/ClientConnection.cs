@@ -35,7 +35,7 @@ namespace MeowChatClientLibrary {
         private static void Connected(IAsyncResult ar) {
             try {
                 Socket.EndConnect(ar); //notify the server the connection was established succefully
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.Login,
                     ClientName = ClientName,
                     Message = null
@@ -64,7 +64,7 @@ namespace MeowChatClientLibrary {
         public static void Disconnect() {
             try {
                 Status = false;
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.Logout,
                     ClientName = ClientName
                 };
@@ -82,7 +82,7 @@ namespace MeowChatClientLibrary {
         public static void ServerDisconnectCall() {
             try {
                 Status = false;
-                MessageStracture msgToSend = new MessageStracture {
+                MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.Disconnect,
                     ClientName = ClientName
                 };

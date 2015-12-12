@@ -8,8 +8,11 @@ namespace MeowChatClientLibrary {
         private readonly RichTextBox _RichTextPrivChtClient = new RichTextBox();
         private readonly TextBox _TextBoxPrvMsg = new TextBox();
         private readonly Button _BtnPrvSnd = new Button();
+        private readonly Button _BtnSendPhotoPrivate = new Button();
+
 
         public event TabPagePrivateChatSendClietHandler TabPagePrivateChatSendClientEvent;
+        public event TabPagePrivateChatSendClietHandler TabPagePrivateChatSendImageClientEvent;
 
         private int _CursorPosition;
 
@@ -27,11 +30,10 @@ namespace MeowChatClientLibrary {
             _RichTextPrivChtClient.TabIndex = 12;
             _RichTextPrivChtClient.Text = "";
             _RichTextPrivChtClient.TextChanged += RichTextPrivChtClientTextChanged;
-
             // txtBxPrvMsg
             _TextBoxPrvMsg.Location = new Point(3, 379);
             _TextBoxPrvMsg.Name = name + "TxtBxPrvMsg";
-            _TextBoxPrvMsg.Size = new Size(511, 20);
+            _TextBoxPrvMsg.Size = new Size(482, 20);
             _TextBoxPrvMsg.TabIndex = 0;
             _TextBoxPrvMsg.Select();
             // btnPrvSnd
@@ -40,12 +42,23 @@ namespace MeowChatClientLibrary {
             _BtnPrvSnd.Size = new Size(89, 23);
             _BtnPrvSnd.TabIndex = 1;
             _BtnPrvSnd.Text = "&Send";
-            _BtnPrvSnd.Click += BtnPrvSnd_Click;
+            _BtnPrvSnd.Click += _BtnPrvSnd_Click;
             _BtnPrvSnd.UseVisualStyleBackColor = true;
+            // BtnSendPhotoPrivate
+            //Bitmap bmp = new Bitmap(System.Reflection.Assembly.GetEntryAssembly().GetManifestResourceStream(@"E:\Porjects\c#\MeowChat\ClientLibraryMeowChat\BtnSendPhotoPublic.BackgroundImage.png"));
+            //_BtnSendPhotoPrivate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BtnSendPhotoPublic.BackgroundImage")));
+            _BtnSendPhotoPrivate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            _BtnSendPhotoPrivate.Location = new System.Drawing.Point(491, 377);
+            _BtnSendPhotoPrivate.Name = "BtnSendPhotoPublic";
+            _BtnSendPhotoPrivate.Size = new System.Drawing.Size(23, 23);
+            //this.BtnSendPhotoPublic.TabIndex = 9;
+            _BtnSendPhotoPrivate.UseVisualStyleBackColor = true;
+            _BtnSendPhotoPrivate.Click += _BtnSendPhotoPrivate_Click;
             // TabPagePrivateChat
             Controls.Add(_RichTextPrivChtClient);
             Controls.Add(_TextBoxPrvMsg);
             Controls.Add(_BtnPrvSnd);
+            Controls.Add(_BtnSendPhotoPrivate);
             Location = new Point(4, 28);
             Name = name;
             Padding = new Padding(3);
@@ -55,12 +68,17 @@ namespace MeowChatClientLibrary {
         }
 
         //Button Send
-        private void BtnPrvSnd_Click(object sender, EventArgs e) {
+        private void _BtnPrvSnd_Click(object sender, EventArgs e) {
             if (_TextBoxPrvMsg.Text.Length > 0) {
                 TabPagePrivateChatSendClientEvent?.Invoke(Name, _TextBoxPrvMsg.Text);
                 _TextBoxPrvMsg.Text = "";
                 ++ClientStatistics.MessagesPrivateSent;
             }
+        }
+
+        //Button Image
+        private void _BtnSendPhotoPrivate_Click(object sender, EventArgs e) {
+            TabPagePrivateChatSendImageClientEvent?.Invoke(Name, null);
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageClientEvent, which being fired in FrmChat
@@ -105,6 +123,12 @@ namespace MeowChatClientLibrary {
                         _RichTextPrivChtClient.SelectionColor = Color.Black;
                         _RichTextPrivChtClient.SelectionBackColor = Color.LightGreen;
                         _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + " has resumed the chat" + Environment.NewLine;
+                        _CursorPosition = _RichTextPrivChtClient.SelectionStart;
+                        break;
+                    case 4:
+                        _RichTextPrivChtClient.SelectionColor = Color.Black;
+                        _RichTextPrivChtClient.SelectionBackColor = Color.CornflowerBlue;
+                        _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + " Image sent successfully" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
                 }
