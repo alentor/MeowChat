@@ -23,7 +23,7 @@ namespace MeowChatClient {
         private byte[] _ByteMessage = new byte[2097152];
         private int _CursorPosition;
         private readonly Statistic _FrmStatistics = new Statistic();
-        private readonly FrmImage _FrmImage = new FrmImage();
+        private readonly FrmClientImages _FrmClientImages = new FrmClientImages();
 
 
         public FrmChat() {
@@ -154,6 +154,7 @@ namespace MeowChatClient {
                             }
                             GenericStatic.FormatItemSize(TabControlClient);
                         })));
+                        _FrmClientImages.Text = msgReceived.Message + @" Received Images";
                         goto case MessageType.ColorChange;
 
                     case MessageType.Message:
@@ -230,24 +231,23 @@ namespace MeowChatClient {
                         break;
 
                     case MessageType.Image:
-                        //_FrmImage.Imgbyte = msgReceived.ImgByte;
                         if (msgReceived.Private != null) {
                             if (ClientConnection.ClientName == msgReceived.ClientName) {
                                 TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 4);
                                 break;
                             }
-                            _FrmImage.NewImage(msgReceived.ImgByte, msgReceived.ClientName + " Private");
+                            _FrmClientImages.NewImage(msgReceived.ImgByte, msgReceived.ClientName + " Private");
                             TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 4);
-                            if (_FrmImage.Visible == false) {
+                            if (_FrmClientImages.Visible == false) {
                                 if (InvokeRequired) {
                                     BeginInvoke(new MethodInvoker(delegate{
-                                        _FrmImage.Visible = true;
-                                        _FrmImage.BringToFront();
+                                        _FrmClientImages.Visible = true;
+                                        _FrmClientImages.BringToFront();
                                     }));
                                 }
                                 else {
-                                    _FrmImage.Visible = true;
-                                    _FrmImage.BringToFront();
+                                    _FrmClientImages.Visible = true;
+                                    _FrmClientImages.BringToFront();
                                 }
                             }
                             break;
@@ -262,34 +262,34 @@ namespace MeowChatClient {
                             })));
                             break;
                         }
-                        _FrmImage.NewImage(msgReceived.ImgByte, msgReceived.ClientName);
-                        if (_FrmImage.Visible == false) {
+                        _FrmClientImages.NewImage(msgReceived.ImgByte, msgReceived.ClientName);
+                        if (_FrmClientImages.Visible == false) {
                             if (InvokeRequired) {
                                 BeginInvoke(new MethodInvoker(delegate{
-                                    _FrmImage.Visible = true;
-                                    _FrmImage.BringToFront();
+                                    _FrmClientImages.Visible = true;
+                                    _FrmClientImages.BringToFront();
                                 }));
                             }
                             else {
-                                _FrmImage.Visible = true;
-                                _FrmImage.BringToFront();
+                                _FrmClientImages.Visible = true;
+                                _FrmClientImages.BringToFront();
                             }
                         }
                         break;
 
                     //newImageThread.Start();
-                    //if (_FrmImage.Visible) {
+                    //if (_FrmClientImages.Visible) {
                     //    Invoke(new Action((delegate{
-                    //        _FrmImage.BringToFront();
+                    //        _FrmClientImages.BringToFront();
                     //    })));
 
                     //}
                     //else {
-                    //    _FrmImage.ShowDialog();
+                    //    _FrmClientImages.ShowDialog();
                     //}
 
                     //Thread newImageThread = new Thread(new ThreadStart(() => {
-                    //    _FrmImage.Show();
+                    //    _FrmClientImages.Show();
                     //}));
                     //newImageThread.Start();
                 }
@@ -456,20 +456,17 @@ namespace MeowChatClient {
                 using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                     openFileDialog.Title = @"Open Image";
                     openFileDialog.Filter = @"Images|*.png;*.bmp;*.jpg;*.gif*";
-                    if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                        // Create a new Bitmap object from the picture file on disk,
-                        // and assign that to the PictureBox.Image property
-
-                        //workign 1
-                        //_Image0 = new Bitmap(openFileDialog.FileName);
-
-                        msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
-
-
-                        //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
-                        byte[] msgToSendByte = msgToSend.ToByte();
-                        ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+                    if (openFileDialog.ShowDialog() != DialogResult.OK) {
+                        return;
                     }
+                    long fileSize = new FileInfo(openFileDialog.FileName).Length;
+                    if (fileSize > 2097152) {
+                        MessageBox.Show(@"This file is too big, you can send files no larger than 3MB", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
+                    byte[] msgToSendByte = msgToSend.ToByte();
+                    ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
                 }
             }
             catch (Exception ex) {
@@ -551,20 +548,17 @@ namespace MeowChatClient {
                 using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                     openFileDialog.Title = @"Open Image";
                     openFileDialog.Filter = @"Images|*.png;*.bmp;*.jpg;*.gif*";
-                    if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                        // Create a new Bitmap object from the picture file on disk,
-                        // and assign that to the PictureBox.Image property
-
-                        //workign 1
-                        //_Image0 = new Bitmap(openFileDialog.FileName);
-
-                        msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
-
-
-                        //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
-                        byte[] msgToSendByte = msgToSend.ToByte();
-                        ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
+                    if (openFileDialog.ShowDialog() != DialogResult.OK) {
+                        return;
                     }
+                    long fileSize = new FileInfo(openFileDialog.FileName).Length;
+                    if (fileSize > 2097152) {
+                        MessageBox.Show(@"This file is too big, you can send files no larger than 3MB", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
+                    byte[] msgToSendByte = msgToSend.ToByte();
+                    ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
                 }
             }
             catch (Exception ex) {
@@ -668,7 +662,7 @@ namespace MeowChatClient {
         }
 
         private void receivedImagesToolStripMenuItem_Click(object sender, EventArgs e) {
-            _FrmImage.Visible = true;
+            _FrmClientImages.Visible = true;
         }
     }
 }

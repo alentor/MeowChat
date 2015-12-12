@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImageConverter.cs" />
     <Compile Include="MessageStractureCommand.cs" />
     <Compile Include="GenericStatic.cs" />
     <Compile Include="MessageStructure.cs" />

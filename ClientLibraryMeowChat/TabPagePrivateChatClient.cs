@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using LibraryMeowChat;
 
@@ -45,8 +47,7 @@ namespace MeowChatClientLibrary {
             _BtnPrvSnd.Click += _BtnPrvSnd_Click;
             _BtnPrvSnd.UseVisualStyleBackColor = true;
             // BtnSendPhotoPrivate
-            //Bitmap bmp = new Bitmap(System.Reflection.Assembly.GetEntryAssembly().GetManifestResourceStream(@"E:\Porjects\c#\MeowChat\ClientLibraryMeowChat\BtnSendPhotoPublic.BackgroundImage.png"));
-            //_BtnSendPhotoPrivate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BtnSendPhotoPublic.BackgroundImage")));
+            _BtnSendPhotoPrivate.BackgroundImage = Image.FromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "BtnSendPhotoPublic.BackgroundImage.png"));
             _BtnSendPhotoPrivate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             _BtnSendPhotoPrivate.Location = new System.Drawing.Point(491, 377);
             _BtnSendPhotoPrivate.Name = "BtnSendPhotoPublic";

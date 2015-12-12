@@ -1,27 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LibraryMeowChat;
-using MeowChatClientLibrary;
 
-namespace MeowChatClient {
-    public partial class FrmImage: Form {
+//using MeowChatClientLibrary;
+
+namespace MeowChatServer {
+    public partial class FrmServerImages: Form {
         private byte[] Imgbyte;
         private Image _Img;
         private int _ImageCouter;
 
-        public FrmImage() {
+        public FrmServerImages() {
             InitializeComponent();
-            Text = ClientConnection.ClientName + @" Received Images";
         }
 
         public void NewImage(byte[] imgByte, string tabName) {
@@ -73,7 +65,7 @@ namespace MeowChatClient {
 
         private void BtnSave_Click(object sender, EventArgs e) {
             if (Imgbyte != null) {
-                _Img = byteArrayToImage(Imgbyte);
+                _Img = ByteArrayToImage(Imgbyte);
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = @"Images|*.png;";
                 //saveFileDialog.Filter = "Images|*.png;*.bmp;*.jpg*.gif*";
@@ -89,7 +81,7 @@ namespace MeowChatClient {
             BtnSave_Click(this, null);
         }
 
-        private static Image byteArrayToImage(byte[] byteArrayIn) {
+        private static Image ByteArrayToImage(byte[] byteArrayIn) {
             MemoryStream ms = new MemoryStream(byteArrayIn);
             Image returnImage = Image.FromStream(ms);
             return returnImage;

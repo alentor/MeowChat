@@ -1,6 +1,6 @@
 ﻿namespace MeowChatClient
 {
-    partial class FrmImage
+    partial class FrmClientImages
     {
         /// <summary>
         /// Required designer variable.
@@ -52,7 +52,7 @@
             // 
             this.tabControlmages.Controls.Add(this.tabPage1);
             this.tabControlmages.Controls.Add(this.tabPage2);
-            this.tabControlmages.Location = new System.Drawing.Point(13, 13);
+            this.tabControlmages.Location = new System.Drawing.Point(3, 3);
             this.tabControlmages.Name = "tabControlmages";
             this.tabControlmages.SelectedIndex = 0;
             this.tabControlmages.Size = new System.Drawing.Size(410, 399);
@@ -72,7 +72,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(147, 345);
+            this.button1.Location = new System.Drawing.Point(170, 345);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -95,7 +95,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(434, 423);
+            this.ClientSize = new System.Drawing.Size(414, 404);
             this.Controls.Add(this.tabControlmages);
             this.MaximizeBox = false;
             this.Name = "FrmImage";

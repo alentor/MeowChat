@@ -47,4 +47,4 @@ E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\ClientMeowChat.csproj.GenerateR
 E:\Porjects\c#\MeowChat\ClientMeowChat\bin\Debug\LibraryMeowChat.dll
 E:\Porjects\c#\MeowChat\ClientMeowChat\bin\Debug\LibraryMeowChat.pdb
 E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\MeowChatClient.Statistic.resources
-E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\MeowChatClient.FrmImage.resources
+E:\Porjects\c#\MeowChat\ClientMeowChat\obj\Debug\MeowChatClient.FrmClientImages.resources

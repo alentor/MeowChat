@@ -21,6 +21,8 @@ namespace MeowChatServer {
         private TabPagePrivateChatReceiveServerHandler _TabPagePrivateChatReceiveServerEvent;
         private bool _IsServerRunning = true;
         private bool _IsDisconnectRunning;
+        private readonly FrmServerImages _FrmServerImages = new FrmServerImages();
+
 
         public FrmServer() {
             InitializeComponent();
@@ -72,7 +74,7 @@ namespace MeowChatServer {
                     return;
                 }
                 _IsDisconnectRunning = true;
-                FrmProgressBar frmProgressBarDisconnect = new FrmProgressBar(_ClientList);
+                FrmServerProgressBar frmProgressBarDisconnect = new FrmServerProgressBar(_ClientList);
                 // Initialize the dialog that will contain the progress bar
                 MessageStructure msgToSend = new MessageStructure {
                     MessageType = MessageType.Disconnect
@@ -378,6 +380,7 @@ namespace MeowChatServer {
                         break;
                     case MessageType.Image:
                         if (msgReceived.Private != null) {
+                            _FrmServerImages.NewImage(msgReceived.ImgByte, msgReceived.ClientName + " Private " + msgReceived.Private);
                             Thread threadSendImagePrivate = new Thread(new ThreadStart(() =>{
                                 foreach (Client client in _ClientList.Where(clientLinq => clientLinq.ClientName == msgReceived.Private)) {
                                     msgToSend.Private = msgReceived.Private;
@@ -390,26 +393,17 @@ namespace MeowChatServer {
                             threadSendImagePrivate.Start();
                             Invoke(new Action((delegate{
                                 msgToSend.ImgByte = msgReceived.ImgByte;
-                                RichTextServerPub.SelectionStart = _CursorPositionPub;
-                                RichTextServerPub.SelectedText = GenericStatic.Time() + " ";
+                                RichTextServerConn.SelectionStart = _CursorPositionPub;
+                                RichTextServerConn.SelectedText = GenericStatic.Time() + " ";
                                 RichTextServerConn.SelectionBackColor = Color.DarkBlue;
                                 RichTextServerConn.SelectionColor = Color.Yellow;
-                                RichTextServerPub.SelectedText = msgToSend.ClientName + @" :" + "sent a photo to " + msgReceived.Private + " +. => " /*+ tabnumber here */;
-                                RichTextServerPub.SelectedText = Environment.NewLine;
-                                _CursorPositionPub = RichTextServerPub.SelectionStart;
+                                RichTextServerConn.SelectedText = msgToSend.ClientName + @" :" + "sent a photo to " + msgReceived.Private;
+                                RichTextServerConn.SelectedText = Environment.NewLine;
+                                _CursorPositionConn = RichTextServerConn.SelectionStart;
                             })));
                             break;
                         }
-                        Invoke(new Action((delegate{
-                            msgToSend.ImgByte = msgReceived.ImgByte;
-                            RichTextServerPub.SelectionStart = _CursorPositionPub;
-                            RichTextServerPub.SelectedText = GenericStatic.Time() + " ";
-                            RichTextServerConn.SelectionBackColor = Color.DarkBlue;
-                            RichTextServerConn.SelectionColor = Color.Yellow;
-                            RichTextServerPub.SelectedText = msgToSend.ClientName + @" :" + "sent a photo. => " /*+ tabnumber here */;
-                            RichTextServerPub.SelectedText = Environment.NewLine;
-                            _CursorPositionPub = RichTextServerPub.SelectionStart;
-                        })));
+                        _FrmServerImages.NewImage(msgReceived.ImgByte, msgReceived.ClientName);
                         msgToSend.ImgByte = msgReceived.ImgByte;
                         messageBytes = msgToSend.ToByte();
                         Thread threadSendImageToAll = new Thread(new ThreadStart(() =>{
@@ -417,8 +411,17 @@ namespace MeowChatServer {
                                 client.ClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.ClientSocket);
                             }
                         }));
-                        //ThreadSendImageToAll.IsBackground = true;
                         threadSendImageToAll.Start();
+                        Invoke(new Action((delegate{
+                            msgToSend.ImgByte = msgReceived.ImgByte;
+                            RichTextServerConn.SelectionStart = _CursorPositionConn;
+                            RichTextServerConn.SelectedText = GenericStatic.Time() + " ";
+                            RichTextServerConn.SelectionBackColor = Color.DarkBlue;
+                            RichTextServerConn.SelectionColor = Color.Yellow;
+                            RichTextServerConn.SelectedText = msgToSend.ClientName + @" :" + "sent a photo";
+                            RichTextServerConn.SelectedText = Environment.NewLine;
+                            _CursorPositionConn = RichTextServerConn.SelectionStart;
+                        })));
 
                         break;
                 }
@@ -595,6 +598,7 @@ namespace MeowChatServer {
         }
 
         private void button1_Click(object sender, EventArgs e) {
+            _FrmServerImages.Visible = true;
         }
     }
 }

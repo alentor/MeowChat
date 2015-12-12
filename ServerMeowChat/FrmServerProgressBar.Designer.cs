@@ -1,6 +1,6 @@
 ﻿namespace MeowChatServer
 {
-    partial class FrmProgressBar
+    partial class FrmServerProgressBar
     {
         /// <summary>
         /// Required designer variable.

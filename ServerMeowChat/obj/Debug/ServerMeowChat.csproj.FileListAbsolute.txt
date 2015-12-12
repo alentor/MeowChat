@@ -39,4 +39,5 @@ E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.Properties.Resou
 E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\ServerMeowChat.csproj.GenerateResource.Cache
 E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\LibraryMeowChat.dll
 E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\LibraryMeowChat.pdb
-E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.FrmProgressBar.resources
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.FrmServerImages.resources
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.FrmServerProgressBar.resources

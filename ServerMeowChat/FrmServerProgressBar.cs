@@ -11,10 +11,10 @@ using System.Windows.Forms;
 using MeowChatServerLibrary;
 
 namespace MeowChatServer {
-    public partial class FrmProgressBar: Form {
+    public partial class FrmServerProgressBar: Form {
         private readonly List <Client> _InternalClientList;
 
-        public FrmProgressBar(List <Client> internalClientList) {
+        public FrmServerProgressBar(List <Client> internalClientList) {
             _InternalClientList = internalClientList;
             InitializeComponent();
             if (_InternalClientList.Count == 0) {
