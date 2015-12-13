@@ -35,17 +35,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(6, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(163, 91);
+            this.label1.Size = new System.Drawing.Size(163, 78);
             this.label1.TabIndex = 0;
-            this.label1.Text = "MeowChat Application\r\nVersion 4.0\r\n\r\n\r\n\r\nDeveloped by Williams Guterman\r\n28.11.15" +
-    "\r\n";
+            this.label1.Text = "MeowChat Application\r\nVersion 4.1\r\n13.12.15\r\n\r\n\r\nDeveloped by Williams Guterman";
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 48);
+            this.linkLabel1.Location = new System.Drawing.Point(6, 54);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(191, 13);
             this.linkLabel1.TabIndex = 1;
@@ -57,7 +56,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(207, 108);
+            this.ClientSize = new System.Drawing.Size(200, 101);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

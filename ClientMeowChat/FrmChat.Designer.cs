@@ -40,10 +40,12 @@ namespace MeowChatClient
             this.chatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.receivedImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.TabPagePublicChatClient = new System.Windows.Forms.TabPage();
+            this.BtnSendPhotoPublic = new System.Windows.Forms.Button();
             this.RichTextClientPub = new System.Windows.Forms.RichTextBox();
             this.TextBoxPubMsg = new System.Windows.Forms.TextBox();
             this.BtnPubSnd = new System.Windows.Forms.Button();
@@ -81,28 +83,28 @@ namespace MeowChatClient
             // StaticsToolStripMenuItem
             // 
             this.StaticsToolStripMenuItem.Name = "StaticsToolStripMenuItem";
-            this.StaticsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.StaticsToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.StaticsToolStripMenuItem.Text = "&Statistics";
             this.StaticsToolStripMenuItem.Click += new System.EventHandler(this.StaticsToolStripMenuItem_Click);
             // 
             // ReconnectToolStripMenuItem
             // 
             this.ReconnectToolStripMenuItem.Name = "ReconnectToolStripMenuItem";
-            this.ReconnectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ReconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.ReconnectToolStripMenuItem.Text = "&Reconnect";
             this.ReconnectToolStripMenuItem.Click += new System.EventHandler(this.ReconnectToolStripMenuItem_Click);
             // 
             // DisconnectToolStripMenuItem
             // 
             this.DisconnectToolStripMenuItem.Name = "DisconnectToolStripMenuItem";
-            this.DisconnectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.DisconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.DisconnectToolStripMenuItem.Text = "&Disconnect";
             this.DisconnectToolStripMenuItem.Click += new System.EventHandler(this.DisconnectToolStripMenuItem_Click);
             // 
             // ExitToolStripMenuItem
             // 
             this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.ExitToolStripMenuItem.Text = "E&xit";
             this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ClickExitToolStripMenuItem);
             // 
@@ -110,7 +112,8 @@ namespace MeowChatClient
             // 
             this.chatToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ChangeNameToolStripMenuItem,
-            this.ChangeColorToolStripMenuItem});
+            this.ChangeColorToolStripMenuItem,
+            this.receivedImagesToolStripMenuItem});
             this.chatToolStripMenuItem.Name = "chatToolStripMenuItem";
             this.chatToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.chatToolStripMenuItem.Text = "&Chat";
@@ -118,16 +121,23 @@ namespace MeowChatClient
             // ChangeNameToolStripMenuItem
             // 
             this.ChangeNameToolStripMenuItem.Name = "ChangeNameToolStripMenuItem";
-            this.ChangeNameToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.ChangeNameToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.ChangeNameToolStripMenuItem.Text = "Cha&nge name";
             this.ChangeNameToolStripMenuItem.Click += new System.EventHandler(this.ChangeNameToolStripMenuItem_Click);
             // 
             // ChangeColorToolStripMenuItem
             // 
             this.ChangeColorToolStripMenuItem.Name = "ChangeColorToolStripMenuItem";
-            this.ChangeColorToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.ChangeColorToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.ChangeColorToolStripMenuItem.Text = "Change &Color";
             this.ChangeColorToolStripMenuItem.Click += new System.EventHandler(this.ChangeColorToolStripMenuItem_Click);
+            // 
+            // receivedImagesToolStripMenuItem
+            // 
+            this.receivedImagesToolStripMenuItem.Name = "receivedImagesToolStripMenuItem";
+            this.receivedImagesToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.receivedImagesToolStripMenuItem.Text = "Received I&mages";
+            this.receivedImagesToolStripMenuItem.Click += new System.EventHandler(this.receivedImagesToolStripMenuItem_Click);
             // 
             // HelpToolStripMenuItem
             // 
@@ -146,6 +156,7 @@ namespace MeowChatClient
             // 
             // TabPagePublicChatClient
             // 
+            this.TabPagePublicChatClient.Controls.Add(this.BtnSendPhotoPublic);
             this.TabPagePublicChatClient.Controls.Add(this.RichTextClientPub);
             this.TabPagePublicChatClient.Controls.Add(this.TextBoxPubMsg);
             this.TabPagePublicChatClient.Controls.Add(this.BtnPubSnd);
@@ -158,6 +169,17 @@ namespace MeowChatClient
             this.TabPagePublicChatClient.TabIndex = 10;
             this.TabPagePublicChatClient.Text = "Public Chat";
             this.TabPagePublicChatClient.UseVisualStyleBackColor = true;
+            // 
+            // BtnSendPhotoPublic
+            // 
+            this.BtnSendPhotoPublic.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BtnSendPhotoPublic.BackgroundImage")));
+            this.BtnSendPhotoPublic.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnSendPhotoPublic.Location = new System.Drawing.Point(464, 377);
+            this.BtnSendPhotoPublic.Name = "BtnSendPhotoPublic";
+            this.BtnSendPhotoPublic.Size = new System.Drawing.Size(23, 23);
+            this.BtnSendPhotoPublic.TabIndex = 9;
+            this.BtnSendPhotoPublic.UseVisualStyleBackColor = true;
+            this.BtnSendPhotoPublic.Click += new System.EventHandler(this.BtnSendPhotoPublic_Click);
             // 
             // RichTextClientPub
             // 
@@ -176,7 +198,7 @@ namespace MeowChatClient
             // 
             this.TextBoxPubMsg.Location = new System.Drawing.Point(3, 379);
             this.TextBoxPubMsg.Name = "TextBoxPubMsg";
-            this.TextBoxPubMsg.Size = new System.Drawing.Size(482, 20);
+            this.TextBoxPubMsg.Size = new System.Drawing.Size(455, 20);
             this.TextBoxPubMsg.TabIndex = 0;
             // 
             // BtnPubSnd
@@ -269,5 +291,7 @@ namespace MeowChatClient
         private Button BtnColorPick;
         private TabControl TabControlClient;
         private ToolStripMenuItem StaticsToolStripMenuItem;
+        private ToolStripMenuItem receivedImagesToolStripMenuItem;
+        private Button BtnSendPhotoPublic;
     }
 }

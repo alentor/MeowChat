@@ -46,11 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrmProgressBar.cs">
+    <Compile Include="FrmServerImages.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmProgressBar.Designer.cs">
-      <DependentUpon>FrmProgressBar.cs</DependentUpon>
+    <Compile Include="FrmServerImages.Designer.cs">
+      <DependentUpon>FrmServerImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmServerProgressBar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmServerProgressBar.Designer.cs">
+      <DependentUpon>FrmServerProgressBar.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -65,8 +71,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmProgressBar.resx">
-      <DependentUpon>FrmProgressBar.cs</DependentUpon>
+    <EmbeddedResource Include="FrmServerImages.resx">
+      <DependentUpon>FrmServerImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmServerProgressBar.resx">
+      <DependentUpon>FrmServerProgressBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmServer.resx">
       <DependentUpon>FrmServer.cs</DependentUpon>

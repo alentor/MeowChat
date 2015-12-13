@@ -42,9 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MessageStractureCommand.cs" />
     <Compile Include="GenericStatic.cs" />
-    <Compile Include="MessageStracture.cs" />
+    <Compile Include="MessageStructure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

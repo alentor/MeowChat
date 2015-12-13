@@ -7,4 +7,6 @@
     public delegate void TabPagePrivateChatReceiveClientHandler(string tabName, string privateName, string message, int caseId);
 
     public delegate void FrmStatisticsUpdateHandler(StatisticsEntry staticsEntry);
+
+    public delegate void FrmClientImagesChangeNameHandler(string tabname, string tabNameNew);
 }

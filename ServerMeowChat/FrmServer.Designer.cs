@@ -49,6 +49,7 @@ namespace MeowChatServer
             this.TabPagePublicChatServer = new System.Windows.Forms.TabPage();
             this.RichTextServerPub = new System.Windows.Forms.RichTextBox();
             this.BtnStopSrv = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.TabControlServer.SuspendLayout();
             this.TabConnTrack.SuspendLayout();
             this.TabPagePublicChatServer.SuspendLayout();
@@ -111,7 +112,7 @@ namespace MeowChatServer
             // LblLocalIp
             // 
             this.LblLocalIp.AutoSize = true;
-            this.LblLocalIp.Location = new System.Drawing.Point(333, 366);
+            this.LblLocalIp.Location = new System.Drawing.Point(408, 366);
             this.LblLocalIp.Name = "LblLocalIp";
             this.LblLocalIp.Size = new System.Drawing.Size(56, 13);
             this.LblLocalIp.TabIndex = 10;
@@ -164,9 +165,9 @@ namespace MeowChatServer
             // 
             // TxtBxServer
             // 
-            this.TxtBxServer.Location = new System.Drawing.Point(421, 362);
+            this.TxtBxServer.Location = new System.Drawing.Point(474, 362);
             this.TxtBxServer.Name = "TxtBxServer";
-            this.TxtBxServer.Size = new System.Drawing.Size(281, 20);
+            this.TxtBxServer.Size = new System.Drawing.Size(228, 20);
             this.TxtBxServer.TabIndex = 16;
             this.TxtBxServer.Text = "Global message";
             // 
@@ -231,6 +232,17 @@ namespace MeowChatServer
             this.BtnStopSrv.UseVisualStyleBackColor = true;
             this.BtnStopSrv.Click += new System.EventHandler(this.btnStopSrv_Click);
             // 
+            // button1
+            // 
+            this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.button1.Location = new System.Drawing.Point(333, 362);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(73, 23);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "I&mages";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FrmServer
             // 
             this.AcceptButton = this.BtnStartSrv;
@@ -238,6 +250,7 @@ namespace MeowChatServer
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnStopSrv;
             this.ClientSize = new System.Drawing.Size(754, 391);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.BtnStopSrv);
             this.Controls.Add(this.TabControlServer);
             this.Controls.Add(this.TxtBxServer);
@@ -282,6 +295,7 @@ namespace MeowChatServer
         private System.Windows.Forms.TabPage TabPagePublicChatServer;
         private RichTextBox RichTextServerPub;
         private Button BtnStopSrv;
+        private Button button1;
     }
 }
 
