@@ -1,14 +1,12 @@
-﻿using LibraryMeowChat;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace LibraryMeowChat {
-    public enum MessageType {
+namespace LibraryMeowChat
+{
+    public enum MessageType
+    {
         Login,
         Logout,
         Message,
@@ -21,13 +19,14 @@ namespace LibraryMeowChat {
         PrivateStop,
         ServerMessage,
         Image,
-        ImagePirvate,
         Null //No command, only used in MessageStructure constarctor
     }
 
-    public class MessageStructure {
+    public class MessageStructure
+    {
         //Constructor
-        public MessageStructure() {
+        public MessageStructure()
+        {
             MessageType = MessageType.Null;
             Color = null;
             ClientName = null;
@@ -43,10 +42,10 @@ namespace LibraryMeowChat {
         public string Message; //The message itself, it can be anything, any kind of information which can fit into a string
         public byte[] ImgByte;
 
-
         //Convert bytes[] into MessageStructure object
-        public MessageStructure(byte[] data) {
-            MessageType = (MessageType) BitConverter.ToInt32(data, 0);
+        public MessageStructure(byte[] data)
+        {
+            MessageType = (MessageType)BitConverter.ToInt32(data, 0);
             //Next four bytes store the length of the clientName
             int clientNameLen = BitConverter.ToInt32(data, 4);
             //Next four bytes store the length of the color
@@ -68,13 +67,14 @@ namespace LibraryMeowChat {
         }
 
         //Convert MessageStructure object into bytes[]
-        public byte[] ToByte() {
+        public byte[] ToByte()
+        {
             //emptyByte for usage in LINQ expression
-            byte[] emptyByte = {};
-            //create list bytes to which the object MessageStructure will be converted 
-            List <byte> bytesList = new List <byte>();
+            byte[] emptyByte = { };
+            //create list bytes to which the object MessageStructure will be converted
+            List<byte> bytesList = new List<byte>();
             //First add command to the bytesList
-            bytesList.AddRange(BitConverter.GetBytes((int) MessageType));
+            bytesList.AddRange(BitConverter.GetBytes((int)MessageType));
             //add ClientName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(ClientName != null ? BitConverter.GetBytes(ClientName.Length) : BitConverter.GetBytes(0));
             //add Color length to the bytesList, add zero bytes if clintName is null
@@ -95,7 +95,7 @@ namespace LibraryMeowChat {
             bytesList.AddRange(Message != null ? Encoding.UTF8.GetBytes(Message) : emptyByte);
             //Add Image to the bytesList
             bytesList.AddRange(ImgByte != null ? ImgByte : emptyByte);
-            // The above can be also done using the following expression 
+            // The above can be also done using the following expression
             //bytesList.AddRange(ImgByte ?? BitConverter.GetBytes(0));
 
             //convert List to array of byte since you can send only arrays of bytes thro the TCP protocol.

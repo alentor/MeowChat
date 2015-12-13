@@ -112,7 +112,7 @@ namespace MeowChatServer
             // LblLocalIp
             // 
             this.LblLocalIp.AutoSize = true;
-            this.LblLocalIp.Location = new System.Drawing.Point(412, 366);
+            this.LblLocalIp.Location = new System.Drawing.Point(408, 366);
             this.LblLocalIp.Name = "LblLocalIp";
             this.LblLocalIp.Size = new System.Drawing.Size(56, 13);
             this.LblLocalIp.TabIndex = 10;

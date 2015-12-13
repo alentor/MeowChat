@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LibraryMeowChat;
 using MeowChatClientLibrary;
 
 namespace MeowChatClient {
     public partial class FrmClientImages: Form {
-        private byte[] Imgbyte;
         private Image _Img;
-        private int _ImageCouter;
+        private byte[] _Imgbyte;
 
         public FrmClientImages() {
             InitializeComponent();
@@ -25,44 +16,45 @@ namespace MeowChatClient {
         }
 
         public void NewImage(byte[] imgByte, string tabName) {
-            ++_ImageCouter;
-            Imgbyte = imgByte;
-            PictureBox newPictureBox = new PictureBox();
-            newPictureBox.Location = new System.Drawing.Point(6, 6);
-            newPictureBox.Name = "newPictureBox";
-            newPictureBox.Size = new System.Drawing.Size(390, 336);
-            newPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            newPictureBox.TabIndex = 0;
-            newPictureBox.TabStop = false;
-            newPictureBox.Click += new System.EventHandler(this.pictureBox1_Click);
+            _Imgbyte = imgByte;
+            PictureBox newPictureBox = new PictureBox {
+                Location = new Point(6, 6),
+                Name = "newPictureBox",
+                Size = new Size(390, 336),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                TabIndex = 0,
+                TabStop = false
+            };
+            newPictureBox.Click += pictureBox1_Click;
             MemoryStream ms = new MemoryStream(imgByte);
             Image newImage = Image.FromStream(ms);
             newPictureBox.Image = newImage;
-            Button BtnSave = new Button();
-            BtnSave.Location = new System.Drawing.Point(147, 345);
-            BtnSave.Name = "saveButton";
-            BtnSave.Size = new System.Drawing.Size(75, 23);
-            BtnSave.TabIndex = 2;
-            BtnSave.Text = @"&Save";
-            BtnSave.UseVisualStyleBackColor = true;
-            BtnSave.Click += new System.EventHandler(this.BtnSave_Click);
+            Button btnSave = new Button {
+                Location = new Point(147, 345),
+                Name = "saveButton",
+                Size = new Size(75, 23),
+                TabIndex = 2,
+                Text = @"&Save",
+                UseVisualStyleBackColor = true
+            };
+            btnSave.Click += BtnSave_Click;
             TabPage newTabPage = new TabPage();
             newTabPage.Controls.Add(newPictureBox);
-            newTabPage.Controls.Add(BtnSave);
-            newTabPage.Location = new System.Drawing.Point(4, 22);
-            newTabPage.Name = tabControlmages.TabCount.ToString();
-            newTabPage.Padding = new System.Windows.Forms.Padding(3);
-            newTabPage.Size = new System.Drawing.Size(402, 349);
+            newTabPage.Controls.Add(btnSave);
+            newTabPage.Location = new Point(4, 22);
+            newTabPage.Name = tabName;
+            newTabPage.Text = tabName;
+            newTabPage.Padding = new Padding(3);
+            newTabPage.Size = new Size(402, 349);
             newTabPage.TabIndex = 0;
-            newTabPage.Text = tabName + @" " + _ImageCouter;
             newTabPage.UseVisualStyleBackColor = true;
             if (InvokeRequired) {
                 Invoke(new MethodInvoker(delegate{
-                    tabControlmages.TabPages.Add(newTabPage);
+                    TabControlClientImages.TabPages.Add(newTabPage);
                 }));
             }
             else {
-                tabControlmages.TabPages.Add(newTabPage);
+                TabControlClientImages.TabPages.Add(newTabPage);
             }
         }
 
@@ -72,16 +64,18 @@ namespace MeowChatClient {
         }
 
         private void BtnSave_Click(object sender, EventArgs e) {
-            if (Imgbyte != null) {
-                _Img = ByteArrayToImage(Imgbyte);
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = @"Images|*.png;";
-                //saveFileDialog.Filter = "Images|*.png;*.bmp;*.jpg*.gif*";
+            if (_Imgbyte == null) {
+                return;
+            }
+            _Img = ByteArrayToImage(_Imgbyte);
+            SaveFileDialog saveFileDialog = new SaveFileDialog {
+                Filter = @"Images|*.png;"
+            };
+            //saveFileDialog.Filter = "Images|*.png;*.bmp;*.jpg*.gif*";
 
-                //ImageFormat format = ImageFormat.Png;
-                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                    _Img.Save(saveFileDialog.FileName, ImageFormat.Png);
-                }
+            //ImageFormat format = ImageFormat.Png;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+                _Img.Save(saveFileDialog.FileName, ImageFormat.Png);
             }
         }
 
@@ -93,6 +87,37 @@ namespace MeowChatClient {
             MemoryStream ms = new MemoryStream(byteArrayIn);
             Image returnImage = Image.FromStream(ms);
             return returnImage;
+        }
+
+        public void ChangeTabName(string tabName, string newTabName) {
+            foreach (TabPage tabPage in TabControlClientImages.TabPages) {
+                if (tabPage.Name == tabName) {
+                    if (tabPage.InvokeRequired) {
+                        Invoke(new MethodInvoker(delegate{
+                            tabPage.Name = newTabName;
+                            tabPage.Text = tabPage.Name;
+                        }));
+                    }
+                    else {
+                        tabPage.Name = newTabName;
+                        tabPage.Text = tabPage.Name;
+                    }
+                }
+                if (tabPage.Name != tabName + " Private") {
+                    continue;
+                }
+
+                if (tabPage.InvokeRequired) {
+                    Invoke(new MethodInvoker(delegate{
+                        tabPage.Name = newTabName + " Private";
+                        tabPage.Text = tabPage.Name;
+                    }));
+                }
+                else {
+                    tabPage.Name = newTabName + " Private";
+                    tabPage.Text = tabPage.Name;
+                }
+            }
         }
     }
 }
