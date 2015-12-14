@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LibraryMeowChat
-{
-    public enum MessageType
-    {
+namespace LibraryMeowChat {
+    public enum MessageType {
+        Regiter,
+        AttempLogin,
         Login,
         Logout,
         Message,
@@ -22,11 +22,9 @@ namespace LibraryMeowChat
         Null //No command, only used in MessageStructure constarctor
     }
 
-    public class MessageStructure
-    {
+    public class MessageStructure {
         //Constructor
-        public MessageStructure()
-        {
+        public MessageStructure() {
             MessageType = MessageType.Null;
             Color = null;
             ClientName = null;
@@ -43,9 +41,8 @@ namespace LibraryMeowChat
         public byte[] ImgByte;
 
         //Convert bytes[] into MessageStructure object
-        public MessageStructure(byte[] data)
-        {
-            MessageType = (MessageType)BitConverter.ToInt32(data, 0);
+        public MessageStructure(byte[] data) {
+            MessageType = (MessageType) BitConverter.ToInt32(data, 0);
             //Next four bytes store the length of the clientName
             int clientNameLen = BitConverter.ToInt32(data, 4);
             //Next four bytes store the length of the color
@@ -67,14 +64,13 @@ namespace LibraryMeowChat
         }
 
         //Convert MessageStructure object into bytes[]
-        public byte[] ToByte()
-        {
+        public byte[] ToByte() {
             //emptyByte for usage in LINQ expression
-            byte[] emptyByte = { };
+            byte[] emptyByte = {};
             //create list bytes to which the object MessageStructure will be converted
-            List<byte> bytesList = new List<byte>();
+            List <byte> bytesList = new List <byte>();
             //First add command to the bytesList
-            bytesList.AddRange(BitConverter.GetBytes((int)MessageType));
+            bytesList.AddRange(BitConverter.GetBytes((int) MessageType));
             //add ClientName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(ClientName != null ? BitConverter.GetBytes(ClientName.Length) : BitConverter.GetBytes(0));
             //add Color length to the bytesList, add zero bytes if clintName is null

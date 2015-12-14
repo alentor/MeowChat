@@ -99,7 +99,7 @@ namespace MeowChatClient
                             RichTextClientPub.SelectionStart = _CursorPosition;
                             RichTextClientPub.SelectionColor = Color.Black;
                             RichTextClientPub.SelectionBackColor = Color.LightGreen;
-                            ListBoxClientList.Items.Add(msgReceived.ClientName);
+                            ListBoxClientList.Items.Add( Name);
                             RichTextClientPub.SelectedText = GenericStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
                             if (msgReceived.ClientName != ClientConnection.ClientName)
                             {
