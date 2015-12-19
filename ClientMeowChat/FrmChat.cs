@@ -21,7 +21,7 @@ namespace MeowChatClient
         private int _CursorPosition;
         private readonly Statistic _FrmStatistics = new Statistic();
         private readonly FrmClientImages _FrmClientImages = new FrmClientImages();
-        //Fired when the client recieves a message with one of the following commands from the servers PrivateMessage/PrivateStart and PrivateStop
+        //Fired when the client recieves a message with one of the following commands from the servers PrivateMessage/PrivateStarted and PrivateStopped
         public event TabPagePrivateChatReceiveClientHandler TabPagePrivateChatReceiveClientEvent;
         //Fired when statics window needs to be updated
         public event FrmStatisticsUpdateHandler FrmStatisticsUpdateEvent;
@@ -44,7 +44,7 @@ namespace MeowChatClient
             {
                 MessageStructure msgToSend = new MessageStructure
                 {
-                    MessageType = MessageType.List,
+                    Command = Command.List,
                     ClientName = ClientConnection.ClientName
                 };
                 _ByteMessage = msgToSend.ToByte();
@@ -73,7 +73,7 @@ namespace MeowChatClient
                 MessageStructure msgReceived = new MessageStructure(_ByteMessage);
                 //Set new bytes and start recieving again
                 _ByteMessage = new byte[2097152];
-                if (msgReceived.MessageType == MessageType.Disconnect)
+                if (msgReceived.Command == Command.Disconnect)
                 {
                     Invoke(new Action((delegate
                     {
@@ -91,15 +91,15 @@ namespace MeowChatClient
                 }
                 ClientConnection.Socket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, null);
                 //Case switch statment message stracture
-                switch (msgReceived.MessageType)
+                switch (msgReceived.Command)
                 {
-                    case MessageType.Login:
+                    case Command.Login:
                         Invoke(new Action((delegate
                         {
                             RichTextClientPub.SelectionStart = _CursorPosition;
                             RichTextClientPub.SelectionColor = Color.Black;
                             RichTextClientPub.SelectionBackColor = Color.LightGreen;
-                            ListBoxClientList.Items.Add( Name);
+                            ListBoxClientList.Items.Add(msgReceived.ClientName);
                             RichTextClientPub.SelectedText = GenericStatic.Time() + " " + msgReceived.Message + Environment.NewLine;
                             if (msgReceived.ClientName != ClientConnection.ClientName)
                             {
@@ -109,7 +109,7 @@ namespace MeowChatClient
                         })));
                         break;
 
-                    case MessageType.List:
+                    case Command.List:
                         ClientConnection.ClientName = msgReceived.ClientName; //Set ClientConnection name
                         Invoke(new Action((delegate
                         {
@@ -129,7 +129,7 @@ namespace MeowChatClient
                         })));
                         break;
 
-                    case MessageType.Logout:
+                    case Command.Logout:
                         Invoke(new Action((delegate
                         {
                             ListBoxClientList.Items.Remove(msgReceived.ClientName);
@@ -149,7 +149,7 @@ namespace MeowChatClient
                         })));
                         break;
 
-                    case MessageType.NameChange:
+                    case Command.NameChange:
                         Invoke(new Action((delegate
                         {
                             int index = ListBoxClientList.FindString(msgReceived.ClientName);
@@ -182,9 +182,9 @@ namespace MeowChatClient
                             _FrmClientImages.Text = msgReceived.Message + @" Received Images";
                         })));
                         FrmClientImagesChangeNameEvent?.Invoke(msgReceived.ClientName, msgReceived.Message);
-                        goto case MessageType.ColorChange;
+                        goto case Command.ColorChanged;
 
-                    case MessageType.Message:
+                    case Command.Message:
                         Invoke(new Action((delegate
                         {
                             RichTextClientPub.SelectionStart = _CursorPosition;
@@ -212,7 +212,7 @@ namespace MeowChatClient
                         FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.MessageReceied);
                         break;
 
-                    case MessageType.ColorChange:
+                    case Command.ColorChanged:
                         Invoke(new Action((delegate
                         {
                             Color newColor = ColorTranslator.FromHtml(msgReceived.Color);
@@ -224,7 +224,7 @@ namespace MeowChatClient
                         })));
                         break;
 
-                    case MessageType.PrivateStart:
+                    case Command.PrivateStarted:
                         if (TabControlClient.TabPages.Cast<TabPage>().Any(tabPagePrivateChat => tabPagePrivateChat.Name == msgReceived.ClientName))
                         {
                             TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 3);
@@ -237,7 +237,7 @@ namespace MeowChatClient
                         })));
                         break;
 
-                    case MessageType.PrivateMessage:
+                    case Command.PrivateMessage:
                         TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 0);
                         if (ClientConnection.ClientName == msgReceived.Private)
                         {
@@ -249,11 +249,11 @@ namespace MeowChatClient
                         FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.MessagePrivateSent);
                         break;
 
-                    case MessageType.PrivateStop:
+                    case Command.PrivateStopped:
                         TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 1);
                         break;
 
-                    case MessageType.ServerMessage:
+                    case Command.ServerMessage:
                         Invoke(new Action((delegate
                         {
                             RichTextClientPub.SelectionStart = _CursorPosition;
@@ -266,7 +266,7 @@ namespace MeowChatClient
                         FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ServerMessage);
                         break;
 
-                    case MessageType.Image:
+                    case Command.Image:
                         if (msgReceived.Private != null)
                         {
                             if (ClientConnection.ClientName == msgReceived.ClientName)
@@ -367,7 +367,7 @@ namespace MeowChatClient
 
                 MessageStructure msgToSend = new MessageStructure
                 {
-                    MessageType = MessageType.Message,
+                    Command = Command.Message,
                     ClientName = ClientConnection.ClientName,
                     Color = ClientConnection.Color,
                     Message = TextBoxPubMsg.Text
@@ -448,7 +448,7 @@ namespace MeowChatClient
                     }
                     MessageStructure msgToSend = new MessageStructure
                     {
-                        MessageType = MessageType.NameChange,
+                        Command = Command.NameChange,
                         ClientName = ClientConnection.ClientName,
                         Message = changeName.NameNew
                     };
@@ -505,7 +505,7 @@ namespace MeowChatClient
                 ClientConnection.Color = colorHex;
                 MessageStructure msgToSend = new MessageStructure
                 {
-                    MessageType = MessageType.ColorChange,
+                    Command = Command.ColorChanged,
                     ClientName = ClientConnection.ClientName,
                     Color = colorHex
                 };
@@ -530,7 +530,7 @@ namespace MeowChatClient
                 MessageStructure msgToSend = new MessageStructure
                 {
                     ClientName = ClientConnection.ClientName,
-                    MessageType = MessageType.Image
+                    Command = Command.Image
                 };
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
@@ -582,7 +582,7 @@ namespace MeowChatClient
                 NewTabPagePrivateChatClient(ListBoxClientList.SelectedItem.ToString());
                 MessageStructure msgToSend = new MessageStructure
                 {
-                    MessageType = MessageType.PrivateStart,
+                    Command = Command.PrivateStarted,
                     ClientName = ClientConnection.ClientName,
                     Private = ListBoxClientList.SelectedItem.ToString()
                 };
@@ -620,7 +620,7 @@ namespace MeowChatClient
         {
             MessageStructure msgToSend = new MessageStructure
             {
-                MessageType = MessageType.PrivateMessage,
+                Command = Command.PrivateMessage,
                 ClientName = ClientConnection.ClientName,
                 Private = namePrivate,
                 Message = message
@@ -640,7 +640,7 @@ namespace MeowChatClient
             {
                 MessageStructure msgToSend = new MessageStructure
                 {
-                    MessageType = MessageType.Image,
+                    Command = Command.Image,
                     Private = namePrivate,
                     ClientName = ClientConnection.ClientName
                 };
@@ -669,7 +669,7 @@ namespace MeowChatClient
             }
 
             //MessageStructure msgToSend = new MessageStructure {
-            //    MessageType = MessageType.Image,
+            //    Command = Command.Image,
             //    ClientName = ClientConnection.ClientName,
             //    Private = namePrivate,
             //};
@@ -751,7 +751,7 @@ namespace MeowChatClient
                 }
                 MessageStructure msgToSend = new MessageStructure
                 {
-                    MessageType = MessageType.PrivateStop,
+                    Command = Command.PrivateStopped,
                     ClientName = ClientConnection.ClientName,
                     Private = TabControlClient.TabPages[i].Name
                 };

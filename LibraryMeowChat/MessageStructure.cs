@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 
 namespace LibraryMeowChat {
-    public enum MessageType {
+    public enum Command {
         Regiter,
-        AttempLogin,
+        AttemptLogin,
         Login,
         Logout,
         Message,
         List,
         NameChange,
-        ColorChange,
+        ColorChanged,
         Disconnect,
-        PrivateStart,
+        PrivateStarted,
         PrivateMessage,
-        PrivateStop,
+        PrivateStopped,
         ServerMessage,
         Image,
         Null //No command, only used in MessageStructure constarctor
@@ -25,7 +25,7 @@ namespace LibraryMeowChat {
     public class MessageStructure {
         //Constructor
         public MessageStructure() {
-            MessageType = MessageType.Null;
+            Command = Command.Null;
             Color = null;
             ClientName = null;
             Private = null;
@@ -33,7 +33,7 @@ namespace LibraryMeowChat {
             ImgByte = null;
         }
 
-        public MessageType MessageType; //MessageType type (Login, Logout, Message etc...)
+        public Command Command; //Command type (Login, Logout, Message etc...)
         public string ClientName; //The name by which the server and client recognizes the establised connection(client) also the name which is displayed in the UI
         public string Color; //Reserved for Color of the message
         public string Private; // Reserved for if the message is private
@@ -42,7 +42,7 @@ namespace LibraryMeowChat {
 
         //Convert bytes[] into MessageStructure object
         public MessageStructure(byte[] data) {
-            MessageType = (MessageType) BitConverter.ToInt32(data, 0);
+            Command = (Command) BitConverter.ToInt32(data, 0);
             //Next four bytes store the length of the clientName
             int clientNameLen = BitConverter.ToInt32(data, 4);
             //Next four bytes store the length of the color
@@ -60,7 +60,7 @@ namespace LibraryMeowChat {
             //Make sure that messageLen has been passed in the bytes array
             Message = messageLen > 0 ? Encoding.UTF8.GetString(data, 24 + clientNameLen + colorLen + privateLen, messageLen) : null;
             //Check if it's an image command, if it's add the representative bytes, if not leave it empty
-            ImgByte = MessageType == MessageType.Image ? data.Skip(24 + clientNameLen + colorLen + privateLen + messageLen).ToArray() : null;
+            ImgByte = Command == Command.Image ? data.Skip(24 + clientNameLen + colorLen + privateLen + messageLen).ToArray() : null;
         }
 
         //Convert MessageStructure object into bytes[]
@@ -70,7 +70,7 @@ namespace LibraryMeowChat {
             //create list bytes to which the object MessageStructure will be converted
             List <byte> bytesList = new List <byte>();
             //First add command to the bytesList
-            bytesList.AddRange(BitConverter.GetBytes((int) MessageType));
+            bytesList.AddRange(BitConverter.GetBytes((int) Command));
             //add ClientName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(ClientName != null ? BitConverter.GetBytes(ClientName.Length) : BitConverter.GetBytes(0));
             //add Color length to the bytesList, add zero bytes if clintName is null

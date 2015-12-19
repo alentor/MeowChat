@@ -31,7 +31,9 @@ namespace MeowChatClient
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLogin));
+            this.lblName = new System.Windows.Forms.Label();
             this.lblServerIp = new System.Windows.Forms.Label();
+            this.txtBoxName = new System.Windows.Forms.TextBox();
             this.txtBoxServerIp = new System.Windows.Forms.TextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -39,29 +41,40 @@ namespace MeowChatClient
             this.colorPicker = new System.Windows.Forms.ColorDialog();
             this.txtBoxPort = new System.Windows.Forms.TextBox();
             this.lvlPort = new System.Windows.Forms.Label();
-            this.BtnRegister = new System.Windows.Forms.Button();
-            this.lblName = new System.Windows.Forms.Label();
-            this.txtBoxUserName = new System.Windows.Forms.TextBox();
-            this.txtBoxNewUserName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtBoxNewName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
+            // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(25, 13);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(38, 13);
+            this.lblName.TabIndex = 0;
+            this.lblName.Text = "&ClientName:";
             // 
             // lblServerIp
             // 
             this.lblServerIp.AutoSize = true;
-            this.lblServerIp.Location = new System.Drawing.Point(16, 42);
+            this.lblServerIp.Location = new System.Drawing.Point(9, 42);
             this.lblServerIp.Name = "lblServerIp";
             this.lblServerIp.Size = new System.Drawing.Size(54, 13);
             this.lblServerIp.TabIndex = 1;
             this.lblServerIp.Text = "&Server IP:";
             // 
+            // txtBoxName
+            // 
+            this.txtBoxName.Location = new System.Drawing.Point(63, 9);
+            this.txtBoxName.Name = "txtBoxName";
+            this.txtBoxName.Size = new System.Drawing.Size(99, 20);
+            this.txtBoxName.TabIndex = 0;
+            this.txtBoxName.Text = "alen";
+            this.txtBoxName.TextChanged += new System.EventHandler(this.txtBoxName_TextChanged);
+            // 
             // txtBoxServerIp
             // 
-            this.txtBoxServerIp.Location = new System.Drawing.Point(71, 38);
+            this.txtBoxServerIp.Location = new System.Drawing.Point(63, 38);
             this.txtBoxServerIp.Name = "txtBoxServerIp";
-            this.txtBoxServerIp.Size = new System.Drawing.Size(91, 20);
+            this.txtBoxServerIp.Size = new System.Drawing.Size(99, 20);
             this.txtBoxServerIp.TabIndex = 1;
             this.txtBoxServerIp.Text = "127.0.0.1";
             this.txtBoxServerIp.TextChanged += new System.EventHandler(this.txtBxServerIp_TextChanged);
@@ -100,7 +113,7 @@ namespace MeowChatClient
             // 
             // txtBoxPort
             // 
-            this.txtBoxPort.Location = new System.Drawing.Point(71, 64);
+            this.txtBoxPort.Location = new System.Drawing.Point(63, 64);
             this.txtBoxPort.Name = "txtBoxPort";
             this.txtBoxPort.Size = new System.Drawing.Size(30, 20);
             this.txtBoxPort.TabIndex = 9;
@@ -110,73 +123,11 @@ namespace MeowChatClient
             // lvlPort
             // 
             this.lvlPort.AutoSize = true;
-            this.lvlPort.Location = new System.Drawing.Point(41, 68);
+            this.lvlPort.Location = new System.Drawing.Point(34, 68);
             this.lvlPort.Name = "lvlPort";
             this.lvlPort.Size = new System.Drawing.Size(29, 13);
             this.lvlPort.TabIndex = 10;
             this.lvlPort.Text = "Po&rt:";
-            // 
-            // BtnRegister
-            // 
-            this.BtnRegister.Location = new System.Drawing.Point(55, 171);
-            this.BtnRegister.Name = "BtnRegister";
-            this.BtnRegister.Size = new System.Drawing.Size(64, 23);
-            this.BtnRegister.TabIndex = 11;
-            this.BtnRegister.Text = "&Register";
-            this.BtnRegister.UseVisualStyleBackColor = true;
-            this.BtnRegister.Click += new System.EventHandler(this.BtnRegister_Click);
-            // 
-            // lblName
-            // 
-            this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(9, 13);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(63, 13);
-            this.lblName.TabIndex = 0;
-            this.lblName.Text = "&UserName :";
-            // 
-            // txtBoxUserName
-            // 
-            this.txtBoxUserName.Location = new System.Drawing.Point(71, 9);
-            this.txtBoxUserName.Name = "txtBoxUserName";
-            this.txtBoxUserName.Size = new System.Drawing.Size(91, 20);
-            this.txtBoxUserName.TabIndex = 0;
-            this.txtBoxUserName.Text = "alen";
-            this.txtBoxUserName.TextChanged += new System.EventHandler(this.txtBoxName_TextChanged);
-            // 
-            // txtBoxNewUserName
-            // 
-            this.txtBoxNewUserName.Location = new System.Drawing.Point(71, 119);
-            this.txtBoxNewUserName.Name = "txtBoxNewUserName";
-            this.txtBoxNewUserName.Size = new System.Drawing.Size(91, 20);
-            this.txtBoxNewUserName.TabIndex = 12;
-            this.txtBoxNewUserName.Text = "New UserName";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 123);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "&UserName :";
-            // 
-            // txtBoxNewName
-            // 
-            this.txtBoxNewName.Location = new System.Drawing.Point(71, 145);
-            this.txtBoxNewName.Name = "txtBoxNewName";
-            this.txtBoxNewName.Size = new System.Drawing.Size(91, 20);
-            this.txtBoxNewName.TabIndex = 14;
-            this.txtBoxNewName.Text = "First Name";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 149);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "&Name :";
             // 
             // FrmLogin
             // 
@@ -184,19 +135,14 @@ namespace MeowChatClient
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(170, 200);
-            this.Controls.Add(this.txtBoxNewName);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtBoxNewUserName);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.BtnRegister);
+            this.ClientSize = new System.Drawing.Size(170, 118);
             this.Controls.Add(this.txtBoxPort);
             this.Controls.Add(this.lvlPort);
             this.Controls.Add(this.btnColorPick);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.txtBoxServerIp);
-            this.Controls.Add(this.txtBoxUserName);
+            this.Controls.Add(this.txtBoxName);
             this.Controls.Add(this.lblServerIp);
             this.Controls.Add(this.lblName);
             this.MaximizeBox = false;
@@ -210,7 +156,10 @@ namespace MeowChatClient
         }
 
         #endregion
+
+        private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Label lblServerIp;
+        private System.Windows.Forms.TextBox txtBoxName;
         private System.Windows.Forms.TextBox txtBoxServerIp;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnCancel;
@@ -218,12 +167,5 @@ namespace MeowChatClient
         private ColorDialog colorPicker;
         private TextBox txtBoxPort;
         private Label lvlPort;
-        private Button BtnRegister;
-        private Label lblName;
-        private TextBox txtBoxUserName;
-        private TextBox txtBoxNewUserName;
-        private Label label1;
-        private TextBox txtBoxNewName;
-        private Label label2;
     }
 }
