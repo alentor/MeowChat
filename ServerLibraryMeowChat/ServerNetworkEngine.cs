@@ -79,14 +79,13 @@ namespace MeowChatServerLibrary {
                     Command = Command.Disconnect
                 };
                 byte[] msgToSendByte = msgToSend.ToByte();
-                new Thread(() =>{
-                    Thread.CurrentThread.IsBackground = true;
+                Task.Factory.StartNew(() =>{
                     foreach (Client client in _ClientList) {
-                        // Necessary when testing inHouse, to give some delay between sending disconnectin calls to give the UI threads time to complete their task
+                        // Added only to slow down the progress bar advance for demonstration purposes
                         Thread.Sleep(150);
                         client.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.Socket);
                     }
-                }).Start();
+                });
                 _ServerSocket.Close();
             }
             catch (Exception ex) {
@@ -280,8 +279,7 @@ namespace MeowChatServerLibrary {
                         MemoryStream ms = new MemoryStream(msgReceived.ImgByte);
                         if (msgReceived.Private != null) {
                             ServerNetworkEngineImageMessageEvent?.Invoke(Image.FromStream(ms), msgReceived.ClientName, msgReceived.Private);
-                            new Thread(() =>{
-                                Thread.CurrentThread.IsBackground = true;
+                            Task.Factory.StartNew(() =>{
                                 foreach (Client client in _ClientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
                                     msgToSend.Private = msgReceived.Private;
                                     msgToSend.ImgByte = msgReceived.ImgByte;
@@ -290,24 +288,22 @@ namespace MeowChatServerLibrary {
                                     receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
                                     break;
                                 }
-                            }).Start();
+                            });
                             break;
                         }
                         ServerNetworkEngineImageMessageEvent?.Invoke(Image.FromStream(ms), msgReceived.ClientName, msgReceived.Private);
                         msgToSend.ImgByte = msgReceived.ImgByte;
                         messageBytes = msgToSend.ToByte();
-                        new Thread(() =>{
-                            Thread.CurrentThread.IsBackground = true;
+                        Task.Factory.StartNew(() =>{
                             foreach (Client client in _ClientList) {
                                 client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
                             }
-                        }).Start();
+                        });
                         break;
                 }
 
                 // Send(broadcast) the message to clients (established connections)
-                new Thread(() =>{
-                    Thread.CurrentThread.IsBackground = true;
+                Task.Factory.StartNew(() =>{
                     if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStarted && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStopped && msgToSend.Command != Command.Disconnect && msgToSend.Command != Command.ImageMessage) {
                         messageBytes = msgToSend.ToByte();
                         foreach (Client client in _ClientList) {
@@ -320,7 +316,7 @@ namespace MeowChatServerLibrary {
                     if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect && msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Regiter) {
                         receivedClientSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
                     }
-                }).Start();
+                });
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> OnReceive", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
