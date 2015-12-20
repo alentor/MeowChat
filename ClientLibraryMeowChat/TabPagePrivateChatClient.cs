@@ -79,7 +79,7 @@ namespace MeowChatClientLibrary
             }
         }
 
-        //Button Image
+        //Button ImageMessage
         private void _BtnSendPhotoPrivate_Click(object sender, EventArgs e)
         {
             TabPagePrivateChatSendImageClientEvent?.Invoke(Name, null);
@@ -140,7 +140,7 @@ namespace MeowChatClientLibrary
                     case 4:
                         _RichTextPrivChtClient.SelectionColor = Color.Black;
                         _RichTextPrivChtClient.SelectionBackColor = Color.Yellow;
-                        _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + "Image sent successfully" + Environment.NewLine;
+                        _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + "ImageMessage sent successfully" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -10,29 +11,39 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibraryMeowChat;
 
+
 namespace MeowChatServerLibrary {
-    public class ServerEngine {
-        public event ServerEngineServerStartedHandler ServerEngineServerStartedEvent;
-        public event ServerEngineClientToAddHandler ServerEngineClientToAddEvent;
-        public event ServerEngineClientToRemoveHandler ServerEngineClientToRemoveEvent;
-        public event ServerEngineSendPublicMessageHandler ServerEngineSendPublicMessageEvent;
-        public event ServerEngineServerStopBeganHandler ServerEngineServerStopBeganEvent;
-        public event ServerEngineStopTickHandler ServerEngineStopTickEvent;
-        public event ServerEngineStoppedHandler ServerEngineStoppedEvent;
-        public event ServerEngineClientColorChangedHandler ServerEngineClientColorChangedEvent;
-        public event ServerEngineClientNameChangedHandler ServerEngineClientNameChangedEvent;
-        public event ServerEnginePrivateChatStartedHandler ServerEnginePrivateChatStartedEvent;
-        public event ServerEnginePrivateChatMessageHandler ServerEnginePrivateChatMessageEvent;
-        public event ServerEnginePrivateChatStoppedHandler ServerEnginePrivateChatStoppedEvent;
+    /// <summary>
+    /// Server Networ Engine is responsible for all the clients network communication
+    /// </summary>
+    public class ServerNetworkEngineEngine {
+        public event ServerNetworkEngineEngineServerStartedHandler ServerNetworkEngineEngineServerStartedEvent;
+        public event ServerNetworkEngineEngineClientToAddHandler ServerNetworkEngineEngineClientToAddEvent;
+        public event ServerNetworkEngineClientToRemoveHandler ServerNetworkEngineClientToRemoveEvent;
+        public event ServerNetworkEngineSendPublicMessageHandler ServerNetworkEngineSendPublicMessageEvent;
+        public event ServerNetworkEngineServerStopBeganHandler ServerNetworkEngineServerStopBeganEvent;
+        public event ServerNetworkEngineServerStopTickHandler ServerNetworkEngineServerStopTickEvent;
+        public event ServerNetworkEngineServerStoppedHandler ServerNetworkEngineServerStoppedEvent;
+        public event ServerNetworkEngineClientColorChangedHandler ServerNetworkEngineClientColorChangedEvent;
+        public event ServerNetworkEngineClientNameChangedHandler ServerNetworkEngineClientNameChangedEvent;
+        public event ServerNetworkEnginePrivateChatStartedHandler ServerNetworkEnginePrivateChatStartedEvent;
+        public event ServerNetworkEnginePrivateChatMessageHandler ServerNetworkEnginePrivateChatMessageEvent;
+        public event ServerNetworkEnginePrivateChatStoppedHandler ServerNetworkEnginePrivateChatStoppedEvent;
+        public event ServerNetworkEngineImageMessageHandler ServerNetworkEngineImageMessageEvent;
         // List which contains all the connected Clients
         private readonly List <Client> _ClientList = new List <Client>();
         // Max byte size to be recieved/sent
         private readonly byte[] _ByteMessage = new byte[2097152];
-        // Server socket is the socket from which ServerEngine is Communicating
+        // Server socket is the socket from which ServerNetworkEngineEngine is Communicating
         private Socket _ServerSocket;
-        // Significance the current state of the ServerEngine. True => Running Flase => not running.
+        // Significance the current state of the ServerNetworkEngineEngine. True => Running Flase => not running.
         private bool _ServerEngineStatus;
+        // an int to count the 
+        private int _DisconnectCout;
 
+        //public ServerNetworkEngineEngine(FrmServer frmServer) {
+
+        //}
         public void StartServer(string ipAddressString, string portString) {
             try {
                 _ClientList.Clear();
@@ -46,7 +57,7 @@ namespace MeowChatServerLibrary {
                 // Start accppting incoming connection, on a succefull accept call to OnAccept method
                 _ServerSocket.BeginAccept((OnAccept), null);
                 _ServerEngineStatus = true;
-                ServerEngineServerStartedEvent?.Invoke();
+                ServerNetworkEngineEngineServerStartedEvent?.Invoke();
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> StartServer", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -55,22 +66,28 @@ namespace MeowChatServerLibrary {
 
         public void ServerStop() {
             try {
+                if (_ClientList.Count == 0) {
+                    ServerNetworkEngineServerStoppedEvent?.Invoke();
+                    _ServerEngineStatus = false;
+                    _ServerSocket.Close();
+                    return;
+                }
                 _ServerEngineStatus = false;
-                ServerEngineServerStopBeganEvent?.Invoke(_ClientList.Count);
-                Thread.Sleep(250);
+                ServerNetworkEngineServerStopBeganEvent?.Invoke(_ClientList.Count);
                 // Initialize the dialog that will contain the progress bar
                 MessageStructure msgToSend = new MessageStructure {
                     Command = Command.Disconnect
                 };
                 byte[] msgToSendByte = msgToSend.ToByte();
-                for (int i = 0; i < _ClientList.Count; i++) {
-                    //frmProgressBarDisconnect.UpdateProgressBar(i);
-                    _ClientList[i].Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, _ClientList[i].Socket);
-                    // Not necessary but in place to only make it "feel" like the clients are actually being disconencted instead split second disconnect
-                    //Thread.Sleep(250);
-                }
-                // Sets the flag to indicates the process has stoppedf
-                _ServerSocket?.Close();
+                new Thread(() =>{
+                    Thread.CurrentThread.IsBackground = true;
+                    foreach (Client client in _ClientList) {
+                        // Necessary when testing inHouse, to give some delay between sending disconnectin calls to give the UI threads time to complete their task
+                        Thread.Sleep(150);
+                        client.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.Socket);
+                    }
+                }).Start();
+                _ServerSocket.Close();
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> btnStopSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -138,11 +155,10 @@ namespace MeowChatServerLibrary {
                             Random rnd = new Random();
                             msgReceived.ClientName = client.Name + rnd.Next(1, 999999);
                             msgToSend.ClientName = msgReceived.ClientName;
-                            //break;
                         }
 
 
-                        // When the Login Command is received the ServerEngine will 
+                        // When the Login Command is received the ServerNetworkEngineEngine will 
                         // add that established connection (Socket) along
                         // with the provoided information to distinguish it (Name) to _ClientList
                         // as a Client and sent the command Login to ohter clients to handle
@@ -157,11 +173,11 @@ namespace MeowChatServerLibrary {
                         _ClientList.Add(newClient);
                         // Setting the message to broadcast to all other clients
                         msgToSend.Message = "<<< " + newClient.Name + " has joined the room >>>";
-                        ServerEngineClientToAddEvent?.Invoke(newClient.Name, newClient.IpEndPoint);
+                        ServerNetworkEngineEngineClientToAddEvent?.Invoke(newClient.Name, newClient.IpEndPoint);
                         break;
 
                     case Command.Logout:
-                        // When the Logout Command is received the ServerEngine will
+                        // When the Logout Command is received the ServerNetworkEngineEngine will
                         // remove the the client from _clientList a long with all of
                         // it's information, socket/clientName etc..
                         // server engine will also stop listening to the removed socket
@@ -175,16 +191,16 @@ namespace MeowChatServerLibrary {
                             _ClientList.Remove(client);
                             break;
                         }
-                        ServerEngineClientToRemoveEvent?.Invoke(msgReceived.ClientName);
+                        ServerNetworkEngineClientToRemoveEvent?.Invoke(msgReceived.ClientName);
                         break;
 
                     case Command.Disconnect:
                         receivedClientSocket.BeginDisconnect(true, (OnDisonnect), receivedClientSocket);
-                        int clientIndex = _ClientList.FindIndex(client => client.Name == msgReceived.ClientName);
-                        if (clientIndex + 1 == _ClientList.Count) {
-                            ServerEngineStoppedEvent?.Invoke();
+                        ServerNetworkEngineServerStopTickEvent?.Invoke(msgReceived.ClientName);
+                        ++_DisconnectCout;
+                        if (_ClientList.Count == _DisconnectCout) {
+                            ServerNetworkEngineServerStoppedEvent?.Invoke();
                         }
-                        ServerEngineStopTickEvent?.Invoke(msgReceived.ClientName);
                         break;
 
                     case Command.List:
@@ -206,7 +222,7 @@ namespace MeowChatServerLibrary {
                     case Command.Message:
                         // Set the message which will be broadcasted to all the connected clients
                         msgToSend.Message = msgReceived.Message;
-                        ServerEngineSendPublicMessageEvent?.Invoke(msgToSend.ClientName, ColorTranslator.FromHtml(msgReceived.Color), msgToSend.Message);
+                        ServerNetworkEngineSendPublicMessageEvent?.Invoke(msgToSend.ClientName, ColorTranslator.FromHtml(msgReceived.Color), msgToSend.Message);
                         break;
 
                     case Command.NameChange:
@@ -215,31 +231,7 @@ namespace MeowChatServerLibrary {
                             break;
                         }
                         msgToSend.Message = msgReceived.Message;
-                        ServerEngineClientNameChangedEvent?.Invoke(msgReceived.ClientName, msgReceived.Message);
-                        //Invoke(new Action((delegate
-                        //{
-                        //    foreach (TabPagePrivateChatServer tabPage in TabControlServer.TabPages.OfType<TabPagePrivateChatServer>())
-                        //    {
-                        //        if (tabPage.TabName0 == msgReceived.Name)
-                        //        {
-                        //            tabPage.TabName0 = msgReceived.Message;
-                        //            tabPage.Text = msgReceived.Message + @" - " + tabPage.TabName1;
-                        //            TabControlServer.Invalidate();
-                        //        }
-                        //        if (tabPage.TabName1 == msgReceived.Name)
-                        //        {
-                        //            tabPage.TabName1 = msgReceived.Message;
-                        //            tabPage.Text = tabPage.TabName0 + @" - " + msgReceived.Message;
-                        //            TabControlServer.Invalidate();
-                        //        }
-                        //    }
-                        //    GenericStatic.FormatItemSize(TabControlServer);
-                        //})));
-                        //Invoke(new Action((delegate
-                        //{
-                        //    _FrmServerImages.Text = msgReceived.Message + @" Received Images";
-                        //})));
-                        //FrmServerImagesChangeNameEvent?.Invoke(msgReceived.Name, msgReceived.Message);
+                        ServerNetworkEngineClientNameChangedEvent?.Invoke(msgReceived.ClientName, msgReceived.Message);
                         goto case Command.ColorChanged;
 
                     case Command.ColorChanged:
@@ -249,41 +241,17 @@ namespace MeowChatServerLibrary {
                             break;
                         }
                         msgToSend.Message = msgReceived.Message;
-                        ServerEngineClientColorChangedEvent?.Invoke(msgReceived.ClientName, newColor);
+                        ServerNetworkEngineClientColorChangedEvent?.Invoke(msgReceived.ClientName, newColor);
                         break;
 
                     case Command.PrivateStarted:
-                        foreach (Client client in _ClientList) {
-                            if (client.Name == msgReceived.Private) {
-                                msgToSend.Private = msgReceived.Private;
-                                messageBytes = msgToSend.ToByte();
-                                client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
-                                ServerEnginePrivateChatStartedEvent?.Invoke(msgReceived.ClientName, msgReceived.Private);
-                                break;
-                            }
+                        foreach (Client client in _ClientList.Where(client => client.Name == msgReceived.Private)) {
+                            msgToSend.Private = msgReceived.Private;
+                            messageBytes = msgToSend.ToByte();
+                            client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
+                            ServerNetworkEnginePrivateChatStartedEvent?.Invoke(msgReceived.ClientName, msgReceived.Private);
+                            break;
                         }
-                        //if (TabControlServer.TabPages.OfType <TabPagePrivateChatServer>().Any(tabPagePrivateChatServer => tabPagePrivateChatServer.TabName0 == msgReceived.Name && tabPagePrivateChatServer.TabName1 == msgReceived.Private || tabPagePrivateChatServer.TabName0 == msgReceived.Private && tabPagePrivateChatServer.TabName1 == msgReceived.Name)) {
-                        //    foreach (Client client in _ClientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
-                        //        msgToSend.Private = msgReceived.Private;
-                        //        messageBytes = msgToSend.ToByte();
-                        //        client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
-                        //    }
-                        //    TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.Name, msgReceived.Private, msgReceived.Message, 3);
-                        //    break;
-                        //}
-                        //Invoke(new Action((delegate{
-                        //    NewTabPagePrivateChatServer(msgReceived.Name, msgReceived.Private);
-                        //})));
-                        //foreach (Client client in _ClientList) {
-                        //    if (client.Name == msgReceived.Private) {
-                        //        msgToSend.Private = msgReceived.Private;
-                        //        messageBytes = msgToSend.ToByte();
-                        //        client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
-                        //    }
-                        //}
-                        //Invoke(new Action((delegate{
-                        //    GenericStatic.FormatItemSize(TabControlServer);
-                        //})));
                         break;
 
                     case Command.PrivateMessage:
@@ -293,7 +261,7 @@ namespace MeowChatServerLibrary {
                             messageBytes = msgToSend.ToByte();
                             client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
                             receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
-                            ServerEnginePrivateChatMessageEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message);
+                            ServerNetworkEnginePrivateChatMessageEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message);
                             break;
                         }
                         break;
@@ -305,78 +273,54 @@ namespace MeowChatServerLibrary {
                             client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
                             receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
                         }
-                        ServerEnginePrivateChatStoppedEvent?.Invoke(msgReceived.ClientName, msgReceived.Private);
-                        //TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.Name, msgReceived.Private, msgReceived.Message, 1);
+                        ServerNetworkEnginePrivateChatStoppedEvent?.Invoke(msgReceived.ClientName, msgReceived.Private);
                         break;
 
-                    //case Command.Image:
-                    //    if (msgReceived.Private != null)
-                    //    {
-                    //        _FrmServerImages.NewImage(msgReceived.ImgByte, msgReceived.Name + " Private " + msgReceived.Private);
-                    //        Thread threadSendImagePrivate = new Thread(new ThreadStart(() =>
-                    //        {
-                    //            foreach (Client client in _ClientList.Where(clientLinq => clientLinq.Name == msgReceived.Private))
-                    //            {
-                    //                msgToSend.Private = msgReceived.Private;
-                    //                msgToSend.ImgByte = msgReceived.ImgByte;
-                    //                messageBytes = msgToSend.ToByte();
-                    //                client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
-                    //                receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
-                    //            }
-                    //        }));
-                    //        threadSendImagePrivate.Start();
-                    //        Invoke(new Action((delegate
-                    //        {
-                    //            msgToSend.ImgByte = msgReceived.ImgByte;
-                    //            RichTextServerConn.SelectionStart = _CursorPositionConn;
-                    //            RichTextServerConn.SelectionBackColor = Color.DarkBlue;
-                    //            RichTextServerConn.SelectionColor = Color.Yellow;
-                    //            RichTextServerConn.SelectedText = GenericStatic.Time() + " ";
-                    //            RichTextServerConn.SelectedText = msgToSend.Name + @" :" + "sent a photo to " + msgReceived.Private;
-                    //            RichTextServerConn.SelectedText = Environment.NewLine;
-                    //            _CursorPositionConn = RichTextServerConn.SelectionStart;
-                    //        })));
-                    //        break;
-                    //    }
-                    //    _FrmServerImages.NewImage(msgReceived.ImgByte, msgReceived.Name);
-                    //    msgToSend.ImgByte = msgReceived.ImgByte;
-                    //    messageBytes = msgToSend.ToByte();
-                    //    Thread threadSendImageToAll = new Thread(new ThreadStart(() =>
-                    //    {
-                    //        foreach (Client client in _ClientList)
-                    //        {
-                    //            client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
-                    //        }
-                    //    }));
-                    //    threadSendImageToAll.Start();
-                    //    Invoke(new Action((delegate
-                    //    {
-                    //        msgToSend.ImgByte = msgReceived.ImgByte;
-                    //        RichTextServerConn.SelectionStart = _CursorPositionConn;
-                    //        RichTextServerConn.SelectionBackColor = Color.DarkBlue;
-                    //        RichTextServerConn.SelectionColor = Color.Yellow;
-                    //        RichTextServerConn.SelectedText = GenericStatic.Time() + " ";
-                    //        RichTextServerConn.SelectedText = msgToSend.Name + @" :" + "sent a photo";
-                    //        RichTextServerConn.SelectedText = Environment.NewLine;
-                    //        _CursorPositionConn = RichTextServerConn.SelectionStart;
-                    //    })));
-                    //    break;
+                    case Command.ImageMessage:
+                        MemoryStream ms = new MemoryStream(msgReceived.ImgByte);
+                        if (msgReceived.Private != null) {
+                            ServerNetworkEngineImageMessageEvent?.Invoke(Image.FromStream(ms), msgReceived.ClientName, msgReceived.Private);
+                            new Thread(() =>{
+                                Thread.CurrentThread.IsBackground = true;
+                                foreach (Client client in _ClientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
+                                    msgToSend.Private = msgReceived.Private;
+                                    msgToSend.ImgByte = msgReceived.ImgByte;
+                                    messageBytes = msgToSend.ToByte();
+                                    client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
+                                    receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
+                                    break;
+                                }
+                            }).Start();
+                            break;
+                        }
+                        ServerNetworkEngineImageMessageEvent?.Invoke(Image.FromStream(ms), msgReceived.ClientName, msgReceived.Private);
+                        msgToSend.ImgByte = msgReceived.ImgByte;
+                        messageBytes = msgToSend.ToByte();
+                        new Thread(() =>{
+                            Thread.CurrentThread.IsBackground = true;
+                            foreach (Client client in _ClientList) {
+                                client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
+                            }
+                        }).Start();
+                        break;
                 }
-                //Send message to clients
-                if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStarted && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStopped && msgToSend.Command != Command.Disconnect && msgToSend.Command != Command.Image) {
-                    //Convert msgToSend to a bytearray representative, this needed to send(broadcat) the message over the TCP protocol
-                    messageBytes = msgToSend.ToByte();
-                    foreach (Client client in _ClientList) {
-                        if (client.Socket != receivedClientSocket || msgToSend.Command != Command.Login) {
-                            //Send(broadcast) the message to established connections(clients)
-                            client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
+
+                // Send(broadcast) the message to clients (established connections)
+                new Thread(() =>{
+                    Thread.CurrentThread.IsBackground = true;
+                    if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStarted && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStopped && msgToSend.Command != Command.Disconnect && msgToSend.Command != Command.ImageMessage) {
+                        messageBytes = msgToSend.ToByte();
+                        foreach (Client client in _ClientList) {
+                            if (client.Socket != receivedClientSocket || msgToSend.Command != Command.Login) {
+                                client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
+                            }
                         }
                     }
-                }
-                //Continue listneing to receivedClientSocket established connection(client)
-                if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect && msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Regiter) {
-                    receivedClientSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
-                }
+                    //Continue listneing to receivedClientSocket established connection(client)
+                    if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect && msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Regiter) {
+                        receivedClientSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
+                    }
+                }).Start();
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> OnReceive", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -385,9 +329,7 @@ namespace MeowChatServerLibrary {
 
         private void OnSend(IAsyncResult ar) {
             try {
-                //passing down AsyncState
                 Socket client = (Socket) ar.AsyncState;
-                //let the client know message send/recieve have ended
                 client.EndSend(ar);
             }
             catch (Exception ex) {
@@ -402,6 +344,23 @@ namespace MeowChatServerLibrary {
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> OnDisonnect", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //Server Message
+        public void ServerMessage(string message) {
+            try {
+                MessageStructure msgToSend = new MessageStructure {
+                    Command = Command.ServerMessage,
+                    Message = message
+                };
+                byte[] msgToSendByte = msgToSend.ToByte();
+                foreach (Client client in _ClientList) {
+                    client.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.Socket);
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message + @" -> ServerMessage", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -67,44 +67,11 @@ namespace MeowChatServerLibrary {
                         }
                         break;
                     case TabCommand.Closed:
-                        _RichTextPrivChtServer.SelectionBackColor = Color.Red;
+                        _RichTextPrivChtServer.SelectionBackColor = Color.OrangeRed;
                         _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + clientName + " have closed the chat" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                         break;
                 }
-                //if (tabName0 == TabName0 || tabName0 == TabName1 && tabName1 == TabName0 || tabName1 == TabName1) {
-                //    switch (caseId) {
-                //        case 0:
-                //            if (tabName0 == TabName0) {
-                //                _RichTextPrivChtServer.SelectionColor = Color.Blue;
-                //                _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + TabName0 + @": " + message + Environment.NewLine;
-                //                _CursorPosition = _RichTextPrivChtServer.SelectionStart;
-                //            }
-                //            else {
-                //                _RichTextPrivChtServer.SelectionColor = Color.Red;
-                //                _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + TabName1 + @": " + message + Environment.NewLine;
-                //                _CursorPosition = _RichTextPrivChtServer.SelectionStart;
-                //            }
-                //            break;
-
-                //        case 1:
-                //            _RichTextPrivChtServer.SelectionBackColor = Color.Red;
-                //            _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + TabName0 + " have closed the chat" + Environment.NewLine;
-                //            _CursorPosition = _RichTextPrivChtServer.SelectionStart;
-                //            break;
-
-                //        case 2:
-                //            _RichTextPrivChtServer.SelectionBackColor = Color.Red;
-                //            _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + TabName0 + " have quit" + Environment.NewLine;
-                //            _CursorPosition = _RichTextPrivChtServer.SelectionStart;
-                //            break;
-                //    }
-                //}
-                //if (caseId == 3) {
-                //    _RichTextPrivChtServer.SelectionBackColor = Color.LightGreen;
-                //    _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + TabName0 + " have resumed the chat" + Environment.NewLine;
-                //    _CursorPosition = _RichTextPrivChtServer.SelectionStart;
-                //}
             })));
         }
 

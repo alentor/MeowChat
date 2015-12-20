@@ -266,7 +266,6 @@ namespace MeowChatServer
             this.Name = "FrmServer";
             this.Text = "Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmServer_FormClosing);
-            this.Load += new System.EventHandler(this.ServerForm_Load);
             this.TabControlServer.ResumeLayout(false);
             this.TabConnTrack.ResumeLayout(false);
             this.TabPagePublicChatServer.ResumeLayout(false);

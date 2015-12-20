@@ -6,29 +6,36 @@ namespace MeowChatServerLibrary {
 
     public delegate void FrmServerImagesChangeNameHandler(string tabname, string tabNameNew);
 
-    public delegate void ServerEngineServerStartedHandler();
+    public delegate void ServerNetworkEngineEngineServerStartedHandler();
 
-    public delegate void ServerEngineServerStopBeganHandler(int clientsCount);
+    public delegate void ServerNetworkEngineServerStopBeganHandler(int clientsCount);
 
-    public delegate void ServerEngineStopTickHandler(string currentDisconnectintClientName);
+    public delegate void ServerNetworkEngineServerStopTickHandler(string currentDisconnectintClientName);
 
-    public delegate void ServerEngineStoppedHandler();
+    public delegate void ServerNetworkEngineServerStoppedHandler();
 
-    public delegate void ServerEngineClientToAddHandler(string clientNameToAdd, IPEndPoint clientNameToAddIpEndPoint);
+    public delegate void ServerNetworkEngineEngineClientToAddHandler(string clientNameToAdd, IPEndPoint clientNameToAddIpEndPoint);
 
-    public delegate void ServerEngineClientToRemoveHandler(string clientNameToRemove);
+    public delegate void ServerNetworkEngineClientToRemoveHandler(string clientNameToRemove);
 
-    public delegate void ServerEngineSendPublicMessageHandler(string clientName, Color clientColor, string message);
+    public delegate void ServerNetworkEngineSendPublicMessageHandler(string clientName, Color clientColor, string message);
 
-    public delegate void ServerEngineClientColorChangedHandler(string clientName, Color newClientColor);
+    public delegate void ServerNetworkEngineClientColorChangedHandler(string clientName, Color newClientColor);
 
-    public delegate void ServerEngineClientNameChangedHandler(string clientName, string newClientName);
+    public delegate void ServerNetworkEngineClientNameChangedHandler(string clientName, string newClientName);
 
-    public delegate void ServerEnginePrivateChatStartedHandler(string clientName, string clientNamePrivate);
+    public delegate void ServerNetworkEnginePrivateChatStartedHandler(string clientName, string clientNamePrivate);
 
-    public delegate void ServerEnginePrivateChatMessageHandler(string clientName, string clientNamePrivate, string message);
+    public delegate void ServerNetworkEnginePrivateChatMessageHandler(string clientName, string clientNamePrivate, string message);
 
-    public delegate void ServerEnginePrivateChatStoppedHandler(string clientName, string clientNamePrivate);
+    public delegate void ServerNetworkEnginePrivateChatStoppedHandler(string clientName, string clientNamePrivate);
 
-    //public delegate void ServerEngineSendPublicMessageHandler(Client client, string message);
+    public delegate void ServerNetworkEngineImageMessageHandler(Image img, string clientName, string clientNamePrivate);
+
+    public delegate void ServerEngineServerMessage();
+
+    public delegate void FrmServerServerMessageHandler(string message);
+
+
+    //public delegate void ServerNetworkEngineSendPublicMessageHandler(Client client, string message);\
 }

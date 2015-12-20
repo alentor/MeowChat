@@ -18,7 +18,7 @@ namespace LibraryMeowChat {
         PrivateMessage,
         PrivateStopped,
         ServerMessage,
-        Image,
+        ImageMessage,
         Null //No command, only used in MessageStructure constarctor
     }
 
@@ -60,7 +60,7 @@ namespace LibraryMeowChat {
             //Make sure that messageLen has been passed in the bytes array
             Message = messageLen > 0 ? Encoding.UTF8.GetString(data, 24 + clientNameLen + colorLen + privateLen, messageLen) : null;
             //Check if it's an image command, if it's add the representative bytes, if not leave it empty
-            ImgByte = Command == Command.Image ? data.Skip(24 + clientNameLen + colorLen + privateLen + messageLen).ToArray() : null;
+            ImgByte = Command == Command.ImageMessage ? data.Skip(24 + clientNameLen + colorLen + privateLen + messageLen).ToArray() : null;
         }
 
         //Convert MessageStructure object into bytes[]
@@ -79,7 +79,7 @@ namespace LibraryMeowChat {
             bytesList.AddRange(Private != null ? BitConverter.GetBytes(Private.Length) : BitConverter.GetBytes(0));
             //add Message length to the bytes bytesList, add zero bytes if message is null
             bytesList.AddRange(Message != null ? BitConverter.GetBytes(Message.Length) : BitConverter.GetBytes(0));
-            //add Image length to the bytes bytesList, add zero bytes if message is null
+            //add ImageMessage length to the bytes bytesList, add zero bytes if message is null
             bytesList.AddRange(ImgByte != null ? BitConverter.GetBytes(ImgByte.Length) : BitConverter.GetBytes(0));
             //Add ClientName to the bytesList
             bytesList.AddRange(ClientName != null ? Encoding.UTF8.GetBytes(ClientName) : emptyByte);
@@ -89,7 +89,7 @@ namespace LibraryMeowChat {
             bytesList.AddRange(Private != null ? Encoding.UTF8.GetBytes(Private) : emptyByte);
             //Add Message to the bytesList
             bytesList.AddRange(Message != null ? Encoding.UTF8.GetBytes(Message) : emptyByte);
-            //Add Image to the bytesList
+            //Add ImageMessage to the bytesList
             bytesList.AddRange(ImgByte != null ? ImgByte : emptyByte);
             // The above can be also done using the following expression
             //bytesList.AddRange(ImgByte ?? BitConverter.GetBytes(0));

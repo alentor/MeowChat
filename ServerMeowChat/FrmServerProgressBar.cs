@@ -1,6 +1,7 @@
 ﻿using MeowChatServerLibrary;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MeowChatServer {
@@ -39,9 +40,8 @@ namespace MeowChatServer {
                 Invoke(new Action((delegate{
                     ++ProgressBar1.Value;
                 })));
-                Invoke(new Action((delegate
-                {
-                    LblDisconnecting.Text = @"Disconnecting " + currentDisconnectintClientName+ @" " + ProgressBar1.Value + @" of " + ProgressBar1.Maximum;
+                Invoke(new Action((delegate{
+                    LblDisconnecting.Text = @"Disconnecting " + currentDisconnectintClientName + @" " + ProgressBar1.Value + @" of " + ProgressBar1.Maximum;
                 })));
                 Invoke(new Action((delegate{
                     ProgressBar1.Update();
@@ -50,6 +50,18 @@ namespace MeowChatServer {
             else {
                 ++ProgressBar1.Value;
             }
+            //Thread.Sleep(250);
+            //if (ProgressBar1.Value == ProgressBar1.Maximum) {
+            //    Invoke(new Action(Close));
+            //}
+        }
+
+        public int ReportProgressValue() {
+            return ProgressBar1.Value;
+        }
+
+        public int ReportProgressBarMax() {
+            return ProgressBar1.Maximum;
         }
     }
 }

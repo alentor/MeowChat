@@ -266,7 +266,7 @@ namespace MeowChatClient
                         FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ServerMessage);
                         break;
 
-                    case Command.Image:
+                    case Command.ImageMessage:
                         if (msgReceived.Private != null)
                         {
                             if (ClientConnection.ClientName == msgReceived.ClientName)
@@ -309,7 +309,7 @@ namespace MeowChatClient
                                 RichTextClientPub.SelectionStart = _CursorPosition;
                                 RichTextClientPub.SelectionColor = Color.Black;
                                 RichTextClientPub.SelectionBackColor = Color.Yellow;
-                                RichTextClientPub.SelectedText = GenericStatic.Time() + " " + " Image sent successfully" + Environment.NewLine;
+                                RichTextClientPub.SelectedText = GenericStatic.Time() + " " + " ImageMessage sent successfully" + Environment.NewLine;
                                 _CursorPosition = RichTextClientPub.SelectionStart;
                             })));
                             break;
@@ -530,11 +530,11 @@ namespace MeowChatClient
                 MessageStructure msgToSend = new MessageStructure
                 {
                     ClientName = ClientConnection.ClientName,
-                    Command = Command.Image
+                    Command = Command.ImageMessage
                 };
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    openFileDialog.Title = @"Open Image";
+                    openFileDialog.Title = @"Open ImageMessage";
                     openFileDialog.Filter = @"Images|*.png;*.bmp;*.jpg;*.gif*";
                     if (openFileDialog.ShowDialog() != DialogResult.OK)
                     {
@@ -640,13 +640,13 @@ namespace MeowChatClient
             {
                 MessageStructure msgToSend = new MessageStructure
                 {
-                    Command = Command.Image,
+                    Command = Command.ImageMessage,
                     Private = namePrivate,
                     ClientName = ClientConnection.ClientName
                 };
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    openFileDialog.Title = @"Open Image";
+                    openFileDialog.Title = @"Open ImageMessage";
                     openFileDialog.Filter = @"Images|*.png;*.bmp;*.jpg;*.gif*";
                     if (openFileDialog.ShowDialog() != DialogResult.OK)
                     {
@@ -669,7 +669,7 @@ namespace MeowChatClient
             }
 
             //MessageStructure msgToSend = new MessageStructure {
-            //    Command = Command.Image,
+            //    Command = Command.ImageMessage,
             //    ClientName = ClientConnection.ClientName,
             //    Private = namePrivate,
             //};

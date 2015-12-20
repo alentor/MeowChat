@@ -46,7 +46,7 @@
     <Compile Include="ClientMessagesPosition.cs" />
     <Compile Include="EventHandlersServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerEngine.cs" />
+    <Compile Include="ServerNetworkEngine.cs" />
     <Compile Include="TabPagePrivateChatServer.cs">
       <SubType>Component</SubType>
     </Compile>
