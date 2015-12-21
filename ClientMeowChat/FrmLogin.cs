@@ -3,79 +3,68 @@ using MeowChatClientLibrary;
 using System;
 using System.Windows.Forms;
 
-namespace MeowChatClient
-{
-    public partial class FrmLogin : Form
-    {
-        //Stores clients established connection, this will happen when the FrmLogin will be closed
-        public FrmLogin()
-        {
+namespace MeowChatClient {
+    public partial class FrmLogin: Form {
+        private readonly ClientNetworkEngine _ClientNetworkEngine = new ClientNetworkEngine();
+
+        public FrmLogin() {
             InitializeComponent();
-            ClientConnection.LoginFrmCloseEvent += Connected;
+            _ClientNetworkEngine.ClientNetworkEngineLoggedinEvent += Loggedin;
+            //ClientConnection.LoginFrmCloseEvent += Connected;
         }
 
-        //Check if Name/IP/Port fileds are filed with at least one charter
-        private void txtBoxName_TextChanged(object sender, EventArgs e)
-        {
-            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0)
-            {
+        // Checks if Name/IP/Port fileds are filed with at least one charter
+        private void txtBoxName_TextChanged(object sender, EventArgs e) {
+            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0) {
                 btnConnect.Enabled = true;
                 return;
             }
             btnConnect.Enabled = false;
         }
 
-        //Check if Name/IP/Port fileds are filed with at least one charter
-        private void txtBxServerIp_TextChanged(object sender, EventArgs e)
-        {
-            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0)
-            {
+        // Checks if Name/IP/Port fileds are filed with at least one charter
+        private void txtBxServerIp_TextChanged(object sender, EventArgs e) {
+            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0) {
                 btnConnect.Enabled = true;
                 return;
             }
             btnConnect.Enabled = false;
         }
 
-        //Check if Name/IP/Port fileds are filed with at least one charter
-        private void txtBoxPort_TextChanged(object sender, EventArgs e)
-        {
-            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0)
-            {
+        // Checks if Name/IP/Port fileds are filed with at least one charter
+        private void txtBoxPort_TextChanged(object sender, EventArgs e) {
+            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0) {
                 btnConnect.Enabled = true;
                 return;
             }
             btnConnect.Enabled = false;
         }
 
-        //Button connect
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            ClientConnection.Connect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text);
+        // Button connect
+        private void btnConnect_Click(object sender, EventArgs e) {
+            _ClientNetworkEngine.AttemptConnect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text, Client.Color);
+            //ClientConnection.Connect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text);
         }
 
         //Button Cancel
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
+        private void btnCancel_Click(object sender, EventArgs e) {
             Close();
         }
 
-        //Connected, will run on a successful Connect
-        private void Connected()
-        {
-            if (Visible)
-            {
-                Invoke((MethodInvoker)Close);
-            }
+        // Logged will be invoked from ClientNetworkServer on a successful Login
+        private void Loggedin() {
+            Invoke(new Action((Close)));
         }
 
+       
+
         //Color pick Button
-        private void btnColorPick_Click(object sender, EventArgs e)
-        {
+        private void btnColorPick_Click(object sender, EventArgs e) {
             DialogResult pickColor = colorPicker.ShowDialog();
-            if (pickColor == DialogResult.OK)
-            {
-                string color = GenericStatic.HexConverter(colorPicker.Color);
-                ClientConnection.Color = color;
+            if (pickColor == DialogResult.OK) {
+                //string color = GenericStatic.HexConverter(colorPicker.Color);
+                //ClientConnection.Color = color;
+                Client.Color = colorPicker.Color;
                 //MessageBox.Show(str, @"Chat: " + ClientConnection.FrmPrivateName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

@@ -37,13 +37,10 @@ namespace MeowChatClientLibrary
             }
         }
 
-        private static void Connected(IAsyncResult ar)
-        {
-            try
-            {
+        private static void Connected(IAsyncResult ar) {
+            try {
                 Socket.EndConnect(ar); //notify the server the connection was established succefully
-                MessageStructure msgToSend = new MessageStructure
-                {
+                MessageStructure msgToSend = new MessageStructure {
                     Command = Command.Login,
                     ClientName = ClientName,
                     Message = null
@@ -52,8 +49,7 @@ namespace MeowChatClientLibrary
                 //send the login credinails of the established connection to the server and call to the methood OnSend
                 Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> Connected", @"Chat: ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

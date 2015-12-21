@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace MeowChatServer {
     public partial class FrmServer: Form {
-        private readonly ServerNetworkEngineEngine _ServerNetworkEngineEngine = new ServerNetworkEngineEngine();
+        //private readonly ServerNetworkEngine _ServerNetworkEngine = new ServerNetworkEngine();
         private readonly List <ClientMessagesPosition> _ClientMessagesesList = new List <ClientMessagesPosition>();
         private FrmServerProgressBar _FrmProgressBarDisconnect;
         private readonly FrmServerImages _FrmServerImages = new FrmServerImages();
@@ -29,33 +29,33 @@ namespace MeowChatServer {
             TabControlServer.TabPages[1].Show();
             TabControlServer.TabPages[0].Show();
             // Setting the events for Server Network Engine to FrmServer
-            _ServerNetworkEngineEngine.ServerNetworkEngineEngineServerStartedEvent += ServerNetworkEngineNetworkStarted;
-            _ServerNetworkEngineEngine.ServerNetworkEngineEngineClientToAddEvent += ClientToAdd;
-            _ServerNetworkEngineEngine.ServerNetworkEngineSendPublicMessageEvent += PublicMessage;
-            _ServerNetworkEngineEngine.ServerNetworkEngineServerStopBeganEvent += ServerNetworkNetworkEngineStopBegan;
-            _ServerNetworkEngineEngine.ServerNetworkEngineServerStopTickEvent += ServerNetworkNetworkEngineStopTick;
-            _ServerNetworkEngineEngine.ServerNetworkEngineServerStoppedEvent += ServerNetworkNetworkEngineStopped;
-            _ServerNetworkEngineEngine.ServerNetworkEngineClientColorChangedEvent += ClientColorChanged;
-            _ServerNetworkEngineEngine.ServerNetworkEngineClientToRemoveEvent += ClientToRemove;
-            _ServerNetworkEngineEngine.ServerNetworkEngineClientNameChangedEvent += ClientNameChanged;
-            _ServerNetworkEngineEngine.ServerNetworkEnginePrivateChatStartedEvent += PrivateChatStarted;
-            _ServerNetworkEngineEngine.ServerNetworkEnginePrivateChatMessageEvent += PrivateChatMessage;
-            _ServerNetworkEngineEngine.ServerNetworkEnginePrivateChatStoppedEvent += PrivateChatStopped;
-            _ServerNetworkEngineEngine.ServerNetworkEngineImageMessageEvent += ImageMessage;
+            ServerNetworkEngine.ServerNetworkEngineEngineServerStartedEvent += ServerNetworkEngineNetworkStarted;
+            ServerNetworkEngine.ServerNetworkEngineEngineClientToAddEvent += ClientToAdd;
+            ServerNetworkEngine.ServerNetworkEngineSendPublicMessageEvent += PublicMessage;
+            ServerNetworkEngine.ServerNetworkEngineServerStopBeganEvent += ServerNetworkNetworkEngineStopBegan;
+            ServerNetworkEngine.ServerNetworkEngineServerStopTickEvent += ServerNetworkNetworkEngineStopTick;
+            ServerNetworkEngine.ServerNetworkEngineServerStoppedEvent += ServerNetworkNetworkEngineStopped;
+            ServerNetworkEngine.ServerNetworkEngineClientColorChangedEvent += ClientColorChanged;
+            ServerNetworkEngine.ServerNetworkEngineClientToRemoveEvent += ClientToRemove;
+            ServerNetworkEngine.ServerNetworkEngineClientNameChangedEvent += ClientNameChanged;
+            ServerNetworkEngine.ServerNetworkEnginePrivateChatStartedEvent += PrivateChatStarted;
+            ServerNetworkEngine.ServerNetworkEnginePrivateChatMessageEvent += PrivateChatMessage;
+            ServerNetworkEngine.ServerNetworkEnginePrivateChatStoppedEvent += PrivateChatStopped;
+            ServerNetworkEngine.ServerNetworkEngineImageMessageEvent += ImageMessage;
             // Setting the event for server message from FrmServer to ServerNetworkEngine
-            FrmServerServerMessageEvent += _ServerNetworkEngineEngine.ServerMessage;
+            FrmServerServerMessageEvent += ServerNetworkEngine.ServerMessage;
             // Setting the event from FrmServer to FrmImages when name is changed
             FrmServerImagesChangeNameEvent += _FrmServerImages.ChangeTabName;
         }
 
         // Button Start
         private void BtnStartSrv_Click(object sender, EventArgs e) {
-            _ServerNetworkEngineEngine.StartServer(TxtBoxIpAddress.Text, TxtBoxPort.Text);
+            ServerNetworkEngine.StartServer(TxtBoxIpAddress.Text, TxtBoxPort.Text);
         }
 
         // Button stop
         private void btnStopSrv_Click(object sender, EventArgs e) {
-            _ServerNetworkEngineEngine.ServerStop();
+            ServerNetworkEngine.ServerStop();
         }
 
         // Server Started
@@ -153,7 +153,7 @@ namespace MeowChatServer {
                 RichTextServerConn.SelectionColor = Color.Black;
                 RichTextServerConn.SelectedText += "<<< " + clientNameToRemove + " has just left the chat >>> " + GenericStatic.TimeDate() + " " + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
-                //GenericStatic.FormatItemSize(TabControlServer);
+                //GenericStatic.ItemEvenSize(TabControlServer);
                 //TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.Name, msgReceived.Private, msgReceived.Message, 2);
             })));
         }

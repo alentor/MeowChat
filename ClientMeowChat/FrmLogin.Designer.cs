@@ -48,7 +48,7 @@ namespace MeowChatClient
             this.lblName.AutoSize = true;
             this.lblName.Location = new System.Drawing.Point(25, 13);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(38, 13);
+            this.lblName.Size = new System.Drawing.Size(64, 13);
             this.lblName.TabIndex = 0;
             this.lblName.Text = "&ClientName:";
             // 

@@ -36,26 +36,28 @@ namespace MeowChatClient
         //On FrmChat Load we are sending a reuqest to get the list of all the connected clients form the server
         private void FrmChat_Load(object sender, EventArgs e)
         {
-            ClientStatistics.StartStatistics();
-            _FrmStatistics.Start();
-            FrmStatisticsUpdateEvent += _FrmStatistics.UpdateStatics;
-            FrmClientImagesChangeNameEvent += _FrmClientImages.ChangeTabName;
-            try
-            {
-                MessageStructure msgToSend = new MessageStructure
-                {
-                    Command = Command.List,
-                    ClientName = ClientConnection.ClientName
-                };
-                _ByteMessage = msgToSend.ToByte();
-                ClientConnection.Socket.BeginSend(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnSend, null);
-                _ByteMessage = new byte[2097152];
-                ClientConnection.Socket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, null);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + @" -> FrmChat_Load", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            FrmLogin frmLogin = new FrmLogin();
+            frmLogin.ShowDialog();
+            //ClientStatistics.StartStatistics();
+            //_FrmStatistics.Start();
+            //FrmStatisticsUpdateEvent += _FrmStatistics.UpdateStatics;
+            //FrmClientImagesChangeNameEvent += _FrmClientImages.ChangeTabName;
+            //try
+            //{
+            //    MessageStructure msgToSend = new MessageStructure
+            //    {
+            //        Command = Command.List,
+            //        ClientName = ClientConnection.ClientName
+            //    };
+            //    _ByteMessage = msgToSend.ToByte();
+            //    ClientConnection.Socket.BeginSend(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnSend, null);
+            //    _ByteMessage = new byte[2097152];
+            //    ClientConnection.Socket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, null);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message + @" -> FrmChat_Load", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         //This method handles all the received data from the server
@@ -392,7 +394,7 @@ namespace MeowChatClient
             }
             ClientConnection.Connect(ClientConnection.Address, ClientConnection.Port, ClientConnection.ClientName);
             Thread.Sleep(5);
-            FrmChat_Load(this, null);
+            //FrmChat_Load(this, null);
             BtnPubSnd.Enabled = true;
         }
 
