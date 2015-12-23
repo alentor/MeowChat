@@ -1,3 +1,3 @@
-MeowChat v4.1
+MeowChat v4.2
 =======
 School Project, simple chat application using .Net sockets.
