@@ -5,22 +5,30 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace MeowChatClientLibrary
-{
-    public class TabPagePrivateChatClient : TabPage
-    {
+namespace MeowChatClientLibrary {
+    public class TabPagePrivateChatClient: TabPage {
+        public enum TabCommand {
+            Resumed,
+            Closed,
+            Disconnected,
+            Disconnect,
+            Message,
+            ImageMessage,
+            ImageMessageSent,
+            NameChange,
+            Null //No command, only used in MessageStructure constarctor
+        }
+
         private readonly RichTextBox _RichTextPrivChtClient = new RichTextBox();
         private readonly TextBox _TextBoxPrvMsg = new TextBox();
-        private readonly Button _BtnPrvSnd = new Button();
-        private readonly Button _BtnSendPhotoPrivate = new Button();
+        private readonly Button _BtnPrivateSendMessage = new Button();
+        private readonly Button _BtnPrivateSendImage = new Button();
         private int _CursorPosition;
         public event TabPagePrivateChatSendClietHandler TabPagePrivateChatSendClientEvent;
-        public event TabPagePrivateChatSendClietHandler TabPagePrivateChatSendImageClientEvent;
+        public event TabPagePrivateChatSendImageClietHandler TabPagePrivateChatSendImageClietEvent;
 
         //Constactor
-        public TabPagePrivateChatClient(string name)
-        {
-            Name = name;
+        public TabPagePrivateChatClient(string name) {
             // RchTxtPrivChat
             _RichTextPrivChtClient.BackColor = Color.White;
             _RichTextPrivChtClient.ForeColor = Color.Black;
@@ -39,27 +47,27 @@ namespace MeowChatClientLibrary
             _TextBoxPrvMsg.TabIndex = 0;
             _TextBoxPrvMsg.Select();
             // btnPrvSnd
-            _BtnPrvSnd.Location = new Point(520, 377);
-            _BtnPrvSnd.Name = name + "BtnPrvSnd";
-            _BtnPrvSnd.Size = new Size(89, 23);
-            _BtnPrvSnd.TabIndex = 1;
-            _BtnPrvSnd.Text = "&Send";
-            _BtnPrvSnd.Click += _BtnPrvSnd_Click;
-            _BtnPrvSnd.UseVisualStyleBackColor = true;
+            _BtnPrivateSendMessage.Location = new Point(520, 377);
+            _BtnPrivateSendMessage.Name = name + "BtnPrvSnd";
+            _BtnPrivateSendMessage.Size = new Size(89, 23);
+            _BtnPrivateSendMessage.TabIndex = 1;
+            _BtnPrivateSendMessage.Text = "&Send";
+            _BtnPrivateSendMessage.Click += BtnPrivateSendMessageClick;
+            _BtnPrivateSendMessage.UseVisualStyleBackColor = true;
             // BtnSendPhotoPrivate
-            _BtnSendPhotoPrivate.BackgroundImage = Image.FromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "BtnSendPhotoPublic.BackgroundImage.png"));
-            _BtnSendPhotoPrivate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            _BtnSendPhotoPrivate.Location = new System.Drawing.Point(491, 377);
-            _BtnSendPhotoPrivate.Name = "BtnSendPhotoPublic";
-            _BtnSendPhotoPrivate.Size = new System.Drawing.Size(23, 23);
+            _BtnPrivateSendImage.BackgroundImage = Image.FromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "BtnSendPhotoPublic.BackgroundImage.png"));
+            _BtnPrivateSendImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            _BtnPrivateSendImage.Location = new System.Drawing.Point(491, 377);
+            _BtnPrivateSendImage.Name = "BtnSendPhotoPublic";
+            _BtnPrivateSendImage.Size = new System.Drawing.Size(23, 23);
             //this.BtnSendPhotoPublic.TabIndex = 9;
-            _BtnSendPhotoPrivate.UseVisualStyleBackColor = true;
-            _BtnSendPhotoPrivate.Click += _BtnSendPhotoPrivate_Click;
+            _BtnPrivateSendImage.UseVisualStyleBackColor = true;
+            _BtnPrivateSendImage.Click += BtnPrivateSendImageClick;
             // TabPagePrivateChat
             Controls.Add(_RichTextPrivChtClient);
             Controls.Add(_TextBoxPrvMsg);
-            Controls.Add(_BtnPrvSnd);
-            Controls.Add(_BtnSendPhotoPrivate);
+            Controls.Add(_BtnPrivateSendMessage);
+            Controls.Add(_BtnPrivateSendImage);
             Location = new Point(4, 28);
             Name = name;
             Padding = new Padding(3);
@@ -69,93 +77,100 @@ namespace MeowChatClientLibrary
         }
 
         //Button Send
-        private void _BtnPrvSnd_Click(object sender, EventArgs e)
-        {
-            if (_TextBoxPrvMsg.Text.Length > 0)
-            {
+        private void BtnPrivateSendMessageClick(object sender, EventArgs e) {
+            if (_TextBoxPrvMsg.Text.Length > 0) {
                 TabPagePrivateChatSendClientEvent?.Invoke(Name, _TextBoxPrvMsg.Text);
                 _TextBoxPrvMsg.Text = "";
-                ++ClientStatistics.MessagesPrivateSent;
             }
         }
 
         //Button ImageMessage
-        private void _BtnSendPhotoPrivate_Click(object sender, EventArgs e)
-        {
-            TabPagePrivateChatSendImageClientEvent?.Invoke(Name, null);
+        private void BtnPrivateSendImageClick(object sender, EventArgs e) {
+            //TabPagePrivateChatSendImageClientEvent?.Invoke(Name, null);
+            TabPagePrivateChatSendImageClietEvent?.Invoke(Name);
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageClientEvent, which being fired in FrmChat
-        public void TabPageTabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, int caseId)
-        {
-            Invoke(new Action((delegate
-            {
+        public void TabPageTabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, TabCommand command) {
+            Invoke(new Action((delegate{
                 _RichTextPrivChtClient.SelectionStart = _CursorPosition;
-                switch (caseId)
-                {
-                    case 0:
-                        _BtnPrvSnd.Enabled = true;
-                        if (tabName == ClientConnection.ClientName && privateName == Name)
-                        {
+                switch (command) {
+                    case TabCommand.Message:
+                        if (tabName == Client.Name && privateName == Name) {
                             _RichTextPrivChtClient.SelectionColor = Color.Blue;
-                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + ClientConnection.ClientName + @": " + message + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + Client.Name + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
-                        if (tabName == Name && privateName == ClientConnection.ClientName)
-                        {
+                        if (tabName == Name && privateName == Client.Name) {
                             _RichTextPrivChtClient.SelectionColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + Name + @": " + message + Environment.NewLine;
+                            _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + Name + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
-                        break;
 
-                    case 1:
-                        if (tabName == Name)
-                        {
+                        break;
+                    case TabCommand.Closed:
+                        if (tabName == Name) {
+                            _BtnPrivateSendMessage.Enabled = false;
+                            _BtnPrivateSendImage.Enabled = false;
                             _RichTextPrivChtClient.SelectionBackColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + " has closed the chat" + Environment.NewLine;
-                            _BtnPrvSnd.Enabled = false;
+                            _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + tabName + " has closed the chat" + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
-                        break;
 
-                    case 2:
-                        if (tabName == Name)
-                        {
-                            _RichTextPrivChtClient.SelectionBackColor = Color.Red;
-                            _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + "Chat have been disconnected" + Environment.NewLine;
-                            _BtnPrvSnd.Enabled = false;
-                            _CursorPosition = _RichTextPrivChtClient.SelectionStart;
-                        }
                         break;
-
-                    case 3:
-                        _BtnPrvSnd.Enabled = true;
+                    case TabCommand.Resumed:
+                        _BtnPrivateSendMessage.Enabled = true;
+                        _BtnPrivateSendImage.Enabled = true;
                         _RichTextPrivChtClient.SelectionColor = Color.Black;
                         _RichTextPrivChtClient.SelectionBackColor = Color.LightGreen;
-                        _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + tabName + " has resumed the chat" + Environment.NewLine;
+                        _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + tabName + " has resumed the chat" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
 
-                    case 4:
+                    case TabCommand.Disconnected:
+                        if (tabName == Name) {
+                            _BtnPrivateSendMessage.Enabled = false;
+                            _BtnPrivateSendImage.Enabled = false;
+                            _RichTextPrivChtClient.SelectionBackColor = Color.Red;
+                            _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + tabName + " have been disconnected" + Environment.NewLine;
+                            _CursorPosition = _RichTextPrivChtClient.SelectionStart;
+                        }
+                        break;
+
+                    case TabCommand.NameChange:
+                        if (Name == tabName) {
+                            _RichTextPrivChtClient.SelectionColor = Color.Red;
+                            _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + Name + @" have changed his name to " + message + Environment.NewLine;
+                            _CursorPosition = _RichTextPrivChtClient.SelectionStart;
+                        }
+                        break;
+
+                    case TabCommand.ImageMessage:
                         _RichTextPrivChtClient.SelectionColor = Color.Black;
                         _RichTextPrivChtClient.SelectionBackColor = Color.Yellow;
-                        _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + "ImageMessage sent successfully" + Environment.NewLine;
+                        _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + Name + " has sent an image" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
 
-                    case 5:
+                    case TabCommand.ImageMessageSent:
                         _RichTextPrivChtClient.SelectionColor = Color.Black;
                         _RichTextPrivChtClient.SelectionBackColor = Color.Yellow;
-                        _RichTextPrivChtClient.SelectedText = GenericStatic.Time() + " " + Name + " has sent an image" + Environment.NewLine;
+                        _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + "ImageMessage sent successfully" + Environment.NewLine;
+                        _CursorPosition = _RichTextPrivChtClient.SelectionStart;
+                        break;
+
+                    case TabCommand.Disconnect:
+                        _BtnPrivateSendMessage.Enabled = false;
+                        _BtnPrivateSendImage.Enabled = false;
+                        _RichTextPrivChtClient.SelectionBackColor = Color.Red;
+                        _RichTextPrivChtClient.SelectedText = Time.NowTime() + " have been disconnected" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         break;
                 }
             })));
         }
 
-        private void RichTextPrivChtClientTextChanged(object sender, EventArgs e)
-        {
+        private void RichTextPrivChtClientTextChanged(object sender, EventArgs e) {
             _RichTextPrivChtClient.SelectionStart = _RichTextPrivChtClient.Text.Length;
             _RichTextPrivChtClient.ScrollToCaret();
         }

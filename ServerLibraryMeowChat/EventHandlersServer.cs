@@ -32,10 +32,5 @@ namespace MeowChatServerLibrary {
 
     public delegate void ServerNetworkEngineImageMessageHandler(Image img, string clientName, string clientNamePrivate);
 
-    public delegate void ServerEngineServerMessage();
-
-    public delegate void FrmServerServerMessageHandler(string message);
-
-
     //public delegate void ServerNetworkEngineSendPublicMessageHandler(Client client, string message);\
 }

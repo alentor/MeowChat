@@ -31,32 +31,32 @@ namespace MeowChatServerLibrary {
         public static event ServerNetworkEnginePrivateChatStoppedHandler ServerNetworkEnginePrivateChatStoppedEvent;
         public static event ServerNetworkEngineImageMessageHandler ServerNetworkEngineImageMessageEvent;
         // List which contains all the connected Clients
-        private static readonly List <Client> _ClientList = new List <Client>();
+        private static readonly List <Client> sr_clientList = new List <Client>();
         // Max byte size to be recieved/sent
-        private static readonly byte[] _ByteMessage = new byte[2097152];
+        private static readonly byte[] sr_byteMessage = new byte[2097152];
         // Server socket is the socket from which ServerNetworkEngine is Communicating
-        private static Socket _ServerSocket;
+        private static Socket s_serverSocket;
         // Significance the current state of the ServerNetworkEngine. True => Running Flase => not running.
-        private static bool _ServerEngineStatus;
+        public static bool Status;
         // an int to count the 
-        private static int _DisconnectCout;
+        private static int s_disconnectCout;
 
         //public ServerNetworkEngine(FrmServer frmServer) {
 
         //}
         public static void StartServer(string ipAddressString, string portString) {
             try {
-                _ClientList.Clear();
-                _ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                sr_clientList.Clear();
+                s_serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPAddress ipAddress = IPAddress.Parse(ipAddressString);
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, int.Parse(portString));
                 // Bind the socket to local endPoint
-                _ServerSocket.Bind(ipEndPoint);
+                s_serverSocket.Bind(ipEndPoint);
                 // Start listening for incoming connection, que up to 100 connections
-                _ServerSocket.Listen(100);
+                s_serverSocket.Listen(100);
                 // Start acceppting incoming connection, on a succefull accept call to OnAccept method
-                _ServerSocket.BeginAccept((OnAccept), null);
-                _ServerEngineStatus = true;
+                s_serverSocket.BeginAccept((OnAccept), null);
+                Status = true;
                 ServerNetworkEngineEngineServerStartedEvent?.Invoke();
             }
             catch (Exception ex) {
@@ -66,27 +66,27 @@ namespace MeowChatServerLibrary {
 
         public static void ServerStop() {
             try {
-                if (_ClientList.Count == 0) {
+                if (sr_clientList.Count == 0) {
                     ServerNetworkEngineServerStoppedEvent?.Invoke();
-                    _ServerEngineStatus = false;
-                    _ServerSocket.Close();
+                    Status = false;
+                    s_serverSocket.Close();
                     return;
                 }
-                _ServerEngineStatus = false;
-                ServerNetworkEngineServerStopBeganEvent?.Invoke(_ClientList.Count);
+                Status = false;
+                ServerNetworkEngineServerStopBeganEvent?.Invoke(sr_clientList.Count);
                 // Initialize the dialog that will contain the progress bar
                 MessageStructure msgToSend = new MessageStructure {
                     Command = Command.Disconnect
                 };
                 byte[] msgToSendByte = msgToSend.ToByte();
                 Task.Factory.StartNew(() =>{
-                    foreach (Client client in _ClientList) {
+                    foreach (Client client in sr_clientList) {
                         // Added only to slow down the progress bar advance for demonstration purposes
                         Thread.Sleep(150);
                         client.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.Socket);
                     }
                 });
-                _ServerSocket.Close();
+                s_serverSocket.Close();
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> btnStopSrv_Click", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -94,16 +94,16 @@ namespace MeowChatServerLibrary {
         }
 
         private static void OnAccept(IAsyncResult ar) {
-            if (!_ServerEngineStatus) {
+            if (!Status) {
                 return;
             }
             try {
                 // Create a connection(client) based on the accepted connection
-                Socket clienSocket = _ServerSocket.EndAccept(ar);
+                Socket clienSocket = s_serverSocket.EndAccept(ar);
                 // Start accepting again
-                _ServerSocket.BeginAccept((OnAccept), null);
+                s_serverSocket.BeginAccept((OnAccept), null);
                 // Start receiving(listening for) information on the accepted socket, once information is receive go to OnReceive client
-                clienSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, (OnReceive), clienSocket);
+                clienSocket.BeginReceive(sr_byteMessage, 0, sr_byteMessage.Length, SocketFlags.None, (OnReceive), clienSocket);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message + @" -> OnAccept", @"Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -111,14 +111,14 @@ namespace MeowChatServerLibrary {
         }
 
         private static void OnReceive(IAsyncResult ar) {
-            //if (!_ServerEngineStatus) {
+            //if (!s_serverEngineStatus) {
             //    return;
             //}
             try {
                 // Casting the AsyncState to a socket class
                 Socket receivedClientSocket = (Socket) ar.AsyncState;
                 // Translating the array of received bytes to  an intelligent class MessageStructure
-                MessageStructure msgReceived = new MessageStructure(_ByteMessage);
+                MessageStructure msgReceived = new MessageStructure(sr_byteMessage);
                 // Constract the initial details of new object MessageStructure which will be sent out
                 MessageStructure msgToSend = new MessageStructure {
                     Command = msgReceived.Command,
@@ -135,7 +135,7 @@ namespace MeowChatServerLibrary {
                         break;
 
                     case Command.AttemptLogin:
-                        foreach (Client client in _ClientList) {
+                        foreach (Client client in sr_clientList) {
                             if (client.Name == msgReceived.ClientName) {
                                 msgToSend.Message = "This user name already logged in";
                                 messageBytes = msgToSend.ToByte();
@@ -144,20 +144,21 @@ namespace MeowChatServerLibrary {
                             }
                         }
                         msgToSend.Command = Command.Login;
+                        msgReceived.Command = Command.Login;
                         //messageBytes = msgToSend.ToByte();
                         //receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
                         goto case Command.Login;
 
                     case Command.Login:
                         // remove this code when you'll start working on database
-                        foreach (Client client in _ClientList.Where(clientLinq => msgReceived.ClientName == clientLinq.Name)) {
+                        foreach (Client client in sr_clientList.Where(clientLinq => msgReceived.ClientName == clientLinq.Name)) {
                             Random rnd = new Random();
                             msgReceived.ClientName = client.Name + rnd.Next(1, 999999);
                             msgToSend.ClientName = msgReceived.ClientName;
                         }
                         // When the Login Command is received the ServerNetworkEngine will 
                         // add that established connection (Socket) along
-                        // with the provoided information to distinguish it (Name) to _ClientList
+                        // with the provoided information to distinguish it (Name) to sr_clientList
                         // as a Client and sent the command Login to ohter clients to handle
                         // it on their end excluding the sending client
                         Client newClient = new Client {
@@ -167,7 +168,7 @@ namespace MeowChatServerLibrary {
                             IpEndPoint = receivedClientSocket.RemoteEndPoint as IPEndPoint
                         };
                         // Adding the current handled established connection(client) to the connected _clientList
-                        _ClientList.Add(newClient);
+                        sr_clientList.Add(newClient);
                         // Setting the message to broadcast to all other clients
                         msgToSend.Message = "<<< " + newClient.Name + " has joined the room >>>";
                         ServerNetworkEngineEngineClientToAddEvent?.Invoke(newClient.Name, newClient.IpEndPoint);
@@ -184,8 +185,8 @@ namespace MeowChatServerLibrary {
                         // Setting the message to broadcast to all other clients
                         msgToSend.Message = "<<< " + msgReceived.ClientName + " has just left the chat >>>";
                         // Removing client (established connection) _clientList
-                        foreach (Client client in _ClientList.Where(client => client.Socket == receivedClientSocket)) {
-                            _ClientList.Remove(client);
+                        foreach (Client client in sr_clientList.Where(client => client.Socket == receivedClientSocket)) {
+                            sr_clientList.Remove(client);
                             break;
                         }
                         ServerNetworkEngineClientToRemoveEvent?.Invoke(msgReceived.ClientName);
@@ -194,8 +195,8 @@ namespace MeowChatServerLibrary {
                     case Command.Disconnect:
                         receivedClientSocket.BeginDisconnect(true, (OnDisonnect), receivedClientSocket);
                         ServerNetworkEngineServerStopTickEvent?.Invoke(msgReceived.ClientName);
-                        ++_DisconnectCout;
-                        if (_ClientList.Count == _DisconnectCout) {
+                        ++s_disconnectCout;
+                        if (sr_clientList.Count == s_disconnectCout) {
                             ServerNetworkEngineServerStoppedEvent?.Invoke();
                         }
                         break;
@@ -204,9 +205,9 @@ namespace MeowChatServerLibrary {
                         // when the List command received serverEngine will send the names of all the
                         // clients(established coneections) back to the requesting (client) (established connection)
                         msgToSend.Command = Command.List;
-                        Client lastItem = _ClientList[_ClientList.Count - 1];
-                        msgToSend.ClientName = lastItem.Name;
-                        foreach (Client client in _ClientList) {
+                        Client lastItem = sr_clientList[sr_clientList.Count - 1];
+                        //msgToSend.ClientName = lastItem.Name;
+                        foreach (Client client in sr_clientList) {
                             //To keep things simple we use a marker to separate the user names
                             msgToSend.Message += client.Name + ",";
                         }
@@ -223,7 +224,7 @@ namespace MeowChatServerLibrary {
                         break;
 
                     case Command.NameChange:
-                        foreach (Client client in _ClientList.Where(client => client.Name == msgReceived.ClientName)) {
+                        foreach (Client client in sr_clientList.Where(client => client.Name == msgReceived.ClientName)) {
                             client.Name = msgReceived.Message;
                             break;
                         }
@@ -233,7 +234,7 @@ namespace MeowChatServerLibrary {
 
                     case Command.ColorChanged:
                         Color newColor = ColorTranslator.FromHtml(msgToSend.Color);
-                        foreach (Client client in _ClientList.Where(client => client.Name == msgReceived.ClientName)) {
+                        foreach (Client client in sr_clientList.Where(client => client.Name == msgReceived.ClientName)) {
                             client.Color = newColor;
                             break;
                         }
@@ -241,8 +242,8 @@ namespace MeowChatServerLibrary {
                         ServerNetworkEngineClientColorChangedEvent?.Invoke(msgReceived.ClientName, newColor);
                         break;
 
-                    case Command.PrivateStarted:
-                        foreach (Client client in _ClientList.Where(client => client.Name == msgReceived.Private)) {
+                    case Command.PrivateStart:
+                        foreach (Client client in sr_clientList.Where(client => client.Name == msgReceived.Private)) {
                             msgToSend.Private = msgReceived.Private;
                             messageBytes = msgToSend.ToByte();
                             client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
@@ -252,7 +253,7 @@ namespace MeowChatServerLibrary {
                         break;
 
                     case Command.PrivateMessage:
-                        foreach (Client client in _ClientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
+                        foreach (Client client in sr_clientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
                             msgToSend.Private = msgReceived.Private;
                             msgToSend.Message = msgReceived.Message;
                             messageBytes = msgToSend.ToByte();
@@ -264,7 +265,7 @@ namespace MeowChatServerLibrary {
                         break;
 
                     case Command.PrivateStopped:
-                        foreach (Client client in _ClientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
+                        foreach (Client client in sr_clientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
                             msgToSend.Private = msgReceived.Private;
                             messageBytes = msgToSend.ToByte();
                             client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
@@ -278,7 +279,7 @@ namespace MeowChatServerLibrary {
                         if (msgReceived.Private != null) {
                             ServerNetworkEngineImageMessageEvent?.Invoke(Image.FromStream(ms), msgReceived.ClientName, msgReceived.Private);
                             Task.Factory.StartNew(() =>{
-                                foreach (Client client in _ClientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
+                                foreach (Client client in sr_clientList.Where(clientLinq => clientLinq.Name == msgReceived.Private)) {
                                     msgToSend.Private = msgReceived.Private;
                                     msgToSend.ImgByte = msgReceived.ImgByte;
                                     messageBytes = msgToSend.ToByte();
@@ -293,7 +294,7 @@ namespace MeowChatServerLibrary {
                         msgToSend.ImgByte = msgReceived.ImgByte;
                         messageBytes = msgToSend.ToByte();
                         Task.Factory.StartNew(() =>{
-                            foreach (Client client in _ClientList) {
+                            foreach (Client client in sr_clientList) {
                                 client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
                             }
                         });
@@ -302,9 +303,9 @@ namespace MeowChatServerLibrary {
 
                 // Send(broadcast) the message to clients (established connections)
                 Task.Factory.StartNew(() =>{
-                    if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStarted && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStopped && msgToSend.Command != Command.Disconnect && msgToSend.Command != Command.ImageMessage) {
+                    if (msgToSend.Command != Command.List && msgToSend.Command != Command.PrivateStart && msgToSend.Command != Command.PrivateMessage && msgToSend.Command != Command.PrivateStopped && msgToSend.Command != Command.Disconnect && msgToSend.Command != Command.ImageMessage) {
                         messageBytes = msgToSend.ToByte();
-                        foreach (Client client in _ClientList) {
+                        foreach (Client client in sr_clientList) {
                             //if (client.Socket != receivedClientSocket || msgToSend.Command != Command.Login) {
                                 client.Socket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, client.Socket);
                             //}
@@ -312,7 +313,7 @@ namespace MeowChatServerLibrary {
                     }
                     // Continue listneing to receivedClientSocket established connection(client)
                     if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect && msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Regiter) {
-                        receivedClientSocket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
+                        receivedClientSocket.BeginReceive(sr_byteMessage, 0, sr_byteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
                     }
                 });
             }
@@ -341,7 +342,7 @@ namespace MeowChatServerLibrary {
             }
         }
 
-        //Server Message
+        // Server Message
         public static void ServerMessage(string message) {
             try {
                 MessageStructure msgToSend = new MessageStructure {
@@ -349,7 +350,7 @@ namespace MeowChatServerLibrary {
                     Message = message
                 };
                 byte[] msgToSendByte = msgToSend.ToByte();
-                foreach (Client client in _ClientList) {
+                foreach (Client client in sr_clientList) {
                     client.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, client.Socket);
                 }
             }

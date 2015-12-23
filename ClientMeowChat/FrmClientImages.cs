@@ -8,15 +8,13 @@ using MeowChatClientLibrary;
 namespace MeowChatClient {
     public partial class FrmClientImages: Form {
         private Image _Img;
-        private byte[] _Imgbyte;
-
         public FrmClientImages() {
             InitializeComponent();
-            Text = ClientConnection.ClientName + @" Received Images";
+            Text = Client.Name + @" Received Images";
         }
 
-        public void NewImage(byte[] imgByte, string tabName) {
-            _Imgbyte = imgByte;
+        public void NewImage(Image img, string tabName ) {
+            _Img = img;
             PictureBox newPictureBox = new PictureBox {
                 Location = new Point(6, 6),
                 Name = "newPictureBox",
@@ -26,9 +24,7 @@ namespace MeowChatClient {
                 TabStop = false
             };
             newPictureBox.Click += pictureBox1_Click;
-            MemoryStream ms = new MemoryStream(imgByte);
-            Image newImage = Image.FromStream(ms);
-            newPictureBox.Image = newImage;
+            newPictureBox.Image = img;
             Button btnSave = new Button {
                 Location = new Point(147, 345),
                 Name = "saveButton",
@@ -64,10 +60,9 @@ namespace MeowChatClient {
         }
 
         private void BtnSave_Click(object sender, EventArgs e) {
-            if (_Imgbyte == null) {
+            if (_Img == null) {
                 return;
             }
-            _Img = ByteArrayToImage(_Imgbyte);
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Filter = @"Images|*.png;"
             };

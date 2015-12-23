@@ -14,7 +14,7 @@ namespace LibraryMeowChat {
         NameChange,
         ColorChanged,
         Disconnect,
-        PrivateStarted,
+        PrivateStart,
         PrivateMessage,
         PrivateStopped,
         ServerMessage,

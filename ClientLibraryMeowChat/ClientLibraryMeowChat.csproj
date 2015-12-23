@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="ClientChatHistory.cs" />
-    <Compile Include="ClientConnection.cs" />
     <Compile Include="ClientNetworkEngine.cs" />
     <Compile Include="ClientStatistics.cs" />
     <Compile Include="EventHandlersClient.cs" />

@@ -5,11 +5,10 @@ using System.Windows.Forms;
 
 namespace MeowChatClient {
     public partial class FrmLogin: Form {
-        private readonly ClientNetworkEngine _ClientNetworkEngine = new ClientNetworkEngine();
 
         public FrmLogin() {
             InitializeComponent();
-            _ClientNetworkEngine.ClientNetworkEngineLoggedinEvent += Loggedin;
+            ClientNetworkEngine.ClientNetworkEngineLoggedinEvent += Loggedin;
             //ClientConnection.LoginFrmCloseEvent += Connected;
         }
 
@@ -42,18 +41,22 @@ namespace MeowChatClient {
 
         // Button connect
         private void btnConnect_Click(object sender, EventArgs e) {
-            _ClientNetworkEngine.AttemptConnect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text, Client.Color);
+            ClientNetworkEngine.AttemptConnect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text, Client.Color);
             //ClientConnection.Connect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text);
         }
 
         //Button Cancel
         private void btnCancel_Click(object sender, EventArgs e) {
             Close();
+            DialogResult = DialogResult.Cancel;
+
         }
 
         // Logged will be invoked from ClientNetworkServer on a successful Login
         private void Loggedin() {
-            Invoke(new Action((Close)));
+            if (Visible) {
+            Invoke(new Action(Close));
+            }
         }
 
        

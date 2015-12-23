@@ -12,16 +12,13 @@ using System.Windows.Forms;
 
 namespace MeowChatServer {
     public partial class FrmServer: Form {
-        //private readonly ServerNetworkEngine _ServerNetworkEngine = new ServerNetworkEngine();
         private readonly List <ClientMessagesPosition> _ClientMessagesesList = new List <ClientMessagesPosition>();
         private FrmServerProgressBar _FrmProgressBarDisconnect;
         private readonly FrmServerImages _FrmServerImages = new FrmServerImages();
         private event TabPagePrivateServerDoActionHandler TabPagePrivateServerDoActionEvent;
         private event FrmServerImagesChangeNameHandler FrmServerImagesChangeNameEvent;
-        private event FrmServerServerMessageHandler FrmServerServerMessageEvent;
         private int _CursorPositionConn;
         private int _CursorPositionPub;
-        private bool _IsServerRunning;
         public FrmServer() {
             InitializeComponent();
             // Controls contained in a TabPage are not created until the tab page is shown, and any data bindings in these controls are not activated until the tab page is shown.
@@ -42,8 +39,6 @@ namespace MeowChatServer {
             ServerNetworkEngine.ServerNetworkEnginePrivateChatMessageEvent += PrivateChatMessage;
             ServerNetworkEngine.ServerNetworkEnginePrivateChatStoppedEvent += PrivateChatStopped;
             ServerNetworkEngine.ServerNetworkEngineImageMessageEvent += ImageMessage;
-            // Setting the event for server message from FrmServer to ServerNetworkEngine
-            FrmServerServerMessageEvent += ServerNetworkEngine.ServerMessage;
             // Setting the event from FrmServer to FrmImages when name is changed
             FrmServerImagesChangeNameEvent += _FrmServerImages.ChangeTabName;
         }
@@ -64,11 +59,10 @@ namespace MeowChatServer {
             RichTextServerConn.SelectionStart = _CursorPositionConn;
             RichTextServerConn.SelectionColor = Color.Black;
             RichTextServerConn.SelectionBackColor = Color.BlueViolet;
-            RichTextServerConn.SelectedText += @"Server have started " + GenericStatic.TimeDate() + Environment.NewLine;
+            RichTextServerConn.SelectedText += @"Server have started " + Time.NowTimeDate() + Environment.NewLine;
             _CursorPositionConn = RichTextServerConn.SelectionStart;
             BtnStartSrv.Enabled = false;
             BtnStopSrv.Enabled = true;
-            _IsServerRunning = true;
         }
 
         // Server stop began
@@ -100,7 +94,7 @@ namespace MeowChatServer {
                 RichTextServerConn.SelectionStart = _CursorPositionConn;
                 RichTextServerConn.SelectionBackColor = Color.Tomato;
                 RichTextServerConn.SelectionColor = Color.Black;
-                RichTextServerConn.SelectedText += "<<< " + currentDisconnectintClientName + " Disconnection preformed successfully  >>>" + " " + GenericStatic.Time() + Environment.NewLine;
+                RichTextServerConn.SelectedText += "<<< " + currentDisconnectintClientName + " Disconnection preformed successfully  >>>" + " " + Time.NowTime() + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
             })));
             _FrmProgressBarDisconnect.UpdateProgressBar(currentDisconnectintClientName);
@@ -113,11 +107,10 @@ namespace MeowChatServer {
                 RichTextServerConn.SelectionStart = _CursorPositionConn;
                 RichTextServerConn.SelectionBackColor = Color.DarkRed;
                 RichTextServerConn.SelectionColor = Color.Black;
-                RichTextServerConn.SelectedText += "<<< Server stopped successfully  >>>" + " " + GenericStatic.Time() + Environment.NewLine;
+                RichTextServerConn.SelectedText += "<<< Server stopped successfully  >>>" + " " + Time.NowTime() + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
                 BtnStartSrv.Enabled = true;
                 BtnStopSrv.Enabled = false;
-                _IsServerRunning = false;
             })));
             Invoke(new Action((delegate{
                 _FrmProgressBarDisconnect?.Close();
@@ -129,7 +122,7 @@ namespace MeowChatServer {
             ClientMessagesPosition newClientMessagesPosition = new ClientMessagesPosition(clientNameToAdd);
             _ClientMessagesesList.Add(newClientMessagesPosition);
             Invoke(new Action((delegate{
-                ListViewItem newRow = new ListViewItem(new[] {clientNameToAdd, clientNameToAddIpEndPoint.ToString(), GenericStatic.TimeDate()}) {
+                ListViewItem newRow = new ListViewItem(new[] {clientNameToAdd, clientNameToAddIpEndPoint.ToString(), Time.NowTimeDate() }) {
                     Name = clientNameToAdd
                 };
                 ListViewClients.Items.Add(newRow);
@@ -138,7 +131,7 @@ namespace MeowChatServer {
                 RichTextServerConn.SelectionBackColor = Color.LightGreen;
                 RichTextServerConn.SelectionColor = Color.Black;
                 RichTextServerConn.SelectedText += " <<< " + clientNameToAdd + " has joined the room >>>" + Environment.NewLine;
-                GenericStatic.FormatItemSize(TabControlServer);
+                TabFormat.ItemEvenSize(TabControlServer);
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
             })));
         }
@@ -151,7 +144,7 @@ namespace MeowChatServer {
                 RichTextServerConn.SelectionStart = _CursorPositionConn;
                 RichTextServerConn.SelectionBackColor = Color.Tomato;
                 RichTextServerConn.SelectionColor = Color.Black;
-                RichTextServerConn.SelectedText += "<<< " + clientNameToRemove + " has just left the chat >>> " + GenericStatic.TimeDate() + " " + Environment.NewLine;
+                RichTextServerConn.SelectedText += "<<< " + clientNameToRemove + " has just left the chat >>> " + Time.NowTimeDate() + " " + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
                 //GenericStatic.ItemEvenSize(TabControlServer);
                 //TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.Name, msgReceived.Private, msgReceived.Message, 2);
@@ -163,7 +156,7 @@ namespace MeowChatServer {
             Invoke(new Action((delegate{
                 // The inner server messages board
                 RichTextServerPub.SelectionStart = _CursorPositionPub;
-                RichTextServerPub.SelectedText = GenericStatic.Time() + " ";
+                RichTextServerPub.SelectedText = Time.NowTime() + " ";
                 int selectionStart = RichTextServerPub.SelectionStart;
                 RichTextServerPub.SelectionColor = clientColor;
                 RichTextServerPub.SelectedText = clientName + @" :" + message;
@@ -210,12 +203,12 @@ namespace MeowChatServer {
                         TabControlServer.Invalidate();
                     }
                 }
-                GenericStatic.FormatItemSize(TabControlServer);
+                TabFormat.ItemEvenSize(TabControlServer);
                 // The inner server messages board
                 RichTextServerConn.SelectionStart = _CursorPositionConn;
                 RichTextServerConn.SelectionColor = Color.Black;
                 RichTextServerConn.SelectionBackColor = Color.CornflowerBlue;
-                RichTextServerConn.SelectedText += @"<<< " + clientName + @" have changed his name to " + newClientName + " " + GenericStatic.TimeDate() + @" >>>" + Environment.NewLine;
+                RichTextServerConn.SelectedText += @"<<< " + clientName + @" have changed his name to " + newClientName + " " + Time.NowTimeDate() + @" >>>" + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
             }));
             FrmServerImagesChangeNameEvent?.Invoke(clientName, newClientName);
@@ -229,7 +222,7 @@ namespace MeowChatServer {
             }
             Invoke(new Action(delegate{
                 NewTabPagePrivateChatServer(clientName, clientNamePrivate);
-                GenericStatic.FormatItemSize(TabControlServer);
+                TabFormat.ItemEvenSize(TabControlServer);
 
             }));
             //Invoke(new Action(delegate{
@@ -255,7 +248,7 @@ namespace MeowChatServer {
                     RichTextServerConn.SelectionStart = _CursorPositionConn;
                     RichTextServerConn.SelectionBackColor = Color.DarkBlue;
                     RichTextServerConn.SelectionColor = Color.Yellow;
-                    RichTextServerConn.SelectedText = GenericStatic.Time() + " ";
+                    RichTextServerConn.SelectedText = Time.NowTime() + " ";
                     RichTextServerConn.SelectedText = clientName + @" :" + "sent a photo to " + clientNamePrivate;
                     RichTextServerConn.SelectedText = Environment.NewLine;
                     _CursorPositionConn = RichTextServerConn.SelectionStart;
@@ -268,7 +261,7 @@ namespace MeowChatServer {
                 RichTextServerConn.SelectionStart = _CursorPositionConn;
                 RichTextServerConn.SelectionBackColor = Color.DarkBlue;
                 RichTextServerConn.SelectionColor = Color.Yellow;
-                RichTextServerConn.SelectedText = GenericStatic.Time() + " ";
+                RichTextServerConn.SelectedText = Time.NowTime() + " ";
                 RichTextServerConn.SelectedText = clientName + @" :" + "sent a photo";
                 RichTextServerConn.SelectedText = Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
@@ -276,7 +269,7 @@ namespace MeowChatServer {
         }
 
 
-        //Automaticlaly scrolldown richTxtChatBox
+        // Automaticlaly scrolldown richTxtChatBox
         private void RichTextChatBox_TextChanged(object sender, EventArgs e) {
             RichTextServerConn.SelectionStart = RichTextServerConn.Text.Length;
             RichTextServerConn.ScrollToCaret();
@@ -364,8 +357,7 @@ namespace MeowChatServer {
 
         //Button send
         private void BtnServerSnd_Click(object sender, EventArgs e) {
-            FrmServerServerMessageEvent?.Invoke(TxtBxServer.Text);
-            //Automaticlaly scrolldown richTxtChatBox
+            ServerNetworkEngine.ServerMessage(TxtBxServer.Text);
             _CursorPositionPub = RichTextServerPub.SelectionStart;
             RichTextServerPub.SelectionColor = Color.Black;
             RichTextServerPub.SelectionBackColor = Color.MediumPurple;
@@ -379,7 +371,7 @@ namespace MeowChatServer {
         }
 
         private void FrmServer_FormClosing(object sender, FormClosingEventArgs e) {
-            if (!_IsServerRunning) {
+            if (!ServerNetworkEngine.Status) {
                 return;
             }
             e.Cancel = true;

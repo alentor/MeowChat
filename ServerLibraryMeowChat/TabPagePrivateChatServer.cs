@@ -51,24 +51,24 @@ namespace MeowChatServerLibrary {
                 switch (command) {
                     case TabCommand.Resumed:
                         _RichTextPrivChtServer.SelectionBackColor = Color.LightGreen;
-                        _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + clientName + " have resumed the chat" + Environment.NewLine;
+                        _RichTextPrivChtServer.SelectedText = Time.NowTime() + " " + clientName + " have resumed the chat" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                         break;
                     case TabCommand.Message:
                         if (clientNamePrivate == ClientName) {
                             _RichTextPrivChtServer.SelectionColor = Color.Blue;
-                            _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + ClientName + @": " + message + Environment.NewLine;
+                            _RichTextPrivChtServer.SelectedText = Time.NowTime() + " " + ClientName + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                         }
                         else {
                             _RichTextPrivChtServer.SelectionColor = Color.Red;
-                            _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + ClientNamePrivate + @": " + message + Environment.NewLine;
+                            _RichTextPrivChtServer.SelectedText = Time.NowTime() + " " + ClientNamePrivate + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                         }
                         break;
                     case TabCommand.Closed:
                         _RichTextPrivChtServer.SelectionBackColor = Color.OrangeRed;
-                        _RichTextPrivChtServer.SelectedText = GenericStatic.Time() + " " + clientName + " have closed the chat" + Environment.NewLine;
+                        _RichTextPrivChtServer.SelectedText = Time.NowTime() + " " + clientName + " have closed the chat" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                         break;
                 }
