@@ -5,10 +5,10 @@ using System.Windows.Forms;
 
 namespace MeowChatClient {
     public partial class FrmLogin: Form {
-
         public FrmLogin() {
             InitializeComponent();
             ClientNetworkEngine.ClientNetworkEngineLoggedinEvent += Loggedin;
+            ClientNetworkEngine.ClientNetworkEngineLoginErrorEvent += LoginError;
             //ClientConnection.LoginFrmCloseEvent += Connected;
         }
 
@@ -41,27 +41,44 @@ namespace MeowChatClient {
 
         // Button connect
         private void btnConnect_Click(object sender, EventArgs e) {
+            btnConnect.Enabled = false;
+            btnColorPick.Enabled = false;
+            txtBoxPort.Enabled = false;
+            txtBoxName.Enabled = false;
+            txtBoxServerIp.Enabled = false;
             ClientNetworkEngine.AttemptConnect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text, Client.Color);
             //ClientConnection.Connect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text);
         }
 
-        //Button Cancel
+        // Button Cancel
         private void btnCancel_Click(object sender, EventArgs e) {
             Close();
             DialogResult = DialogResult.Cancel;
-
+            ClientNetworkEngine.Disconnect();
         }
 
         // Logged will be invoked from ClientNetworkServer on a successful Login
         private void Loggedin() {
-            if (Visible) {
-            Invoke(new Action(Close));
-            }
+            DialogResult = DialogResult.OK;
+            //if (Visible) {
+            //    Invoke(new Action(Close));
+            //}
         }
 
-       
+        // Login error
+        private void LoginError(string errorMessage) {
+            Invoke(new Action(delegate
+            {
+                btnConnect.Enabled = true;
+                btnColorPick.Enabled = true;
+                txtBoxPort.Enabled = true;
+                txtBoxName.Enabled = true;
+                txtBoxServerIp.Enabled = true;
+            }));
+            MessageBox.Show(errorMessage, @"Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
 
-        //Color pick Button
+        // Color pick Button
         private void btnColorPick_Click(object sender, EventArgs e) {
             DialogResult pickColor = colorPicker.ShowDialog();
             if (pickColor == DialogResult.OK) {

@@ -23,7 +23,6 @@ namespace MeowChatClient {
         public event FrmStatisticsUpdateHandler FrmStatisticsUpdateEvent;
         public event FrmClientImagesChangeNameHandler FrmClientImagesChangeNameEvent;
 
-
         public FrmChat() {
             InitializeComponent();
             TextBoxPubMsg.Select();
@@ -43,7 +42,6 @@ namespace MeowChatClient {
             ClientNetworkEngine.ClientNetworkEngineImageMessageEvent += ImageMessage;
         }
 
-        //On FrmChat Load we are sending a reuqest to get the list of all the connected clients form the server
         private void FrmChat_Load(object sender, EventArgs e) {
             FrmLogin frmLogin = new FrmLogin();
             frmLogin.ShowDialog();
@@ -53,29 +51,6 @@ namespace MeowChatClient {
             // Set window name
             Text = @"Chat: " + Client.Name;
             ClientStatistics.Start();
-            //if (frmLogin.DialogResult != DialogResult.Cancel)
-            //{
-            //    Close();
-            //}
-
-            //ClientStatistics.StartStatistics();
-            //_FrmStatistics.Start();
-            //try
-            //{
-            //    MessageStructure msgToSend = new MessageStructure
-            //    {
-            //        Command = Command.List,
-            //        ClientName = ClientConnection.ClientName
-            //    };
-            //    _ByteMessage = msgToSend.ToByte();
-            //    ClientConnection.Socket.BeginSend(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnSend, null);
-            //    _ByteMessage = new byte[2097152];
-            //    ClientConnection.Socket.BeginReceive(_ByteMessage, 0, _ByteMessage.Length, SocketFlags.None, OnReceive, null);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message + @" -> FrmChat_Load", @"Chat: " + ClientConnection.ClientName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //}
         }
 
         // Clients list
@@ -164,6 +139,9 @@ namespace MeowChatClient {
 
         // Form closing event
         private void FrmChat_FormClosing(object sender, FormClosingEventArgs e) {
+            if (!ClientNetworkEngine.Status) {
+                return;
+            }
             if (MessageBox.Show(@"Are you sure you want to exit?", @"Chat: " + Client.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No) {
                 return;
             }
@@ -309,16 +287,7 @@ namespace MeowChatClient {
 
         //Send private Photo method event
         private void TabPagePrivateChatSendImageClient(string namePrivate) {
-            //if (!ClientConnection.Status)
-            //{
-            //    return;
-            //}
             try {
-                //MessageStructure msgToSend = new MessageStructure {
-                //    Command = Command.ImageMessage,
-                //    Private = namePrivate,
-                //    ClientName = ClientConnection.ClientName
-                //};
                 using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                     openFileDialog.Title = @"Open ImageMessage";
                     openFileDialog.Filter = @"Images|*.png;*.bmp;*.jpg;*.gif*";
@@ -331,9 +300,6 @@ namespace MeowChatClient {
                         return;
                     }
                     ClientNetworkEngine.SendImagePrivate(File.ReadAllBytes(openFileDialog.FileName), Client.Name, namePrivate);
-                    //msgToSend.ImgByte = File.ReadAllBytes(openFileDialog.FileName);
-                    //byte[] msgToSendByte = msgToSend.ToByte();
-                    //ClientConnection.Socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
                 }
             }
             catch (Exception ex) {
@@ -386,7 +352,7 @@ namespace MeowChatClient {
             }
         }
 
-        //Click event on TabPage, checks whenever the click was in the X rectangle area
+        // Click event on TabPage, checks whenever the click was in the X rectangle area
         private void TabControlClient_MouseClick(object sender, MouseEventArgs e) {
             for (int i = 1; i < TabControlClient.TabPages.Count; i++) {
                 Rectangle tabRect = TabControlClient.GetTabRect(i);
@@ -406,15 +372,13 @@ namespace MeowChatClient {
                 break;
             }
         }
+
         // Logout
-        private void Logout(string clientName, string message)
-        {
-            Invoke(new Action((delegate {
+        private void Logout(string clientName, string message) {
+            Invoke(new Action((delegate{
                 ListBoxClientList.Items.Remove(clientName);
-                for (int i = 0; i < _ClientChatHistoryList.Count; i++)
-                {
-                    if (_ClientChatHistoryList[i].Name == clientName)
-                    {
+                for (int i = 0; i < _ClientChatHistoryList.Count; i++) {
+                    if (_ClientChatHistoryList[i].Name == clientName) {
                         _ClientChatHistoryList.Remove(_ClientChatHistoryList[i]);
                         TabPagePrivateChatReceiveClientEvent?.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.Disconnected);
                     }

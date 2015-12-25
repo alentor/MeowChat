@@ -74,7 +74,6 @@ namespace MeowChatServerLibrary {
                 }
                 Status = false;
                 ServerNetworkEngineServerStopBeganEvent?.Invoke(sr_clientList.Count);
-                // Initialize the dialog that will contain the progress bar
                 MessageStructure msgToSend = new MessageStructure {
                     Command = Command.Disconnect
                 };
@@ -137,7 +136,7 @@ namespace MeowChatServerLibrary {
                     case Command.AttemptLogin:
                         foreach (Client client in sr_clientList) {
                             if (client.Name == msgReceived.ClientName) {
-                                msgToSend.Message = "This user name already logged in";
+                                msgToSend.Message = "This Name already logged in";
                                 messageBytes = msgToSend.ToByte();
                                 receivedClientSocket.BeginSend(messageBytes, 0, messageBytes.Length, SocketFlags.None, OnSend, receivedClientSocket);
                                 return;
@@ -312,7 +311,7 @@ namespace MeowChatServerLibrary {
                         }
                     }
                     // Continue listneing to receivedClientSocket established connection(client)
-                    if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect && msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Regiter) {
+                    if (msgReceived.Command != Command.Logout && msgReceived.Command != Command.Disconnect &&/* msgReceived.Command != Command.AttemptLogin &&*/ msgReceived.Command != Command.Regiter) {
                         receivedClientSocket.BeginReceive(sr_byteMessage, 0, sr_byteMessage.Length, SocketFlags.None, OnReceive, receivedClientSocket);
                     }
                 });
