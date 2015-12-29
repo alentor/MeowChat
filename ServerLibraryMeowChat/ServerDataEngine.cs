@@ -12,13 +12,13 @@ namespace MeowChatServerLibrary {
     public static class ServerDataEngine {
         public static ServerDataEngineRefreshClientsDbHandler ServerDataEngineRefreshClientsDbEvent;
         public static ServerDateEngineRefreshMessagesDbHandler ServerDateEngineRefreshMessagesDbEvent;
-        private static readonly string sr_sqlConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=E:\PORJECTS\C#\MEOWCHAT\SERVERLIBRARYMEOWCHAT\SERVERDATABASE.MDF;Integrated Security=True";
+        private static readonly string sr_sqlConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|SERVERDATABASE.MDF;Integrated Security=True";
         private static readonly SqlConnection _SqlConn = new SqlConnection(sr_sqlConnectionString);
         private static SqlDataAdapter _Adp = new SqlDataAdapter();
         private static SqlDataAdapter _sqlDataAdapterC;
         private static DataSet _DataSet = new DataSet("ServerDataSet");
-        private static SqlCommand _SqlCommSelectAllCleintsDb;
-        private static SqlCommand _SqlCommSelectAllMessagesDb;
+        private static SqlCommand s_sqlCommSelectAllCleintsDb;
+        private static SqlCommand s_sqlCommSelectAllMessagesDb;
 
 
         public static void StartDataServer() {
@@ -34,28 +34,28 @@ namespace MeowChatServerLibrary {
             _DataSet.Tables["ClientsDB"].Clear();
             _DataSet.Tables["MessagesDB"].Clear();
             // ClientsDB
-            _SqlCommSelectAllCleintsDb = new SqlCommand("select * from ClientsDB", _SqlConn);
-            _Adp.SelectCommand = _SqlCommSelectAllCleintsDb;
+            s_sqlCommSelectAllCleintsDb = new SqlCommand("select * from ClientsDB", _SqlConn);
+            _Adp.SelectCommand = s_sqlCommSelectAllCleintsDb;
             _Adp.Fill(_DataSet.Tables["ClientsDB"]);
             // MessagesDB
-            _SqlCommSelectAllMessagesDb = new SqlCommand("select * from MessagesDB", _SqlConn);
-            _Adp.SelectCommand = _SqlCommSelectAllMessagesDb;
+            s_sqlCommSelectAllMessagesDb = new SqlCommand("select * from MessagesDB", _SqlConn);
+            _Adp.SelectCommand = s_sqlCommSelectAllMessagesDb;
             _Adp.Fill(_DataSet.Tables["MessagesDB"]);
             return _DataSet;
         }
 
         public static DataTable GetClientsDbTable() {
             _DataSet.Tables["ClientsDB"].Clear();
-            _SqlCommSelectAllCleintsDb = new SqlCommand("select * from ClientsDB", _SqlConn);
-            _Adp.SelectCommand = _SqlCommSelectAllCleintsDb;
+            s_sqlCommSelectAllCleintsDb = new SqlCommand("select * from ClientsDB", _SqlConn);
+            _Adp.SelectCommand = s_sqlCommSelectAllCleintsDb;
             _Adp.Fill(_DataSet.Tables["ClientsDB"]);
             return _DataSet.Tables["ClientsDB"];
         }
 
         public static DataTable GetMessagesDbTable() {
             _DataSet.Tables["MessagesDB"].Clear();
-            _SqlCommSelectAllCleintsDb = new SqlCommand("select * from MessagesDB", _SqlConn);
-            _Adp.SelectCommand = _SqlCommSelectAllCleintsDb;
+            s_sqlCommSelectAllCleintsDb = new SqlCommand("select * from MessagesDB", _SqlConn);
+            _Adp.SelectCommand = s_sqlCommSelectAllCleintsDb;
             _Adp.Fill(_DataSet.Tables["MessagesDB"]);
             return _DataSet.Tables["MessagesDB"];
         }
