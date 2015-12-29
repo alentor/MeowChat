@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Net;
 using System.Net.Sockets;
 
-namespace MeowChatServerLibrary {
-    public class Client {
+namespace MeowChatServerLibrary
+{
+    public class Client
+    {
         // The username of the the established connection(cleint) in the DataBase, a unique modifer
         public string UserName;
 

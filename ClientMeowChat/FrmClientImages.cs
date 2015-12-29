@@ -1,21 +1,27 @@
-﻿using System;
+﻿using MeowChatClientLibrary;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using MeowChatClientLibrary;
 
-namespace MeowChatClient {
-    public partial class FrmClientImages: Form {
+namespace MeowChatClient
+{
+    public partial class FrmClientImages : Form
+    {
         private Image _Img;
-        public FrmClientImages() {
+
+        public FrmClientImages()
+        {
             InitializeComponent();
             Text = Client.Name + @" Received Images";
         }
 
-        public void NewImage(Image img, string tabName ) {
+        public void NewImage(Image img, string tabName)
+        {
             _Img = img;
-            PictureBox newPictureBox = new PictureBox {
+            PictureBox newPictureBox = new PictureBox
+            {
                 Location = new Point(6, 6),
                 Name = "newPictureBox",
                 Size = new Size(390, 336),
@@ -25,7 +31,8 @@ namespace MeowChatClient {
             };
             newPictureBox.Click += pictureBox1_Click;
             newPictureBox.Image = img;
-            Button btnSave = new Button {
+            Button btnSave = new Button
+            {
                 Location = new Point(147, 345),
                 Name = "saveButton",
                 Size = new Size(75, 23),
@@ -44,8 +51,10 @@ namespace MeowChatClient {
             newTabPage.Size = new Size(402, 349);
             newTabPage.TabIndex = 0;
             newTabPage.UseVisualStyleBackColor = true;
-            if (InvokeRequired) {
-                Invoke(new MethodInvoker(delegate{
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate
+                {
                     TabControlClientImages.TabPages.Add(newTabPage);
                 }));
             }
@@ -54,41 +63,53 @@ namespace MeowChatClient {
             }
         }
 
-        private void FrmImage_FormClosing(object sender, FormClosingEventArgs e) {
+        private void FrmImage_FormClosing(object sender, FormClosingEventArgs e)
+        {
             e.Cancel = true;
             Visible = false;
         }
 
-        private void BtnSave_Click(object sender, EventArgs e) {
-            if (_Img == null) {
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (_Img == null)
+            {
                 return;
             }
-            SaveFileDialog saveFileDialog = new SaveFileDialog {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
                 Filter = @"Images|*.png;"
             };
             //saveFileDialog.Filter = "Images|*.png;*.bmp;*.jpg*.gif*";
 
             //ImageFormat format = ImageFormat.Png;
-            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
                 _Img.Save(saveFileDialog.FileName, ImageFormat.Png);
             }
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e) {
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
             BtnSave_Click(this, null);
         }
 
-        private static Image ByteArrayToImage(byte[] byteArrayIn) {
+        private static Image ByteArrayToImage(byte[] byteArrayIn)
+        {
             MemoryStream ms = new MemoryStream(byteArrayIn);
             Image returnImage = Image.FromStream(ms);
             return returnImage;
         }
 
-        public void ChangeTabName(string tabName, string newTabName) {
-            foreach (TabPage tabPage in TabControlClientImages.TabPages) {
-                if (tabPage.Name == tabName) {
-                    if (tabPage.InvokeRequired) {
-                        Invoke(new MethodInvoker(delegate{
+        public void ChangeTabName(string tabName, string newTabName)
+        {
+            foreach (TabPage tabPage in TabControlClientImages.TabPages)
+            {
+                if (tabPage.Name == tabName)
+                {
+                    if (tabPage.InvokeRequired)
+                    {
+                        Invoke(new MethodInvoker(delegate
+                        {
                             tabPage.Name = newTabName;
                             tabPage.Text = tabPage.Name;
                         }));
@@ -98,12 +119,15 @@ namespace MeowChatClient {
                         tabPage.Text = tabPage.Name;
                     }
                 }
-                if (tabPage.Name != tabName + " Private") {
+                if (tabPage.Name != tabName + " Private")
+                {
                     continue;
                 }
 
-                if (tabPage.InvokeRequired) {
-                    Invoke(new MethodInvoker(delegate{
+                if (tabPage.InvokeRequired)
+                {
+                    Invoke(new MethodInvoker(delegate
+                    {
                         tabPage.Name = newTabName + " Private";
                         tabPage.Text = tabPage.Name;
                     }));

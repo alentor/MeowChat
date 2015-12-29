@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 
-namespace MeowChatClientLibrary {
+namespace MeowChatClientLibrary
+{
     public delegate void FrmStatisticsUpdateHandler(StatisticsEntry staticsEntry);
 
     public delegate void FrmClientImagesChangeNameHandler(string tabname, string tabNameNew);
@@ -40,5 +41,4 @@ namespace MeowChatClientLibrary {
     public delegate void TabPagePrivateChatSendImageClietHandler(string clientName);
 
     public delegate void TabPagePrivateChatReceiveClientHandler(string tabName, string privateName, string message, TabPagePrivateChatClient.TabCommand tabCommand);
-
 }
