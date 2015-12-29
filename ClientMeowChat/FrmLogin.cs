@@ -8,8 +8,8 @@ namespace MeowChatClient {
         public FrmLogin() {
             InitializeComponent();
             ClientNetworkEngine.ClientNetworkEngineLoggedinEvent += Loggedin;
-            ClientNetworkEngine.ClientNetworkEngineLoginErrorEvent += LoginError;
-            //ClientConnection.LoginFrmCloseEvent += Connected;
+            ClientNetworkEngine.ClientNetworkEngineAttemptLoginErrorEvent += AttemptLoginErrorError;
+            ClientNetworkEngine.ClientNetworkEngineRegisterMessageEvent += RegisterMessage;
         }
 
         // Checks if Name/IP/Port fileds are filed with at least one charter
@@ -46,8 +46,18 @@ namespace MeowChatClient {
             txtBoxPort.Enabled = false;
             txtBoxName.Enabled = false;
             txtBoxServerIp.Enabled = false;
-            ClientNetworkEngine.AttemptConnect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text, Client.Color);
+            ClientNetworkEngine.AttemptConnect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text, txtBoxUserName.Text, Client.Color);
             //ClientConnection.Connect(txtBoxServerIp.Text, int.Parse(txtBoxPort.Text), txtBoxName.Text);
+        }
+
+        // Register button
+        private void btnRegister_Click(object sender, EventArgs e) {
+            ClientNetworkEngine.Register(txtBoxRegUserName.Text, txtBoxServerIp.Text, int.Parse(txtBoxPort.Text));
+            btnConnect.Enabled = false;
+            btnColorPick.Enabled = false;
+            txtBoxPort.Enabled = false;
+            txtBoxName.Enabled = false;
+            txtBoxServerIp.Enabled = false;
         }
 
         // Button Cancel
@@ -60,15 +70,30 @@ namespace MeowChatClient {
         // Logged will be invoked from ClientNetworkServer on a successful Login
         private void Loggedin() {
             DialogResult = DialogResult.OK;
+            //ClientNetworkEngine.ClientNetworkEngineRegisterMessageEvent -= RegisterMessage;
             //if (Visible) {
             //    Invoke(new Action(Close));
             //}
         }
 
         // Login error
-        private void LoginError(string errorMessage) {
-            Invoke(new Action(delegate
-            {
+        private void AttemptLoginErrorError(string errorMessage) {
+            Invoke(new Action(delegate{
+                btnConnect.Enabled = true;
+                btnColorPick.Enabled = true;
+                txtBoxPort.Enabled = true;
+                txtBoxName.Enabled = true;
+                txtBoxServerIp.Enabled = true;
+            }));
+            MessageBox.Show(errorMessage, @"Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        // Register message
+        private void RegisterMessage(string errorMessage) {
+            if (IsDisposed) {
+                return;
+            }
+            Invoke(new Action(delegate{
                 btnConnect.Enabled = true;
                 btnColorPick.Enabled = true;
                 txtBoxPort.Enabled = true;
@@ -88,5 +113,6 @@ namespace MeowChatClient {
                 //MessageBox.Show(str, @"Chat: " + ClientConnection.FrmPrivateName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

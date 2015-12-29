@@ -5,7 +5,9 @@ namespace MeowChatClientLibrary {
 
     public delegate void FrmClientImagesChangeNameHandler(string tabname, string tabNameNew);
 
-    public delegate void ClientNetworkEngineLoginErrorHandler(string errorMessage);
+    public delegate void ClientNetworkEngineRegisterHandler(string message);
+
+    public delegate void ClientNetworkEngineAttemptLoginErrorHandler(string message);
 
     public delegate void ClientNetworkEngineLoggedinHandler();
 
@@ -38,4 +40,5 @@ namespace MeowChatClientLibrary {
     public delegate void TabPagePrivateChatSendImageClietHandler(string clientName);
 
     public delegate void TabPagePrivateChatReceiveClientHandler(string tabName, string privateName, string message, TabPagePrivateChatClient.TabCommand tabCommand);
+
 }

@@ -30,6 +30,12 @@ namespace LibraryMeowChat {
             string timeFormat = "HH:mm:ss - dd/MM/yyyy";
             return time.ToString(timeFormat);
         }
+
+        public static string SaveTimeDate() {
+            DateTime time = DateTime.Now;
+            string timeFormat = "HH-mm-ss-dd-MM-yyyy";
+            return time.ToString(timeFormat);
+        }
     }
 
     public static class TabFormat {

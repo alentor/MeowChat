@@ -28,7 +28,7 @@ namespace MeowChatServerLibrary {
             _RichTextPrivChtServer.Name = clientName + " - " + clientNamePrivate + "TabPagePrivateChatServer";
             _RichTextPrivChtServer.ReadOnly = true;
             _RichTextPrivChtServer.ScrollBars = RichTextBoxScrollBars.Vertical;
-            _RichTextPrivChtServer.Size = new Size(406, 312);
+            _RichTextPrivChtServer.Size = new Size(541, 312);
             _RichTextPrivChtServer.TabIndex = 12;
             _RichTextPrivChtServer.Text = "";
             _RichTextPrivChtServer.TextChanged += RichTextPrivChtServerTextChanged;
@@ -37,7 +37,7 @@ namespace MeowChatServerLibrary {
             Location = new Point(4, 28);
             Name = ClientName + " - " + ClientNamePrivate;
             Padding = new Padding(3);
-            Size = new Size(610, 402);
+            Size = new Size(541, 402);
             //this.TabIndex = 1;//mke it more accurate
             Text = ClientName + " - " + ClientNamePrivate;
             UseVisualStyleBackColor = true;

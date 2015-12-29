@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LibraryMeowChat {
     public enum Command {
-        Regiter,
+        Register,
         AttemptLogin,
         Login,
         Logout,
@@ -45,7 +45,6 @@ namespace LibraryMeowChat {
         //Convert bytes[] into MessageStructure object
         public MessageStructure(byte[] data) {
             Command = (Command) BitConverter.ToInt32(data, 0);
-
             // Next four bytes store the length of the clientName
             int userNameLen = BitConverter.ToInt32(data, 4);
             // Next four bytes store the length of the UserName
@@ -57,17 +56,17 @@ namespace LibraryMeowChat {
             // Next four bytes store the length of the message
             int messageLen = BitConverter.ToInt32(data, 20);
             // Make sure that userNameLen has been passed in the bytes array
-            UserName = userNameLen > 0 ? Encoding.UTF8.GetString(data, 28, clientNameLen) : null;
+            UserName = userNameLen > 0 ? Encoding.UTF8.GetString(data, 28, userNameLen) : null;
             // Make sure that clientNameLen has been passed in the bytes array
-            ClientName = clientNameLen > 0 ? Encoding.UTF8.GetString(data, 28, clientNameLen) : null;
+            ClientName = clientNameLen > 0 ? Encoding.UTF8.GetString(data, 28 + userNameLen, clientNameLen) : null;
             // Make sure that colorLen has been passed in the bytes array
-            Color = colorLen > 0 ? Encoding.UTF8.GetString(data, 28 + clientNameLen, colorLen) : null;
+            Color = colorLen > 0 ? Encoding.UTF8.GetString(data, 28 + userNameLen + clientNameLen, colorLen) : null;
             // Make sure that colorLen has been passed in the bytes array
-            Private = privateLen > 0 ? Encoding.UTF8.GetString(data, 28 + clientNameLen + colorLen, privateLen) : null;
+            Private = privateLen > 0 ? Encoding.UTF8.GetString(data, 28 + userNameLen + clientNameLen + colorLen, privateLen) : null;
             // Make sure that messageLen has been passed in the bytes array
-            Message = messageLen > 0 ? Encoding.UTF8.GetString(data, 28 + clientNameLen + colorLen + privateLen, messageLen) : null;
+            Message = messageLen > 0 ? Encoding.UTF8.GetString(data, 28 + userNameLen + clientNameLen + colorLen + privateLen, messageLen) : null;
             // Check if it's an image command, if it's add the representative bytes, if not leave it empty
-            ImgByte = Command == Command.ImageMessage ? data.Skip(28 + clientNameLen + colorLen + privateLen + messageLen).ToArray() : null;
+            ImgByte = Command == Command.ImageMessage ? data.Skip(28 + userNameLen + clientNameLen + colorLen + privateLen + messageLen).ToArray() : null;
         }
 
         //Convert MessageStructure object into bytes[]
@@ -82,7 +81,6 @@ namespace LibraryMeowChat {
 
             // add UserName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(UserName != null ? BitConverter.GetBytes(UserName.Length) : BitConverter.GetBytes(0));
-
             // add ClientName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(ClientName != null ? BitConverter.GetBytes(ClientName.Length) : BitConverter.GetBytes(0));
             // add Color length to the bytesList, add zero bytes if clintName is null
@@ -106,7 +104,7 @@ namespace LibraryMeowChat {
             // Add ImageMessage to the bytesList
             bytesList.AddRange(ImgByte != null ? ImgByte : emptyByte);
             // The above can be also done using the following expression
-            // bytesList.AddRange(ImgByte ?? BitConverter.GetBytes(0));
+            //bytesList.AddRange(ImgByte ?? BitConverter.GetBytes(0));
 
             // convert List to array of byte since you can send only arrays of bytes thro the TCP protocol.
             return bytesList.ToArray();

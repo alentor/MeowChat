@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Data;
+using System.Drawing;
 using System.Net;
 
 namespace MeowChatServerLibrary {
@@ -32,5 +33,10 @@ namespace MeowChatServerLibrary {
 
     public delegate void ServerNetworkEngineImageMessageHandler(Image img, string clientName, string clientNamePrivate);
 
-    //public delegate void ServerNetworkEngineSendPublicMessageHandler(Client client, string message);\
+    //public delegate void ServerNetworkEngineSendPublicMessageHandler(Client client, string message);
+
+    public delegate void ServerDateEngineRefreshMessagesDbHandler();
+
+    public delegate void ServerDataEngineRefreshClientsDbHandler();
+
 }

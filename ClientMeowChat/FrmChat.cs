@@ -419,7 +419,7 @@ namespace MeowChatClient {
                 int index = ListBoxClientList.FindString(clientName);
                 ListBoxClientList.Items[index] = clientNameNew;
 
-                foreach (ClientChatHistory clientColor in _ClientChatHistoryList.Where(ClientChatHistory => ClientChatHistory.Name == clientNameNew)) {
+                foreach (ClientChatHistory clientColor in _ClientChatHistoryList.Where(ClientChatHistory => ClientChatHistory.Name == clientName)) {
                     clientColor.Name = clientNameNew;
                 }
                 RichTextClientPub.SelectionStart = _CursorPosition;

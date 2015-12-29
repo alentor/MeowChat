@@ -15,10 +15,12 @@ namespace MeowChatServer {
         private readonly List <ClientMessagesPosition> _ClientMessagesesList = new List <ClientMessagesPosition>();
         private FrmServerProgressBar _FrmProgressBarDisconnect;
         private readonly FrmServerImages _FrmServerImages = new FrmServerImages();
+        private FrmData _FrmData = new FrmData();
         private event TabPagePrivateServerDoActionHandler TabPagePrivateServerDoActionEvent;
         private event FrmServerImagesChangeNameHandler FrmServerImagesChangeNameEvent;
         private int _CursorPositionConn;
         private int _CursorPositionPub;
+
         public FrmServer() {
             InitializeComponent();
             // Controls contained in a TabPage are not created until the tab page is shown, and any data bindings in these controls are not activated until the tab page is shown.
@@ -26,6 +28,7 @@ namespace MeowChatServer {
             TabControlServer.TabPages[1].Show();
             TabControlServer.TabPages[0].Show();
             // Setting the events for Server Network Engine to FrmServer
+            //ServerHistoryEngine.
             ServerNetworkEngine.ServerNetworkEngineEngineServerStartedEvent += ServerNetworkEngineNetworkStarted;
             ServerNetworkEngine.ServerNetworkEngineEngineClientToAddEvent += ClientToAdd;
             ServerNetworkEngine.ServerNetworkEngineSendPublicMessageEvent += PublicMessage;
@@ -41,6 +44,8 @@ namespace MeowChatServer {
             ServerNetworkEngine.ServerNetworkEngineImageMessageEvent += ImageMessage;
             // Setting the event from FrmServer to FrmImages when name is changed
             FrmServerImagesChangeNameEvent += _FrmServerImages.ChangeTabName;
+            _FrmData.Show();
+            _FrmData.Visible = false;
         }
 
         // Button Start
@@ -122,7 +127,7 @@ namespace MeowChatServer {
             ClientMessagesPosition newClientMessagesPosition = new ClientMessagesPosition(clientNameToAdd);
             _ClientMessagesesList.Add(newClientMessagesPosition);
             Invoke(new Action((delegate{
-                ListViewItem newRow = new ListViewItem(new[] {clientNameToAdd, clientNameToAddIpEndPoint.ToString(), Time.NowTimeDate() }) {
+                ListViewItem newRow = new ListViewItem(new[] {clientNameToAdd, clientNameToAddIpEndPoint.ToString(), Time.NowTimeDate()}) {
                     Name = clientNameToAdd
                 };
                 ListViewClients.Items.Add(newRow);
@@ -183,6 +188,11 @@ namespace MeowChatServer {
         private void ClientNameChanged(string clientName, string newClientName) {
             // Change the ListViewItem.name in ListViewClients
             Invoke(new Action(delegate{
+                foreach (ClientMessagesPosition clientMessagesPosition in _ClientMessagesesList) {
+                    if (clientMessagesPosition.ClientName == clientName) {
+                        clientMessagesPosition.ClientName = newClientName;
+                    }
+                }
                 for (int i = 0; i < ListViewClients.Items.Count; i++) {
                     if (ListViewClients.Items[i].Name != clientName) {
                         continue;
@@ -223,7 +233,6 @@ namespace MeowChatServer {
             Invoke(new Action(delegate{
                 NewTabPagePrivateChatServer(clientName, clientNamePrivate);
                 TabFormat.ItemEvenSize(TabControlServer);
-
             }));
             //Invoke(new Action(delegate{
             //}));
@@ -366,8 +375,12 @@ namespace MeowChatServer {
             TxtBxServer.Text = "";
         }
 
-        private void button1_Click(object sender, EventArgs e) {
+        private void BtnImages_Click(object sender, EventArgs e) {
             _FrmServerImages.Visible = true;
+        }
+
+        private void BtnHisotry_Click(object sender, EventArgs e) {
+            _FrmData.Visible = true;
         }
 
         private void FrmServer_FormClosing(object sender, FormClosingEventArgs e) {
