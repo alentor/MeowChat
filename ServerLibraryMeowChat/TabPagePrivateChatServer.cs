@@ -3,9 +3,12 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MeowChatServerLibrary {
-    public class TabPagePrivateChatServer: TabPage {
-        public enum TabCommand {
+namespace MeowChatServerLibrary
+{
+    public class TabPagePrivateChatServer : TabPage
+    {
+        public enum TabCommand
+        {
             Resumed,
             Closed,
             Disconnected,
@@ -18,7 +21,8 @@ namespace MeowChatServerLibrary {
         public string ClientName, ClientNamePrivate;
 
         //Constactor
-        public TabPagePrivateChatServer(string clientName, string clientNamePrivate) {
+        public TabPagePrivateChatServer(string clientName, string clientNamePrivate)
+        {
             ClientName = clientName;
             ClientNamePrivate = clientNamePrivate;
             // RchTxtPrivChat
@@ -45,17 +49,22 @@ namespace MeowChatServerLibrary {
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageServerEvent, which being fired in FrmServer
-        public void TabPagePrivateReceiveMessageServerDoAction(string clientName, string clientNamePrivate, string message, TabCommand command) {
-            Invoke(new Action((delegate{
+        public void TabPagePrivateReceiveMessageServerDoAction(string clientName, string clientNamePrivate, string message, TabCommand command)
+        {
+            Invoke(new Action((delegate
+            {
                 _RichTextPrivChtServer.SelectionStart = _CursorPosition;
-                switch (command) {
+                switch (command)
+                {
                     case TabCommand.Resumed:
                         _RichTextPrivChtServer.SelectionBackColor = Color.LightGreen;
                         _RichTextPrivChtServer.SelectedText = Time.NowTime() + " " + clientName + " have resumed the chat" + Environment.NewLine;
                         _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                         break;
+
                     case TabCommand.Message:
-                        if (clientNamePrivate == ClientName) {
+                        if (clientNamePrivate == ClientName)
+                        {
                             _RichTextPrivChtServer.SelectionColor = Color.Blue;
                             _RichTextPrivChtServer.SelectedText = Time.NowTime() + " " + ClientName + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtServer.SelectionStart;
@@ -66,6 +75,7 @@ namespace MeowChatServerLibrary {
                             _CursorPosition = _RichTextPrivChtServer.SelectionStart;
                         }
                         break;
+
                     case TabCommand.Closed:
                         _RichTextPrivChtServer.SelectionBackColor = Color.OrangeRed;
                         _RichTextPrivChtServer.SelectedText = Time.NowTime() + " " + clientName + " have closed the chat" + Environment.NewLine;
@@ -75,7 +85,8 @@ namespace MeowChatServerLibrary {
             })));
         }
 
-        private void RichTextPrivChtServerTextChanged(object sender, EventArgs e) {
+        private void RichTextPrivChtServerTextChanged(object sender, EventArgs e)
+        {
             _RichTextPrivChtServer.SelectionStart = _RichTextPrivChtServer.Text.Length;
             _RichTextPrivChtServer.ScrollToCaret();
         }

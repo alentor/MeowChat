@@ -5,9 +5,12 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace MeowChatClientLibrary {
-    public class TabPagePrivateChatClient: TabPage {
-        public enum TabCommand {
+namespace MeowChatClientLibrary
+{
+    public class TabPagePrivateChatClient : TabPage
+    {
+        public enum TabCommand
+        {
             Resumed,
             Closed,
             Disconnected,
@@ -24,11 +27,14 @@ namespace MeowChatClientLibrary {
         private readonly Button _BtnPrivateSendMessage = new Button();
         private readonly Button _BtnPrivateSendImage = new Button();
         private int _CursorPosition;
+
         public event TabPagePrivateChatSendClietHandler TabPagePrivateChatSendClientEvent;
+
         public event TabPagePrivateChatSendImageClietHandler TabPagePrivateChatSendImageClietEvent;
 
         //Constactor
-        public TabPagePrivateChatClient(string name) {
+        public TabPagePrivateChatClient(string name)
+        {
             // RchTxtPrivChat
             _RichTextPrivChtClient.BackColor = Color.White;
             _RichTextPrivChtClient.ForeColor = Color.Black;
@@ -77,39 +83,49 @@ namespace MeowChatClientLibrary {
         }
 
         //Button Send
-        private void BtnPrivateSendMessageClick(object sender, EventArgs e) {
-            if (_TextBoxPrvMsg.Text.Length > 0) {
+        private void BtnPrivateSendMessageClick(object sender, EventArgs e)
+        {
+            if (_TextBoxPrvMsg.Text.Length > 0)
+            {
                 TabPagePrivateChatSendClientEvent?.Invoke(Name, _TextBoxPrvMsg.Text);
                 _TextBoxPrvMsg.Text = "";
             }
         }
 
         //Button ImageMessage
-        private void BtnPrivateSendImageClick(object sender, EventArgs e) {
+        private void BtnPrivateSendImageClick(object sender, EventArgs e)
+        {
             //TabPagePrivateChatSendImageClientEvent?.Invoke(Name, null);
             TabPagePrivateChatSendImageClietEvent?.Invoke(Name);
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageClientEvent, which being fired in FrmChat
-        public void TabPageTabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, TabCommand command) {
-            Invoke(new Action((delegate{
+        public void TabPageTabPagePrivateReceiveMessageClient(string tabName, string privateName, string message, TabCommand command)
+        {
+            Invoke(new Action((delegate
+            {
                 _RichTextPrivChtClient.SelectionStart = _CursorPosition;
-                switch (command) {
+                switch (command)
+                {
                     case TabCommand.Message:
-                        if (tabName == Client.Name && privateName == Name) {
+                        if (tabName == Client.Name && privateName == Name)
+                        {
                             _RichTextPrivChtClient.SelectionColor = Color.Blue;
                             _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + Client.Name + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
-                        if (tabName == Name && privateName == Client.Name) {
+                        if (tabName == Name && privateName == Client.Name)
+                        {
                             _RichTextPrivChtClient.SelectionColor = Color.Red;
                             _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + Name + @": " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
                         }
 
                         break;
+
                     case TabCommand.Closed:
-                        if (tabName == Name) {
+                        if (tabName == Name)
+                        {
                             _BtnPrivateSendMessage.Enabled = false;
                             _BtnPrivateSendImage.Enabled = false;
                             _RichTextPrivChtClient.SelectionBackColor = Color.Red;
@@ -118,6 +134,7 @@ namespace MeowChatClientLibrary {
                         }
 
                         break;
+
                     case TabCommand.Resumed:
                         _BtnPrivateSendMessage.Enabled = true;
                         _BtnPrivateSendImage.Enabled = true;
@@ -128,7 +145,8 @@ namespace MeowChatClientLibrary {
                         break;
 
                     case TabCommand.Disconnected:
-                        if (tabName == Name) {
+                        if (tabName == Name)
+                        {
                             _BtnPrivateSendMessage.Enabled = false;
                             _BtnPrivateSendImage.Enabled = false;
                             _RichTextPrivChtClient.SelectionBackColor = Color.Red;
@@ -138,7 +156,8 @@ namespace MeowChatClientLibrary {
                         break;
 
                     case TabCommand.NameChange:
-                        if (Name == tabName) {
+                        if (Name == tabName)
+                        {
                             _RichTextPrivChtClient.SelectionColor = Color.Red;
                             _RichTextPrivChtClient.SelectedText = Time.NowTime() + " " + Name + @" have changed his name to " + message + Environment.NewLine;
                             _CursorPosition = _RichTextPrivChtClient.SelectionStart;
@@ -170,7 +189,8 @@ namespace MeowChatClientLibrary {
             })));
         }
 
-        private void RichTextPrivChtClientTextChanged(object sender, EventArgs e) {
+        private void RichTextPrivChtClientTextChanged(object sender, EventArgs e)
+        {
             _RichTextPrivChtClient.SelectionStart = _RichTextPrivChtClient.Text.Length;
             _RichTextPrivChtClient.ScrollToCaret();
         }

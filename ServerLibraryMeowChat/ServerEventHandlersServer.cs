@@ -1,8 +1,8 @@
-﻿using System.Data;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Net;
 
-namespace MeowChatServerLibrary {
+namespace MeowChatServerLibrary
+{
     public delegate void TabPagePrivateServerDoActionHandler(string clientName0, string clientName1, string message, TabPagePrivateChatServer.TabCommand command);
 
     public delegate void FrmServerImagesChangeNameHandler(string tabname, string tabNameNew);
@@ -38,5 +38,4 @@ namespace MeowChatServerLibrary {
     public delegate void ServerDateEngineRefreshMessagesDbHandler();
 
     public delegate void ServerDataEngineRefreshClientsDbHandler();
-
 }

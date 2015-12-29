@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LibraryMeowChat {
-    public enum Command {
+namespace LibraryMeowChat
+{
+    public enum Command
+    {
         Register,
         AttemptLogin,
         Login,
@@ -22,9 +24,11 @@ namespace LibraryMeowChat {
         Null // No command, only used in MessageStructure constarctor
     }
 
-    public class MessageStructure {
+    public class MessageStructure
+    {
         //Constructor
-        public MessageStructure() {
+        public MessageStructure()
+        {
             Command = Command.Null;
             UserName = null;
             ClientName = null;
@@ -35,7 +39,7 @@ namespace LibraryMeowChat {
         }
 
         public Command Command; // Command type (Login, Logout, Message etc...)
-        public string UserName; // UserName  
+        public string UserName; // UserName
         public string ClientName; // Name
         public string Color; // Reserved for Color of the message
         public string Private; // Reserved for if the message is private
@@ -43,8 +47,9 @@ namespace LibraryMeowChat {
         public byte[] ImgByte;
 
         //Convert bytes[] into MessageStructure object
-        public MessageStructure(byte[] data) {
-            Command = (Command) BitConverter.ToInt32(data, 0);
+        public MessageStructure(byte[] data)
+        {
+            Command = (Command)BitConverter.ToInt32(data, 0);
             // Next four bytes store the length of the clientName
             int userNameLen = BitConverter.ToInt32(data, 4);
             // Next four bytes store the length of the UserName
@@ -70,14 +75,14 @@ namespace LibraryMeowChat {
         }
 
         //Convert MessageStructure object into bytes[]
-        public byte[] ToByte() {
+        public byte[] ToByte()
+        {
             // emptyByte for usage in LINQ expression
-            byte[] emptyByte = {};
+            byte[] emptyByte = { };
             // create list bytes to which the object MessageStructure will be converted
-            List <byte> bytesList = new List <byte>();
+            List<byte> bytesList = new List<byte>();
             // First add command to the bytesList
-            bytesList.AddRange(BitConverter.GetBytes((int) Command));
-
+            bytesList.AddRange(BitConverter.GetBytes((int)Command));
 
             // add UserName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(UserName != null ? BitConverter.GetBytes(UserName.Length) : BitConverter.GetBytes(0));

@@ -1,11 +1,13 @@
-﻿using LibraryMeowChat;
-using MeowChatClientLibrary;
+﻿using MeowChatClientLibrary;
 using System;
 using System.Windows.Forms;
 
-namespace MeowChatClient {
-    public partial class FrmLogin: Form {
-        public FrmLogin() {
+namespace MeowChatClient
+{
+    public partial class FrmLogin : Form
+    {
+        public FrmLogin()
+        {
             InitializeComponent();
             ClientNetworkEngine.ClientNetworkEngineLoggedinEvent += Loggedin;
             ClientNetworkEngine.ClientNetworkEngineAttemptLoginErrorEvent += AttemptLoginErrorError;
@@ -13,8 +15,10 @@ namespace MeowChatClient {
         }
 
         // Checks if Name/IP/Port fileds are filed with at least one charter
-        private void txtBoxName_TextChanged(object sender, EventArgs e) {
-            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0) {
+        private void txtBoxName_TextChanged(object sender, EventArgs e)
+        {
+            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0)
+            {
                 btnConnect.Enabled = true;
                 return;
             }
@@ -22,8 +26,10 @@ namespace MeowChatClient {
         }
 
         // Checks if Name/IP/Port fileds are filed with at least one charter
-        private void txtBxServerIp_TextChanged(object sender, EventArgs e) {
-            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0) {
+        private void txtBxServerIp_TextChanged(object sender, EventArgs e)
+        {
+            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0)
+            {
                 btnConnect.Enabled = true;
                 return;
             }
@@ -31,8 +37,10 @@ namespace MeowChatClient {
         }
 
         // Checks if Name/IP/Port fileds are filed with at least one charter
-        private void txtBoxPort_TextChanged(object sender, EventArgs e) {
-            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0) {
+        private void txtBoxPort_TextChanged(object sender, EventArgs e)
+        {
+            if (txtBoxServerIp.Text.Length > 0 && txtBoxName.Text.Length > 0 && txtBoxPort.Text.Length > 0)
+            {
                 btnConnect.Enabled = true;
                 return;
             }
@@ -40,7 +48,8 @@ namespace MeowChatClient {
         }
 
         // Button connect
-        private void btnConnect_Click(object sender, EventArgs e) {
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
             btnConnect.Enabled = false;
             btnColorPick.Enabled = false;
             txtBoxPort.Enabled = false;
@@ -51,7 +60,8 @@ namespace MeowChatClient {
         }
 
         // Register button
-        private void btnRegister_Click(object sender, EventArgs e) {
+        private void btnRegister_Click(object sender, EventArgs e)
+        {
             ClientNetworkEngine.Register(txtBoxRegUserName.Text, txtBoxServerIp.Text, int.Parse(txtBoxPort.Text));
             btnConnect.Enabled = false;
             btnColorPick.Enabled = false;
@@ -61,14 +71,16 @@ namespace MeowChatClient {
         }
 
         // Button Cancel
-        private void btnCancel_Click(object sender, EventArgs e) {
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
             Close();
             DialogResult = DialogResult.Cancel;
             ClientNetworkEngine.Disconnect();
         }
 
         // Logged will be invoked from ClientNetworkServer on a successful Login
-        private void Loggedin() {
+        private void Loggedin()
+        {
             DialogResult = DialogResult.OK;
             //ClientNetworkEngine.ClientNetworkEngineRegisterMessageEvent -= RegisterMessage;
             //if (Visible) {
@@ -77,8 +89,10 @@ namespace MeowChatClient {
         }
 
         // Login error
-        private void AttemptLoginErrorError(string errorMessage) {
-            Invoke(new Action(delegate{
+        private void AttemptLoginErrorError(string errorMessage)
+        {
+            Invoke(new Action(delegate
+            {
                 btnConnect.Enabled = true;
                 btnColorPick.Enabled = true;
                 txtBoxPort.Enabled = true;
@@ -89,11 +103,14 @@ namespace MeowChatClient {
         }
 
         // Register message
-        private void RegisterMessage(string errorMessage) {
-            if (IsDisposed) {
+        private void RegisterMessage(string errorMessage)
+        {
+            if (IsDisposed)
+            {
                 return;
             }
-            Invoke(new Action(delegate{
+            Invoke(new Action(delegate
+            {
                 btnConnect.Enabled = true;
                 btnColorPick.Enabled = true;
                 txtBoxPort.Enabled = true;
@@ -104,15 +121,16 @@ namespace MeowChatClient {
         }
 
         // Color pick Button
-        private void btnColorPick_Click(object sender, EventArgs e) {
+        private void btnColorPick_Click(object sender, EventArgs e)
+        {
             DialogResult pickColor = colorPicker.ShowDialog();
-            if (pickColor == DialogResult.OK) {
+            if (pickColor == DialogResult.OK)
+            {
                 //string color = GenericStatic.HexConverter(colorPicker.Color);
                 //ClientConnection.Color = color;
                 Client.Color = colorPicker.Color;
                 //MessageBox.Show(str, @"Chat: " + ClientConnection.FrmPrivateName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
 }

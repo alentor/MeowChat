@@ -1,41 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LibraryMeowChat;
+using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LibraryMeowChat;
 
-namespace MeowChatClientLibrary {
-    public static class ClientNetworkEngine {
+namespace MeowChatClientLibrary
+{
+    public static class ClientNetworkEngine
+    {
         public static event ClientNetworkEngineRegisterHandler ClientNetworkEngineRegisterMessageEvent;
+
         public static event ClientNetworkEngineAttemptLoginErrorHandler ClientNetworkEngineAttemptLoginErrorEvent;
+
         public static event ClientNetworkEngineLoggedinHandler ClientNetworkEngineLoggedinEvent;
+
         public static event ClientNetworkEngineLoginHandler ClientNetworkEngineLoginEvent;
+
         public static event ClientNetworkEngineClientsListHandler ClientNetworkEngineClientsListEvent;
+
         public static event ClientNetworkEngineDisconnectHandler ClientNetworkEngineDisconnectEvent;
+
         public static event ClientNetworkEngineLogoutHandler ClientNetworkEngineLogoutEvent;
+
         public static event ClientNetworkEngineMessageHandler ClientNetworkEngineMessageEvent;
+
         public static event ClientNetworkEngineColorChangedHandler ClientNetworkEngineColorChangedEvent;
+
         public static event ClientNetworkEnginePrivateChatStartHandler ClientNetworkEnginePrivateChatStartEvent;
+
         public static event ClientNetworkEnginePrivateMessageHandler ClientNetworkEnginePrivateMessageEvent;
+
         public static event ClientNetworkEnginePrivateStoppedHandler ClientNetworkEnginePrivateStoppedEvent;
+
         public static event ClientNetworkEngineNameChangeHandler ClientNetworkEngineNameChangeEvent;
+
         public static event ClientNetworkEngineServerMessageHandler ClientNetworkEngineServerMessageEvent;
+
         public static event ClientNetworkEngineImageMessageHandler ClientNetworkEngineImageMessageEvent;
+
         private static byte[] s_byteMessage;
         public static bool Status;
         private static Socket s_socket /* = new s_socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)*/;
         private static IPEndPoint s_ipdEndPoint;
 
-
-        public static void AttemptConnect(string ipAdress, int port, string name, string userName, Color color) {
-            try {
-                if (Status) {
+        public static void AttemptConnect(string ipAdress, int port, string name, string userName, Color color)
+        {
+            try
+            {
+                if (Status)
+                {
                     s_socket.Close();
                     Status = false;
                 }
@@ -50,17 +65,20 @@ namespace MeowChatClientLibrary {
                 s_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 s_socket.BeginConnect(s_ipdEndPoint, OnAttemptConnect, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> AttemptConnect", @"Chat: ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-
-        private static void OnAttemptConnect(IAsyncResult ar) {
-            try {
+        private static void OnAttemptConnect(IAsyncResult ar)
+        {
+            try
+            {
                 Status = true;
                 s_socket.EndConnect(ar); //notify the server the connection was established succefully
-                MessageStructure msgToSend = new MessageStructure {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     Command = Command.AttemptLogin,
                     Color = HexConverter.Convert(Client.Color),
                     ClientName = Client.Name,
@@ -73,26 +91,32 @@ namespace MeowChatClientLibrary {
                 s_byteMessage = new byte[2097152];
                 s_socket.BeginReceive(s_byteMessage, 0, s_byteMessage.Length, SocketFlags.None, OnReceive, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ClientNetworkEngineAttemptLoginErrorEvent?.Invoke(ex.Message);
                 //MessageBox.Show(ex.Message + @" -> OnAttemptConnect", @"Chat: ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private static void OnReceive(IAsyncResult ar) {
-            if (!Status) {
+        private static void OnReceive(IAsyncResult ar)
+        {
+            if (!Status)
+            {
                 return;
             }
-            try {
+            try
+            {
                 // Let the server know the message was recieved
                 s_socket.EndReceive(ar);
                 // Convert message from bytes to messageStracure class and store it in msgReceieved
                 MessageStructure msgReceived = new MessageStructure(s_byteMessage);
                 // Set new bytes and start recieving again
                 s_byteMessage = new byte[2097152];
-                if (msgReceived.Command == Command.Disconnect) {
+                if (msgReceived.Command == Command.Disconnect)
+                {
                     Status = false;
-                    MessageStructure msgToSend = new MessageStructure {
+                    MessageStructure msgToSend = new MessageStructure
+                    {
                         Command = Command.Disconnect,
                         ClientName = Client.Name,
                         UserName = Client.UserName
@@ -104,11 +128,13 @@ namespace MeowChatClientLibrary {
                     ClientNetworkEngineDisconnectEvent?.Invoke();
                     return;
                 }
-                if (msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Register) {
+                if (msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Register)
+                {
                     s_socket.BeginReceive(s_byteMessage, 0, s_byteMessage.Length, SocketFlags.None, OnReceive, s_socket);
                 }
 
-                switch (msgReceived.Command) {
+                switch (msgReceived.Command)
+                {
                     case Command.Register:
                         ClientNetworkEngineRegisterMessageEvent?.Invoke(msgReceived.Message);
                         break;
@@ -118,10 +144,12 @@ namespace MeowChatClientLibrary {
                         break;
 
                     case Command.Login:
-                        if (msgReceived.ClientName == Client.Name) {
+                        if (msgReceived.ClientName == Client.Name)
+                        {
                             ClientNetworkEngineLoggedinEvent?.Invoke();
                             // Send Request for online client list
-                            MessageStructure msgToSend = new MessageStructure {
+                            MessageStructure msgToSend = new MessageStructure
+                            {
                                 Command = Command.List,
                                 ClientName = Client.Name
                             };
@@ -145,7 +173,8 @@ namespace MeowChatClientLibrary {
                         break;
 
                     case Command.NameChange:
-                        if (Client.Name == msgReceived.ClientName) {
+                        if (Client.Name == msgReceived.ClientName)
+                        {
                             Client.Name = msgReceived.Message;
                         }
                         ClientNetworkEngineNameChangeEvent?.Invoke(msgReceived.ClientName, msgReceived.Message, ColorTranslator.FromHtml(msgReceived.Color));
@@ -183,38 +212,48 @@ namespace MeowChatClientLibrary {
             //{
             //    //MessageBox.Show(ex.Message + @" -> OnReceive", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             //}
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> OnReceive", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-
-        private static void OnSend(IAsyncResult ar) {
-            try {
+        private static void OnSend(IAsyncResult ar)
+        {
+            try
+            {
                 s_socket.EndSend(ar);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> OnSend", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void Reconnect() {
-            try {
+        public static void Reconnect()
+        {
+            try
+            {
                 s_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 s_socket.BeginConnect(s_ipdEndPoint, OnAttemptConnect, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> ListBoxClientList_DoubleClick", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void Disconnect() {
-            try {
-                if (!Status) {
+        public static void Disconnect()
+        {
+            try
+            {
+                if (!Status)
+                {
                     return;
                 }
                 Status = false;
-                MessageStructure msgToSend = new MessageStructure {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     Command = Command.Logout,
                     UserName = Client.UserName,
                     ClientName = Client.Name
@@ -224,24 +263,31 @@ namespace MeowChatClientLibrary {
                 s_socket.Shutdown(SocketShutdown.Both);
                 s_socket.BeginDisconnect(true, (OnDisonnect), s_socket);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + " -> Disconnect", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private static void OnDisonnect(IAsyncResult ar) {
-            try {
-                s_socket = (Socket) ar.AsyncState;
+        private static void OnDisonnect(IAsyncResult ar)
+        {
+            try
+            {
+                s_socket = (Socket)ar.AsyncState;
                 s_socket.EndDisconnect(ar);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + " -> OnDisonnect", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void SendMessage(string message) {
-            try {
-                MessageStructure msgToSend = new MessageStructure {
+        public static void SendMessage(string message)
+        {
+            try
+            {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     Command = Command.Message,
                     UserName = Client.UserName,
                     ClientName = Client.Name,
@@ -251,14 +297,18 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> SendMessage", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void NameChange(string clientNameNew) {
-            try {
-                MessageStructure msgToSend = new MessageStructure {
+        public static void NameChange(string clientNameNew)
+        {
+            try
+            {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     Command = Command.NameChange,
                     UserName = Client.UserName,
                     ClientName = Client.Name,
@@ -268,16 +318,20 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> NameChange", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void ChangeColor(Color color) {
-            try {
+        public static void ChangeColor(Color color)
+        {
+            try
+            {
                 //string colorHex = GenericStatic.HexConverter(ColorPicker.Color);
-                //ClientConnection.Color = colorHex;    
-                MessageStructure msgToSend = new MessageStructure {
+                //ClientConnection.Color = colorHex;
+                MessageStructure msgToSend = new MessageStructure
+                {
                     Command = Command.ColorChanged,
                     UserName = Client.UserName,
                     ClientName = Client.Name,
@@ -286,14 +340,18 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> ChangeColor", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void StartPrivateChat(string clientNamePrivate) {
-            try {
-                MessageStructure msgToSend = new MessageStructure {
+        public static void StartPrivateChat(string clientNamePrivate)
+        {
+            try
+            {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     UserName = Client.UserName,
                     Command = Command.PrivateStart,
                     ClientName = Client.Name,
@@ -302,14 +360,18 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> StartPrivateChat", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void SendPrivateMessage(string clientNamePrivate, string message) {
-            try {
-                MessageStructure msgToSend = new MessageStructure {
+        public static void SendPrivateMessage(string clientNamePrivate, string message)
+        {
+            try
+            {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     UserName = Client.UserName,
                     Command = Command.PrivateMessage,
                     ClientName = Client.Name,
@@ -319,14 +381,18 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> SendPrivateMessage", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void PrivateClose(string tabName) {
-            try {
-                MessageStructure msgToSend = new MessageStructure {
+        public static void PrivateClose(string tabName)
+        {
+            try
+            {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     UserName = Client.UserName,
                     Command = Command.PrivateStopped,
                     ClientName = Client.Name,
@@ -335,14 +401,18 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> PrivateStop", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void SendImage(byte[] imgByte) {
-            try {
-                MessageStructure msgToSend = new MessageStructure {
+        public static void SendImage(byte[] imgByte)
+        {
+            try
+            {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     UserName = Client.UserName,
                     ClientName = Client.Name,
                     Command = Command.ImageMessage,
@@ -351,14 +421,18 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> SendImage", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void SendImagePrivate(byte[] imgByte, string clientName, string clientNamePrivate) {
-            try {
-                MessageStructure msgToSend = new MessageStructure {
+        public static void SendImagePrivate(byte[] imgByte, string clientName, string clientNamePrivate)
+        {
+            try
+            {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     Command = Command.ImageMessage,
                     UserName = Client.UserName,
                     ClientName = Client.Name,
@@ -368,14 +442,18 @@ namespace MeowChatClientLibrary {
                 byte[] msgToSendByte = msgToSend.ToByte();
                 s_socket.BeginSend(msgToSendByte, 0, msgToSendByte.Length, SocketFlags.None, OnSend, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> SendImagePrivate", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public static void Register(string userName, string ipAdress, int port) {
-            try {
-                if (Status) {
+        public static void Register(string userName, string ipAdress, int port)
+        {
+            try
+            {
+                if (Status)
+                {
                     s_socket.Close();
                     Status = false;
                 }
@@ -384,16 +462,20 @@ namespace MeowChatClientLibrary {
                 s_socket.BeginConnect(s_ipdEndPoint, OnRegister, null);
                 Client.UserName = userName;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> Register", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private static void OnRegister(IAsyncResult ar) {
-            try {
+        private static void OnRegister(IAsyncResult ar)
+        {
+            try
+            {
                 Status = true;
                 s_socket.EndConnect(ar);
-                MessageStructure msgToSend = new MessageStructure {
+                MessageStructure msgToSend = new MessageStructure
+                {
                     Command = Command.Register,
                     UserName = Client.UserName,
                     ClientName = Client.Name
@@ -403,7 +485,8 @@ namespace MeowChatClientLibrary {
                 s_byteMessage = new byte[2097152];
                 s_socket.BeginReceive(s_byteMessage, 0, s_byteMessage.Length, SocketFlags.None, OnReceive, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + @" -> OnRegister", @"Chat: " + Client.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -421,7 +504,6 @@ namespace MeowChatClientLibrary {
         //    MessageBox.Show("attemptConnect2 => conncted");
         //    AttempRegister();
         //}
-
 
         //public static void AttempRegister() {
         //    try {

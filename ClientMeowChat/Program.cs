@@ -1,14 +1,16 @@
-﻿using MeowChatClientLibrary;
-using MeowChatClient;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace MeowChatClient {
-    public static class Program {
+namespace MeowChatClient
+{
+    public static class Program
+    {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        [STAThread] private static void Main() {
+        [STAThread]
+        private static void Main()
+        {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FrmChat());
