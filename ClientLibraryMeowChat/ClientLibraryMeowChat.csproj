@@ -43,10 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
     <Compile Include="ClientChatHistory.cs" />
-    <Compile Include="ClientConnection.cs" />
+    <Compile Include="ClientNetworkEngine.cs" />
     <Compile Include="ClientStatistics.cs" />
-    <Compile Include="EventHandlersClient.cs" />
+    <Compile Include="ClientEventHandlersClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TabPagePrivateChatClient.cs">
       <SubType>Component</SubType>

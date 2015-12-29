@@ -8,7 +8,6 @@ using System.Windows.Forms;
 
 namespace MeowChatServer {
     public partial class FrmServerImages: Form {
-        private byte[] Imgbyte;
         private Image _Img;
         private int _ImageCouter;
 
@@ -16,21 +15,18 @@ namespace MeowChatServer {
             InitializeComponent();
         }
 
-        public void NewImage(byte[] imgByte, string tabName) {
-            ++_ImageCouter;
-            Imgbyte = imgByte;
+        public void NewImage(Image img, string tabName) {
+            _Img = img;
             PictureBox newPictureBox = new PictureBox {
                 Location = new System.Drawing.Point(6, 6),
                 Name = "newPictureBox",
                 Size = new System.Drawing.Size(390, 336),
                 SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom,
-                TabIndex = 0,
-                TabStop = false
+                TabIndex = _ImageCouter,
             };
+            ++_ImageCouter;
             newPictureBox.Click += new System.EventHandler(this.pictureBox1_Click);
-            MemoryStream ms = new MemoryStream(imgByte);
-            Image newImage = Image.FromStream(ms);
-            newPictureBox.Image = newImage;
+            newPictureBox.Image = img;
             Button btnSave = new Button {
                 Location = new System.Drawing.Point(147, 345),
                 Name = "saveButton",
@@ -66,16 +62,13 @@ namespace MeowChatServer {
         }
 
         private void BtnSave_Click(object sender, EventArgs e) {
-            if (Imgbyte != null) {
-                _Img = ByteArrayToImage(Imgbyte);
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = @"Images|*.png;";
-                //saveFileDialog.Filter = "Images|*.png;*.bmp;*.jpg*.gif*";
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = @"Images|*.png;";
+            //saveFileDialog.Filter = "Images|*.png;*.bmp;*.jpg*.gif*";
 
-                //ImageFormat format = ImageFormat.Png;
-                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-                    _Img.Save(saveFileDialog.FileName, ImageFormat.Png);
-                }
+            //ImageFormat format = ImageFormat.Png;
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                _Img.Save(saveFileDialog.FileName, ImageFormat.Png);
             }
         }
 

@@ -41,3 +41,6 @@ E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\LibraryMeowChat.dll
 E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\LibraryMeowChat.pdb
 E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.FrmServerImages.resources
 E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.FrmServerProgressBar.resources
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\ServerDataBase.mdf
+E:\Porjects\c#\MeowChat\ServerMeowChat\bin\Debug\ServerDataBase_log.ldf
+E:\Porjects\c#\MeowChat\ServerMeowChat\obj\Debug\MeowChatServer.FrmData.resources

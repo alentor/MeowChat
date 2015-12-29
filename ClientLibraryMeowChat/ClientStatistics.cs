@@ -33,7 +33,7 @@ namespace MeowChatClientLibrary
         public static string ConnectedTime;
 
         //public
-        public static void StartStatistics()
+        public static void Start()
         {
             sr_stopWatchConnectedTime.Reset();
             sr_timerConnectedTime.Enabled = true;
@@ -55,7 +55,7 @@ namespace MeowChatClientLibrary
             ConnectedTime = sr_stopWatchConnectedTime.Elapsed.Hours.ToString("00") + @":" + sr_stopWatchConnectedTime.Elapsed.Minutes.ToString("00") + @":" + sr_stopWatchConnectedTime.Elapsed.Seconds.ToString("00");
         }
 
-        public static void StopStatistics()
+        public static void Stop()
         {
             sr_stopWatchConnectedTime.Stop();
         }

@@ -49,7 +49,8 @@ namespace MeowChatServer
             this.TabPagePublicChatServer = new System.Windows.Forms.TabPage();
             this.RichTextServerPub = new System.Windows.Forms.RichTextBox();
             this.BtnStopSrv = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.BtnImages = new System.Windows.Forms.Button();
+            this.BtnHisotry = new System.Windows.Forms.Button();
             this.TabControlServer.SuspendLayout();
             this.TabConnTrack.SuspendLayout();
             this.TabPagePublicChatServer.SuspendLayout();
@@ -104,7 +105,7 @@ namespace MeowChatServer
             this.RichTextServerConn.Name = "RichTextServerConn";
             this.RichTextServerConn.ReadOnly = true;
             this.RichTextServerConn.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.RichTextServerConn.Size = new System.Drawing.Size(406, 312);
+            this.RichTextServerConn.Size = new System.Drawing.Size(541, 312);
             this.RichTextServerConn.TabIndex = 9;
             this.RichTextServerConn.Text = "";
             this.RichTextServerConn.TextChanged += new System.EventHandler(this.RichTextChatBox_TextChanged);
@@ -112,7 +113,7 @@ namespace MeowChatServer
             // LblLocalIp
             // 
             this.LblLocalIp.AutoSize = true;
-            this.LblLocalIp.Location = new System.Drawing.Point(408, 366);
+            this.LblLocalIp.Location = new System.Drawing.Point(491, 366);
             this.LblLocalIp.Name = "LblLocalIp";
             this.LblLocalIp.Size = new System.Drawing.Size(56, 13);
             this.LblLocalIp.TabIndex = 10;
@@ -155,7 +156,7 @@ namespace MeowChatServer
             // BtnServerSnd
             // 
             this.BtnServerSnd.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.BtnServerSnd.Location = new System.Drawing.Point(708, 360);
+            this.BtnServerSnd.Location = new System.Drawing.Point(787, 360);
             this.BtnServerSnd.Name = "BtnServerSnd";
             this.BtnServerSnd.Size = new System.Drawing.Size(43, 23);
             this.BtnServerSnd.TabIndex = 15;
@@ -165,7 +166,7 @@ namespace MeowChatServer
             // 
             // TxtBxServer
             // 
-            this.TxtBxServer.Location = new System.Drawing.Point(474, 362);
+            this.TxtBxServer.Location = new System.Drawing.Point(553, 362);
             this.TxtBxServer.Name = "TxtBxServer";
             this.TxtBxServer.Size = new System.Drawing.Size(228, 20);
             this.TxtBxServer.TabIndex = 16;
@@ -180,7 +181,7 @@ namespace MeowChatServer
             this.TabControlServer.Location = new System.Drawing.Point(336, 12);
             this.TabControlServer.Name = "TabControlServer";
             this.TabControlServer.SelectedIndex = 0;
-            this.TabControlServer.Size = new System.Drawing.Size(415, 341);
+            this.TabControlServer.Size = new System.Drawing.Size(549, 341);
             this.TabControlServer.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.TabControlServer.TabIndex = 17;
             this.TabControlServer.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControlServer_DrawItem);
@@ -192,7 +193,7 @@ namespace MeowChatServer
             this.TabConnTrack.Location = new System.Drawing.Point(4, 28);
             this.TabConnTrack.Name = "TabConnTrack";
             this.TabConnTrack.Padding = new System.Windows.Forms.Padding(3);
-            this.TabConnTrack.Size = new System.Drawing.Size(407, 309);
+            this.TabConnTrack.Size = new System.Drawing.Size(541, 309);
             this.TabConnTrack.TabIndex = 0;
             this.TabConnTrack.Text = "Connection Track";
             this.TabConnTrack.UseVisualStyleBackColor = true;
@@ -203,7 +204,7 @@ namespace MeowChatServer
             this.TabPagePublicChatServer.Location = new System.Drawing.Point(4, 28);
             this.TabPagePublicChatServer.Name = "TabPagePublicChatServer";
             this.TabPagePublicChatServer.Padding = new System.Windows.Forms.Padding(3);
-            this.TabPagePublicChatServer.Size = new System.Drawing.Size(407, 309);
+            this.TabPagePublicChatServer.Size = new System.Drawing.Size(541, 309);
             this.TabPagePublicChatServer.TabIndex = 1;
             this.TabPagePublicChatServer.Text = "Pubic chat";
             this.TabPagePublicChatServer.UseVisualStyleBackColor = true;
@@ -216,7 +217,7 @@ namespace MeowChatServer
             this.RichTextServerPub.Name = "RichTextServerPub";
             this.RichTextServerPub.ReadOnly = true;
             this.RichTextServerPub.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.RichTextServerPub.Size = new System.Drawing.Size(406, 312);
+            this.RichTextServerPub.Size = new System.Drawing.Size(541, 312);
             this.RichTextServerPub.TabIndex = 10;
             this.RichTextServerPub.Text = "";
             // 
@@ -232,16 +233,27 @@ namespace MeowChatServer
             this.BtnStopSrv.UseVisualStyleBackColor = true;
             this.BtnStopSrv.Click += new System.EventHandler(this.btnStopSrv_Click);
             // 
-            // button1
+            // BtnImages
             // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(333, 362);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(73, 23);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "I&mages";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.BtnImages.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BtnImages.Location = new System.Drawing.Point(333, 362);
+            this.BtnImages.Name = "BtnImages";
+            this.BtnImages.Size = new System.Drawing.Size(73, 23);
+            this.BtnImages.TabIndex = 19;
+            this.BtnImages.Text = "&Images";
+            this.BtnImages.UseVisualStyleBackColor = true;
+            this.BtnImages.Click += new System.EventHandler(this.BtnImages_Click);
+            // 
+            // BtnHisotry
+            // 
+            this.BtnHisotry.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BtnHisotry.Location = new System.Drawing.Point(412, 361);
+            this.BtnHisotry.Name = "BtnHisotry";
+            this.BtnHisotry.Size = new System.Drawing.Size(73, 23);
+            this.BtnHisotry.TabIndex = 20;
+            this.BtnHisotry.Text = "&History";
+            this.BtnHisotry.UseVisualStyleBackColor = true;
+            this.BtnHisotry.Click += new System.EventHandler(this.BtnHisotry_Click);
             // 
             // FrmServer
             // 
@@ -249,8 +261,9 @@ namespace MeowChatServer
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnStopSrv;
-            this.ClientSize = new System.Drawing.Size(754, 391);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(890, 391);
+            this.Controls.Add(this.BtnHisotry);
+            this.Controls.Add(this.BtnImages);
             this.Controls.Add(this.BtnStopSrv);
             this.Controls.Add(this.TabControlServer);
             this.Controls.Add(this.TxtBxServer);
@@ -266,7 +279,6 @@ namespace MeowChatServer
             this.Name = "FrmServer";
             this.Text = "Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmServer_FormClosing);
-            this.Load += new System.EventHandler(this.ServerForm_Load);
             this.TabControlServer.ResumeLayout(false);
             this.TabConnTrack.ResumeLayout(false);
             this.TabPagePublicChatServer.ResumeLayout(false);
@@ -295,7 +307,8 @@ namespace MeowChatServer
         private System.Windows.Forms.TabPage TabPagePublicChatServer;
         private RichTextBox RichTextServerPub;
         private Button BtnStopSrv;
-        private Button button1;
+        private Button BtnImages;
+        private Button BtnHisotry;
     }
 }
 
