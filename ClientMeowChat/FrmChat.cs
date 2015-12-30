@@ -81,6 +81,8 @@ namespace MeowChatClient
                 RichTextClientPub.SelectionBackColor = Color.GreenYellow;
                 RichTextClientPub.SelectedText = @"<<< You have joined the chat successfully >>>" + Environment.NewLine;
                 _CursorPosition = RichTextClientPub.SelectionStart;
+                _FrmStatistics.Start();
+                ClientStatistics.Start();
             })));
         }
 
@@ -137,7 +139,10 @@ namespace MeowChatClient
             }
             foreach (TabPage tabPage in TabControlClient.TabPages)
             {
-                TabPagePrivateChatReceiveClientEvent?.Invoke(tabPage.Name, null, null, TabPagePrivateChatClient.TabCommand.Disconnected);
+                if (TabPagePrivateChatReceiveClientEvent != null)
+                {
+                    TabPagePrivateChatReceiveClientEvent.Invoke(tabPage.Name, null, null, TabPagePrivateChatClient.TabCommand.Disconnected);
+                }
             }
             ClientNetworkEngine.Disconnect();
             ClientStatistics.Stop();
@@ -179,7 +184,10 @@ namespace MeowChatClient
             ClientStatistics.Stop();
             Invoke(new Action((delegate
             {
-                TabPagePrivateChatReceiveClientEvent?.Invoke(null, null, null, TabPagePrivateChatClient.TabCommand.Disconnect);
+                if (TabPagePrivateChatReceiveClientEvent != null)
+                {
+                    TabPagePrivateChatReceiveClientEvent.Invoke(null, null, null, TabPagePrivateChatClient.TabCommand.Disconnect);
+                }
                 BtnPubSnd.Enabled = false;
                 ListBoxClientList.Items.Clear();
                 RichTextClientPub.SelectionStart = _CursorPosition;
@@ -243,7 +251,10 @@ namespace MeowChatClient
             TextBoxPubMsg.Text = null;
             // Update statistics
             ++ClientStatistics.MessagesSent;
-            FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.MessageSent);
+            if (FrmStatisticsUpdateEvent != null)
+            {
+                FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.MessageSent);
+            }
         }
 
         // Color Button
@@ -331,7 +342,10 @@ namespace MeowChatClient
         {
             ClientNetworkEngine.SendPrivateMessage(clientNamePrivate, message);
             ++ClientStatistics.MessagesPrivateSent;
-            FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.MessagePrivateSent);
+            if (FrmStatisticsUpdateEvent != null)
+            {
+                FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.MessagePrivateSent);
+            }
         }
 
         //Send private Photo method event
@@ -450,7 +464,10 @@ namespace MeowChatClient
                     if (_ClientChatHistoryList[i].Name == clientName)
                     {
                         _ClientChatHistoryList.Remove(_ClientChatHistoryList[i]);
-                        TabPagePrivateChatReceiveClientEvent?.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.Disconnected);
+                        if (TabPagePrivateChatReceiveClientEvent != null)
+                        {
+                            TabPagePrivateChatReceiveClientEvent.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.Disconnected);
+                        }
                     }
                 }
                 RichTextClientPub.SelectionStart = _CursorPosition;
@@ -483,7 +500,10 @@ namespace MeowChatClient
             if (clientName != Client.Name)
             {
                 ++ClientStatistics.MessagesReceived;
-                FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.MessageReceied);
+                if (FrmStatisticsUpdateEvent != null)
+                {
+                    FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.MessageReceied);
+                }
             }
         }
 
@@ -508,7 +528,10 @@ namespace MeowChatClient
                 {
                     Text = @"Chat: " + clientNameNew;
                 }
-                TabPagePrivateChatReceiveClientEvent?.Invoke(clientName, null, clientNameNew, TabPagePrivateChatClient.TabCommand.NameChange);
+                if (TabPagePrivateChatReceiveClientEvent != null)
+                {
+                    TabPagePrivateChatReceiveClientEvent.Invoke(clientName, null, clientNameNew, TabPagePrivateChatClient.TabCommand.NameChange);
+                }
                 foreach (TabPage tabPage in TabControlClient.TabPages.Cast<TabPage>().Where(tabPage => tabPage.Name == clientName))
                 {
                     tabPage.Name = clientNameNew;
@@ -521,7 +544,10 @@ namespace MeowChatClient
             {
                 _FrmClientImages.Text = clientNameNew + @" Received Images";
             })));
-            FrmClientImagesChangeNameEvent?.Invoke(clientName, clientNameNew);
+            if (FrmClientImagesChangeNameEvent != null)
+            {
+                FrmClientImagesChangeNameEvent.Invoke(clientName, clientNameNew);
+            }
             ColorChanged(clientName, color);
         }
 
@@ -543,7 +569,10 @@ namespace MeowChatClient
         {
             if (TabControlClient.TabPages.Cast<TabPage>().Any(tabPagePrivateChat => tabPagePrivateChat.Name == clientNamePrivate))
             {
-                TabPagePrivateChatReceiveClientEvent?.Invoke(clientNamePrivate, null, null, TabPagePrivateChatClient.TabCommand.Resumed);
+                if (TabPagePrivateChatReceiveClientEvent != null)
+                {
+                    TabPagePrivateChatReceiveClientEvent.Invoke(clientNamePrivate, null, null, TabPagePrivateChatClient.TabCommand.Resumed);
+                }
                 return;
             }
             Invoke(new Action((delegate
@@ -556,21 +585,30 @@ namespace MeowChatClient
         // Private message
         private void PrivateMessage(string clientName, string clientNamePrivate, string message)
         {
-            TabPagePrivateChatReceiveClientEvent?.Invoke(clientName, clientNamePrivate, message, TabPagePrivateChatClient.TabCommand.Message);
+            if (TabPagePrivateChatReceiveClientEvent != null)
+            {
+                TabPagePrivateChatReceiveClientEvent.Invoke(clientName, clientNamePrivate, message, TabPagePrivateChatClient.TabCommand.Message);
+            }
             if (Client.Name == clientNamePrivate)
             {
                 ++ClientStatistics.MessagesPrivateReceived;
-                FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.MessagePrivateReceived);
+                FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.MessagePrivateReceived);
                 return;
             }
             ++ClientStatistics.MessagesPrivateSent;
-            FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.MessagePrivateSent);
+            if (FrmStatisticsUpdateEvent != null)
+            {
+                FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.MessagePrivateSent);
+            }
         }
 
         // Private stopped
         private void PrivateStopped(string clientName)
         {
-            TabPagePrivateChatReceiveClientEvent?.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.Closed);
+            if (TabPagePrivateChatReceiveClientEvent != null)
+            {
+                TabPagePrivateChatReceiveClientEvent.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.Closed);
+            }
         }
 
         // Server message
@@ -585,7 +623,10 @@ namespace MeowChatClient
                 _CursorPosition = RichTextClientPub.SelectionStart;
             })));
             ++ClientStatistics.ServerMessage;
-            FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ServerMessage);
+            if (FrmStatisticsUpdateEvent != null)
+            {
+                FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.ServerMessage);
+            }
         }
 
         // Image message
@@ -596,16 +637,28 @@ namespace MeowChatClient
                 if (Client.Name == clientName)
                 {
                     ++ClientStatistics.ImagesPrivateSent;
-                    FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ImagesPrivateSent);
+                    if (FrmStatisticsUpdateEvent != null)
+                    {
+                        FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.ImagesPrivateSent);
+                    }
                     // Let the user know that the private photo he sent went thro
-                    TabPagePrivateChatReceiveClientEvent?.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.ImageMessageSent);
+                    if (TabPagePrivateChatReceiveClientEvent != null)
+                    {
+                        TabPagePrivateChatReceiveClientEvent.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.ImageMessageSent);
+                    }
                     return;
                 }
                 // Show the photo to the receiving user
                 ++ClientStatistics.ImagesPrivateReceived;
-                FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ImagesPrivateReceived);
+                if (FrmStatisticsUpdateEvent != null)
+                {
+                    FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.ImagesPrivateReceived);
+                }
                 _FrmClientImages.NewImage(img, clientName + " Private");
-                TabPagePrivateChatReceiveClientEvent?.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.ImageMessage);
+                if (TabPagePrivateChatReceiveClientEvent != null)
+                {
+                    TabPagePrivateChatReceiveClientEvent.Invoke(clientName, null, null, TabPagePrivateChatClient.TabCommand.ImageMessage);
+                }
                 if (_FrmClientImages.Visible == false)
                 {
                     if (InvokeRequired)
@@ -627,7 +680,10 @@ namespace MeowChatClient
             if (Client.Name == clientName)
             {
                 ++ClientStatistics.ImagesSent;
-                FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ImagesSent);
+                if (FrmStatisticsUpdateEvent != null)
+                {
+                    FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.ImagesSent);
+                }
                 Invoke(new Action((delegate
                 {
                     RichTextClientPub.SelectionStart = _CursorPosition;
@@ -639,7 +695,10 @@ namespace MeowChatClient
                 return;
             }
             ++ClientStatistics.ImagesReceived;
-            FrmStatisticsUpdateEvent?.Invoke(StatisticsEntry.ImagesReceived);
+            if (FrmStatisticsUpdateEvent != null)
+            {
+                FrmStatisticsUpdateEvent.Invoke(StatisticsEntry.ImagesReceived);
+            }
             _FrmClientImages.NewImage(img, clientName);
             if (_FrmClientImages.Visible == false)
             {

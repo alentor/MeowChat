@@ -18,13 +18,12 @@ namespace MeowChatServer
         private FrmServerProgressBar _FrmProgressBarDisconnect;
         private readonly FrmServerImages _FrmServerImages = new FrmServerImages();
         private FrmData _FrmData = new FrmData();
+        private int _CursorPositionConn;
+        private int _CursorPositionPub;
 
         private event TabPagePrivateServerDoActionHandler TabPagePrivateServerDoActionEvent;
 
         private event FrmServerImagesChangeNameHandler FrmServerImagesChangeNameEvent;
-
-        private int _CursorPositionConn;
-        private int _CursorPositionPub;
 
         public FrmServer()
         {
@@ -177,7 +176,7 @@ namespace MeowChatServer
                 RichTextServerConn.SelectedText += "<<< " + clientNameToRemove + " has just left the chat >>> " + Time.NowTimeDate() + " " + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
                 //GenericStatic.ItemEvenSize(TabControlServer);
-                //TabPagePrivateChatReceiveServerEvent?.Invoke(msgReceived.Name, msgReceived.Private, msgReceived.Message, 2);
+                //TabPagePrivateChatReceiveServerEvent.Invoke(msgReceived.Name, msgReceived.Private, msgReceived.Message, 2);
             })));
         }
 
@@ -261,7 +260,10 @@ namespace MeowChatServer
                 RichTextServerConn.SelectedText += @"<<< " + clientName + @" have changed his name to " + newClientName + " " + Time.NowTimeDate() + @" >>>" + Environment.NewLine;
                 _CursorPositionConn = RichTextServerConn.SelectionStart;
             }));
-            FrmServerImagesChangeNameEvent?.Invoke(clientName, newClientName);
+            if (FrmServerImagesChangeNameEvent != null)
+            {
+                FrmServerImagesChangeNameEvent.Invoke(clientName, newClientName);
+            }
         }
 
         // Private Chat Started
@@ -269,7 +271,10 @@ namespace MeowChatServer
         {
             if (TabControlServer.TabPages.OfType<TabPagePrivateChatServer>().Any(tabPagePrivateChatServer => tabPagePrivateChatServer.ClientName == clientName && tabPagePrivateChatServer.ClientNamePrivate == clientNamePrivate || tabPagePrivateChatServer.ClientName == clientNamePrivate && tabPagePrivateChatServer.ClientNamePrivate == clientName))
             {
-                TabPagePrivateServerDoActionEvent?.Invoke(clientName, clientNamePrivate, null, TabPagePrivateChatServer.TabCommand.Resumed);
+                if (TabPagePrivateServerDoActionEvent != null)
+                {
+                    TabPagePrivateServerDoActionEvent.Invoke(clientName, clientNamePrivate, null, TabPagePrivateChatServer.TabCommand.Resumed);
+                }
                 return;
             }
             Invoke(new Action(delegate
@@ -284,13 +289,19 @@ namespace MeowChatServer
         // Private Chat Message
         private void PrivateChatMessage(string clientName, string clientNamePrivate, string message)
         {
-            TabPagePrivateServerDoActionEvent?.Invoke(clientName, clientNamePrivate, message, TabPagePrivateChatServer.TabCommand.Message);
+            if (TabPagePrivateServerDoActionEvent != null)
+            {
+                TabPagePrivateServerDoActionEvent.Invoke(clientName, clientNamePrivate, message, TabPagePrivateChatServer.TabCommand.Message);
+            }
         }
 
         // Private Chat Stopped
         private void PrivateChatStopped(string clientName, string clientNamePrivate)
         {
-            TabPagePrivateServerDoActionEvent?.Invoke(clientName, clientName, null, TabPagePrivateChatServer.TabCommand.Closed);
+            if (TabPagePrivateServerDoActionEvent != null)
+            {
+                TabPagePrivateServerDoActionEvent.Invoke(clientName, clientName, null, TabPagePrivateChatServer.TabCommand.Closed);
+            }
         }
 
         // Image Message

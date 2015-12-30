@@ -10,14 +10,13 @@ namespace MeowChatServerLibrary
         private static readonly string sr_sqlConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|SERVERDATABASE.MDF;Integrated Security=True";
         private static readonly SqlConnection _SqlConn = new SqlConnection(sr_sqlConnectionString);
         private static SqlDataAdapter _Adp = new SqlDataAdapter();
-        private static SqlDataAdapter _sqlDataAdapterC;
         private static DataSet _DataSet = new DataSet("ServerDataSet");
         private static SqlCommand s_sqlCommSelectAllCleintsDb;
         private static SqlCommand s_sqlCommSelectAllMessagesDb;
 
         public static void StartDataServer()
         {
-            if ((_SqlConn.State & ConnectionState.Open) != 0)
+            if (_SqlConn.State != ConnectionState.Open)
             {
                 _SqlConn.Close();
             }
@@ -74,7 +73,7 @@ namespace MeowChatServerLibrary
             sqlCommRegister.Parameters.AddWithValue("@lastConnected", lastConnected);
             sqlCommRegister.Parameters.AddWithValue("@status", status);
             sqlCommRegister.ExecuteNonQuery();
-            ServerDataEngineRefreshClientsDbEvent?.Invoke();
+            ServerDataEngineRefreshClientsDbEvent.Invoke();
             return "Registerted";
         }
 
@@ -104,7 +103,10 @@ namespace MeowChatServerLibrary
         {
             SqlCommand sqlCommUpdateStatus = new SqlCommand("update ClientsDB set Status ='Offline'", _SqlConn);
             sqlCommUpdateStatus.ExecuteNonQuery();
-            ServerDataEngineRefreshClientsDbEvent?.Invoke();
+            if (ServerDataEngineRefreshClientsDbEvent != null)
+            {
+                ServerDataEngineRefreshClientsDbEvent.Invoke();
+            }
         }
 
         public static void UpdateStatus(string userName, string clientName, string status)
@@ -114,7 +116,10 @@ namespace MeowChatServerLibrary
             sqlCommUpdateStatus.Parameters.AddWithValue("@status", status);
             sqlCommUpdateStatus.Parameters.AddWithValue("@clientName", clientName);
             sqlCommUpdateStatus.ExecuteNonQuery();
-            ServerDataEngineRefreshClientsDbEvent?.Invoke();
+            if (ServerDataEngineRefreshClientsDbEvent != null)
+            {
+                ServerDataEngineRefreshClientsDbEvent.Invoke();
+            }
         }
 
         public static void UpdateDate(string userName, string dateTime)
@@ -123,7 +128,10 @@ namespace MeowChatServerLibrary
             sqlCommUpdateDate.Parameters.AddWithValue("@userName", userName);
             sqlCommUpdateDate.Parameters.AddWithValue("@dateTime", dateTime);
             sqlCommUpdateDate.ExecuteNonQuery();
-            ServerDataEngineRefreshClientsDbEvent?.Invoke();
+            if (ServerDataEngineRefreshClientsDbEvent != null)
+            {
+                ServerDataEngineRefreshClientsDbEvent.Invoke();
+            }
         }
 
         public static void UpdateLoggedLastLogged(string userName, string clientName)
@@ -132,7 +140,10 @@ namespace MeowChatServerLibrary
             sqlCommUpdateLoggedLastLogged.Parameters.AddWithValue("@userName", userName);
             sqlCommUpdateLoggedLastLogged.Parameters.AddWithValue("@clientName", clientName);
             sqlCommUpdateLoggedLastLogged.ExecuteNonQuery();
-            ServerDataEngineRefreshClientsDbEvent?.Invoke();
+            if (ServerDataEngineRefreshClientsDbEvent != null)
+            {
+                ServerDataEngineRefreshClientsDbEvent.Invoke();
+            }
         }
 
         public static void AddMessage(string userName, string message, string timeDate, string isPrivate, string isImage)
@@ -150,7 +161,10 @@ namespace MeowChatServerLibrary
             sqlCommInsertMessage.Parameters.AddWithValue("@isPrivate", isPrivate);
             sqlCommInsertMessage.Parameters.AddWithValue("@isImage", isImage);
             sqlCommInsertMessage.ExecuteNonQuery();
-            ServerDateEngineRefreshMessagesDbEvent?.Invoke();
+            if (ServerDateEngineRefreshMessagesDbEvent != null)
+            {
+                ServerDateEngineRefreshMessagesDbEvent.Invoke();
+            }
         }
 
         public static DataTable SearchID(int id)

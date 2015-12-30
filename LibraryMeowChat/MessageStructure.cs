@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 
 namespace LibraryMeowChat
-{/// <summary>
-/// The message stracture at which client and server communicate
-/// </summary>
+{
+    /// <summary>
+    /// The message stracture at which client and server communicate
+    /// </summary>
     public enum Command
     {
         Register,
@@ -28,7 +29,7 @@ namespace LibraryMeowChat
 
     public class MessageStructure
     {
-        //Constructor
+        // Constructor
         public MessageStructure()
         {
             Command = Command.Null;
@@ -48,7 +49,7 @@ namespace LibraryMeowChat
         public string Message; // The message itself, it can be anything, any kind of information which can fit into a string
         public byte[] ImgByte;
 
-        //Convert bytes[] into MessageStructure object
+        // Convert bytes[] into MessageStructure object
         public MessageStructure(byte[] data)
         {
             Command = (Command)BitConverter.ToInt32(data, 0);
@@ -76,7 +77,7 @@ namespace LibraryMeowChat
             ImgByte = Command == Command.ImageMessage ? data.Skip(28 + userNameLen + clientNameLen + colorLen + privateLen + messageLen).ToArray() : null;
         }
 
-        //Convert MessageStructure object into bytes[]
+        // Convert MessageStructure object into bytes[]
         public byte[] ToByte()
         {
             // emptyByte for usage in LINQ expression
@@ -85,7 +86,6 @@ namespace LibraryMeowChat
             List<byte> bytesList = new List<byte>();
             // First add command to the bytesList
             bytesList.AddRange(BitConverter.GetBytes((int)Command));
-
             // add UserName length to the bytesList, add zero bytes if clintName is null
             bytesList.AddRange(UserName != null ? BitConverter.GetBytes(UserName.Length) : BitConverter.GetBytes(0));
             // add ClientName length to the bytesList, add zero bytes if clintName is null
