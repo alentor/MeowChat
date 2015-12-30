@@ -95,7 +95,10 @@ namespace MeowChatClientLibrary
             }
             catch (Exception ex)
             {
-                ClientNetworkEngineAttemptLoginErrorEvent?.Invoke(ex.Message);
+                if (ClientNetworkEngineAttemptLoginErrorEvent != null)
+                {
+                    ClientNetworkEngineAttemptLoginErrorEvent.Invoke(ex.Message);
+                }
                 //MessageBox.Show(ex.Message + @" -> OnAttemptConnect", @"Chat: ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -127,7 +130,10 @@ namespace MeowChatClientLibrary
                     s_socket.Send(b, 0, b.Length, SocketFlags.None);
                     s_socket.Shutdown(SocketShutdown.Both);
                     s_socket.BeginDisconnect(true, (OnDisonnect), s_socket);
-                    ClientNetworkEngineDisconnectEvent?.Invoke();
+                    if (ClientNetworkEngineDisconnectEvent != null)
+                    {
+                        ClientNetworkEngineDisconnectEvent.Invoke();
+                    }
                     return;
                 }
                 if (msgReceived.Command != Command.AttemptLogin && msgReceived.Command != Command.Register)
@@ -138,17 +144,26 @@ namespace MeowChatClientLibrary
                 switch (msgReceived.Command)
                 {
                     case Command.Register:
-                        ClientNetworkEngineRegisterMessageEvent?.Invoke(msgReceived.Message);
+                        if (ClientNetworkEngineRegisterMessageEvent != null)
+                        {
+                            ClientNetworkEngineRegisterMessageEvent.Invoke(msgReceived.Message);
+                        }
                         break;
 
                     case Command.AttemptLogin:
-                        ClientNetworkEngineAttemptLoginErrorEvent?.Invoke(msgReceived.Message);
+                        if (ClientNetworkEngineAttemptLoginErrorEvent != null)
+                        {
+                            ClientNetworkEngineAttemptLoginErrorEvent.Invoke(msgReceived.Message);
+                        }
                         break;
 
                     case Command.Login:
                         if (msgReceived.ClientName == Client.Name)
                         {
-                            ClientNetworkEngineLoggedinEvent?.Invoke();
+                            if (ClientNetworkEngineLoggedinEvent != null)
+                            {
+                                ClientNetworkEngineLoggedinEvent.Invoke();
+                            }
                             // Send Request for online client list
                             MessageStructure msgToSend = new MessageStructure
                             {
@@ -159,19 +174,31 @@ namespace MeowChatClientLibrary
                             s_socket.BeginSend(byteMessageToSend, 0, byteMessageToSend.Length, SocketFlags.None, OnSend, s_socket);
                             return;
                         }
-                        ClientNetworkEngineLoginEvent?.Invoke(msgReceived.ClientName, msgReceived.Message);
+                        if (ClientNetworkEngineLoginEvent != null)
+                        {
+                            ClientNetworkEngineLoginEvent.Invoke(msgReceived.ClientName, msgReceived.Message);
+                        }
                         break;
 
                     case Command.List:
-                        ClientNetworkEngineClientsListEvent?.Invoke(msgReceived.Message);
+                        if (ClientNetworkEngineClientsListEvent != null)
+                        {
+                            ClientNetworkEngineClientsListEvent.Invoke(msgReceived.Message);
+                        }
                         break;
 
                     case Command.Logout:
-                        ClientNetworkEngineLogoutEvent?.Invoke(msgReceived.ClientName, msgReceived.Message);
+                        if (ClientNetworkEngineLogoutEvent != null)
+                        {
+                            ClientNetworkEngineLogoutEvent.Invoke(msgReceived.ClientName, msgReceived.Message);
+                        }
                         break;
 
                     case Command.Message:
-                        ClientNetworkEngineMessageEvent?.Invoke(msgReceived.ClientName, msgReceived.Message, ColorTranslator.FromHtml(msgReceived.Color));
+                        if (ClientNetworkEngineMessageEvent != null)
+                        {
+                            ClientNetworkEngineMessageEvent.Invoke(msgReceived.ClientName, msgReceived.Message, ColorTranslator.FromHtml(msgReceived.Color));
+                        }
                         break;
 
                     case Command.NameChange:
@@ -179,34 +206,55 @@ namespace MeowChatClientLibrary
                         {
                             Client.Name = msgReceived.Message;
                         }
-                        ClientNetworkEngineNameChangeEvent?.Invoke(msgReceived.ClientName, msgReceived.Message, ColorTranslator.FromHtml(msgReceived.Color));
+                        if (ClientNetworkEngineNameChangeEvent != null)
+                        {
+                            ClientNetworkEngineNameChangeEvent.Invoke(msgReceived.ClientName, msgReceived.Message, ColorTranslator.FromHtml(msgReceived.Color));
+                        }
                         break;
 
                     case Command.ColorChanged:
-                        ClientNetworkEngineColorChangedEvent?.Invoke(msgReceived.ClientName, ColorTranslator.FromHtml(msgReceived.Color));
+                        if (ClientNetworkEngineColorChangedEvent != null)
+                        {
+                            ClientNetworkEngineColorChangedEvent.Invoke(msgReceived.ClientName, ColorTranslator.FromHtml(msgReceived.Color));
+                        }
                         break;
 
                     case Command.PrivateStart:
-                        ClientNetworkEnginePrivateChatStartEvent?.Invoke(msgReceived.ClientName);
+                        if (ClientNetworkEnginePrivateChatStartEvent != null)
+                        {
+                            ClientNetworkEnginePrivateChatStartEvent.Invoke(msgReceived.ClientName);
+                        }
                         break;
 
                     case Command.PrivateMessage:
-                        ClientNetworkEnginePrivateMessageEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message);
+                        if (ClientNetworkEnginePrivateMessageEvent != null)
+                        {
+                            ClientNetworkEnginePrivateMessageEvent.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message);
+                        }
                         break;
 
                     case Command.PrivateStopped:
-                        ClientNetworkEnginePrivateStoppedEvent?.Invoke(msgReceived.ClientName);
-                        //TabPagePrivateChatReceiveClientEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 1);
+                        if (ClientNetworkEnginePrivateStoppedEvent != null)
+                        {
+                            ClientNetworkEnginePrivateStoppedEvent.Invoke(msgReceived.ClientName);
+                        }
+                        //TabPagePrivateChatReceiveClientEvent.Invoke(msgReceived.ClientName, msgReceived.Private, msgReceived.Message, 1);
                         break;
 
                     case Command.ServerMessage:
-                        ClientNetworkEngineServerMessageEvent?.Invoke(msgReceived.Message);
+                        if (ClientNetworkEngineServerMessageEvent != null)
+                        {
+                            ClientNetworkEngineServerMessageEvent.Invoke(msgReceived.Message);
+                        }
                         break;
 
                     case Command.ImageMessage:
                         MemoryStream ms = new MemoryStream(msgReceived.ImgByte);
                         Image img = Image.FromStream(ms);
-                        ClientNetworkEngineImageMessageEvent?.Invoke(msgReceived.ClientName, msgReceived.Private, img);
+                        if (ClientNetworkEngineImageMessageEvent != null)
+                        {
+                            ClientNetworkEngineImageMessageEvent.Invoke(msgReceived.ClientName, msgReceived.Private, img);
+                        }
                         break;
                 }
             }

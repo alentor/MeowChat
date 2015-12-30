@@ -87,7 +87,10 @@ namespace MeowChatClientLibrary
         {
             if (_TextBoxPrvMsg.Text.Length > 0)
             {
-                TabPagePrivateChatSendClientEvent?.Invoke(Name, _TextBoxPrvMsg.Text);
+                if (TabPagePrivateChatSendClientEvent != null)
+                {
+                    TabPagePrivateChatSendClientEvent.Invoke(Name, _TextBoxPrvMsg.Text);
+                }
                 _TextBoxPrvMsg.Text = "";
             }
         }
@@ -95,8 +98,11 @@ namespace MeowChatClientLibrary
         //Button ImageMessage
         private void BtnPrivateSendImageClick(object sender, EventArgs e)
         {
-            //TabPagePrivateChatSendImageClientEvent?.Invoke(Name, null);
-            TabPagePrivateChatSendImageClietEvent?.Invoke(Name);
+            //TabPagePrivateChatSendImageClientEvent.Invoke(Name, null);
+            if (TabPagePrivateChatSendImageClietEvent != null)
+            {
+                TabPagePrivateChatSendImageClietEvent.Invoke(Name);
+            }
         }
 
         //Method which handles the event TabPagePrivateReceiveMessageClientEvent, which being fired in FrmChat
