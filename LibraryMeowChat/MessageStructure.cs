@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 
 namespace LibraryMeowChat
-{
+{/// <summary>
+/// The message stracture at which client and server communicate
+/// </summary>
     public enum Command
     {
         Register,
