@@ -3,7 +3,9 @@ using System.Diagnostics;
 using Timer = System.Windows.Forms.Timer;
 
 namespace MeowChatClientLibrary
-{
+{/// <summary>
+/// Class with stores all the statistics for the current session
+/// </summary>
     public enum StatisticsEntry
     {
         MessageSent,

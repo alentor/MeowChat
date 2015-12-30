@@ -39,7 +39,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(163, 78);
             this.label1.TabIndex = 0;
-            this.label1.Text = "MeowChat Application\r\nVersion 4.1\r\n13.12.15\r\n\r\n\r\nDeveloped by Williams Guterman";
+            this.label1.Text = "MeowChat Application\r\nVersion 4.3\r\n28.12.15\r\n\r\n\r\nDeveloped by Williams Guterman";
             // 
             // linkLabel1
             // 

@@ -3,7 +3,9 @@ using System.Net;
 using System.Net.Sockets;
 
 namespace MeowChatServerLibrary
-{
+{/// <summary>
+/// class which describes each connected clients
+/// </summary>
     public class Client
     {
         // The username of the the established connection(cleint) in the DataBase, a unique modifer

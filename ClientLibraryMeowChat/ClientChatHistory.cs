@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 
 namespace MeowChatClientLibrary
-{
-    //Stores the clients name and it's messages history
+{/// <summary>
+/// Stores the information of all the clients which are connected to the server and their messages
+/// </summary>
     public class ClientChatHistory
     {
         public string Name;

@@ -7,7 +7,9 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 
 namespace MeowChatClientLibrary
-{
+{/// <summary>
+/// class which handles all network traffic and updates the UI/Notifys the UI accordingly
+/// </summary>
     public static class ClientNetworkEngine
     {
         public static event ClientNetworkEngineRegisterHandler ClientNetworkEngineRegisterMessageEvent;

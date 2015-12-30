@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 
 namespace MeowChatServerLibrary
-{
+{/// <summary>
+/// class which keeps track on each messages position in order to chnage thier color if color changed
+/// </summary>
     public class ClientMessagesPosition
     {
         //Name of the Client
